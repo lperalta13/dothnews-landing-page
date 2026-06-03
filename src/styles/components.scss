@@ -1,0 +1,121 @@
+// ─── Hero background blobs ───────────────────────────────────────────────────
+// Posições calculadas a partir do frame Figma (1290px de altura, node 43:1992)
+
+.hero {
+  margin: 110px 80px;
+  height: 783px;
+  margin-bottom: 373px;
+
+  @media (max-width: 1023px) {
+    margin: 80px 32px 200px;
+    height: auto;
+  }
+
+  @media (max-width: 639px) {
+    margin: 0;
+    padding: 80px 20px 40px;
+    height: auto;
+    margin-bottom: 60px;
+  }
+
+  .hero-background {
+    position: absolute;
+    inset: 0;
+
+    .hero-blob-purple {
+      bottom: 0;
+      left: 12.65%;
+      right: 1.1%;
+      height: 330px;
+    }
+
+    .hero-blob-blue {
+      bottom: 0;
+      left: 6.6%;
+      right: 6.6%;
+      height: 404px;
+    }
+
+    .hero-blur-overlay {
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(217, 217, 217, 0.01);
+    }
+
+  }
+
+}
+
+// ─── Liquid glass — reusable ─────────────────────────────────────────────────
+// Use alongside any rounded-* Tailwind class; border-radius is inherited.
+// Mirrors the original .glassBtn structure:
+//   ::before → white tint + inset glow highlight (above content)
+//   ::after  → SVG glass-lens filter with backdrop (behind content)
+
+.liquid-glass {
+  position: relative;
+   // cria stacking context sem isolation — permite que ::after veja o fundo externo
+
+  // White tint + inner glow rim (acima do conteúdo)
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    border-radius: inherit;
+    box-shadow:
+      inset 2px 2px 0px -2px rgba(255, 255, 255, 0.7),
+      inset 0 0 3px 1px rgba(255, 255, 255, 0.7);
+    background-color: rgb(255 255 255 / 30%);
+    pointer-events: none;
+  }
+
+  // Blur + distorção líquida no mesmo elemento — sem conflito
+  // backdrop-filter: blura o fundo primeiro
+  // filter: distorce o resultado já borrado
+  &::after {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    inset: 0;
+    border-radius: inherit;
+    -webkit-backdrop-filter: blur(8px) saturate(240%);
+    backdrop-filter: blur(8px) saturate(240%);
+    filter: url(#container-glass);
+    overflow: hidden;
+    isolation: isolate;
+    pointer-events: none;
+  }
+
+  &.fixed-liquid {
+    position: fixed;
+    &::before {
+      box-shadow:
+        0 1px 2px 0 rgba(0, 0, 0, 0.3),
+        0 4px 4px 0 rgba(0, 0, 0, 0.15);
+    }
+  }
+  &.frost { 
+    &::before {
+        background-color: rgb(255 255 255 / 60%);
+    }
+  }
+}
+
+// ─── FAQ accordion ────────────────────────────────────────────────────────────
+
+.faq-toggle-icon {
+  width: 18px;
+  height: 18px;
+}
+
+.faq-answer {
+  grid-template-rows: 0fr;
+
+  &.is-open {
+    grid-template-rows: 1fr;
+  }
+}
