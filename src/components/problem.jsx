@@ -11,7 +11,7 @@ const PAINS = [
 
 export function GrowthSection() {
   return (
-    <section id="estrutura" className="bg-tint py-24 lg:py-[120px]">
+    <section id="estrutura" className="bg-white py-24 lg:py-[120px]">
       <Shell>
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-end lg:gap-16">
           <Reveal>
@@ -50,35 +50,35 @@ export function GrowthSection() {
 
 export function ReflectionSection() {
   return (
-    <section className="bg-white py-24 lg:py-[120px]">
+    <section className="bg-primary py-24 lg:py-[120px]">
       <Shell className="max-w-4xl text-center">
         <Reveal>
-          <Eyebrow className="justify-center">Reflexão</Eyebrow>
+          <Eyebrow className="justify-center" dark>Reflexão</Eyebrow>
         </Reveal>
         <Reveal delay={80}>
-          <h2 className="headline mx-auto mt-7 max-w-3xl text-[32px] font-bold leading-[1.13] tracking-[-0.015em] text-ink sm:text-[46px]">
+          <h2 className="headline mx-auto mt-7 max-w-3xl text-[32px] font-bold leading-[1.13] tracking-[-0.015em] text-white sm:text-[46px]">
             O problema nem sempre é o crescimento do portal. Às vezes, é a estrutura que ficou para trás.
           </h2>
         </Reveal>
 
         <Reveal delay={140}>
-          <p className="pretty mx-auto mt-9 max-w-2xl text-[17px] leading-[1.7] text-mute">
+          <p className="pretty mx-auto mt-9 max-w-2xl text-[17px] leading-[1.7] text-white/75">
             Portais crescem, audiência cresce, receita cresce — mas a infraestrutura nem sempre acompanha. O
             resultado é uma operação que funciona, mas opera no limite. Com desgaste acumulado, improvisos que
             viraram rotina e potencial represado pela arquitetura errada.
           </p>
         </Reveal>
         <Reveal delay={200}>
-          <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.7] text-subink">
+          <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.7] text-white/85">
             A pergunta não é se o seu portal está crescendo. A pergunta é: a estrutura por baixo dele está preparada
             para esse crescimento?
           </p>
         </Reveal>
 
         <Reveal delay={260}>
-          <figure className="mx-auto mt-14 max-w-3xl rounded-2xl border border-line bg-tint px-8 py-12">
-            <span aria-hidden="true" className="block font-serif text-[52px] leading-none text-primary/30">"</span>
-            <blockquote className="headline -mt-5 text-[25px] font-semibold leading-[1.34] text-ink sm:text-[31px]">
+          <figure className="mx-auto mt-14 max-w-3xl rounded-2xl border border-white/25 bg-white/15 px-8 py-12 backdrop-blur-sm">
+            <span aria-hidden="true" className="block font-serif text-[52px] leading-none text-white/40">"</span>
+            <blockquote className="headline -mt-5 text-[25px] font-semibold leading-[1.34] text-white sm:text-[31px]">
               Talvez meu portal tenha crescido além da estrutura que o sustenta.
             </blockquote>
           </figure>

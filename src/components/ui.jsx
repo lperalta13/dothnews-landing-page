@@ -135,7 +135,7 @@ export function Card({ children, highlight = false, className = '' }) {
 export function BrowserFrame({ src, alt, url = 'painel.dothnews.com', className = '' }) {
   return (
     <div className={'overflow-hidden rounded-xl border border-line bg-white shadow-[0_40px_90px_-40px_rgba(17,17,30,0.35)] ' + className}>
-      <div className="flex items-center gap-3 border-b border-line bg-[#f7f7f5] px-4 py-3">
+      <div className="flex items-center gap-3 border-b border-line bg-surface px-4 py-3">
         <div className="flex gap-1.5">
           <span className="h-2.5 w-2.5 rounded-full bg-[#e0554d]"></span>
           <span className="h-2.5 w-2.5 rounded-full bg-[#e8b14b]"></span>

@@ -8,11 +8,11 @@ export function Hero() {
       <div className="relative z-20 mx-auto flex max-w-[1104px] flex-col items-center gap-8 sm:gap-[60px] pt-[60px] text-center">
         {/* Tag + headline */}
         <div className="flex flex-col items-center gap-5">
-          <span className="inline-flex items-center rounded-full border border-[#adb7cd] px-[12px] py-[6px] text-[14px] leading-normal text-[#949eb7]">
+          <span className="inline-flex items-center rounded-full border border-faint px-[12px] py-[6px] text-[14px] leading-normal text-faint">
             22 anos de Infraestrutura editorial
           </span>
 
-          <h1 className="text-[#040407]">
+          <h1 className="text-ink">
             <span className="block font-sans text-[26px] font-normal leading-[30px] sm:text-[38px] sm:leading-[44px] lg:text-[48px] lg:leading-[48px]">
               Infraestrutura editorial feita para crescer.
             </span>
@@ -24,7 +24,7 @@ export function Hero() {
 
         {/* Body text + CTA */}
         <div className="flex w-full flex-col items-center gap-5">
-          <p className="max-w-[822px] text-[17px] leading-[28px] text-[#040407]">
+          <p className="max-w-[822px] text-[17px] leading-[28px] text-ink">
             Quando audiência, monetização e operação evoluem, soluções improvisadas começam a limitar o negócio. A DothNews desenvolve infraestrutura especializada para operações editoriais há mais de duas décadas.
           </p>
           <Button
@@ -43,7 +43,7 @@ export function Hero() {
       {/* Dashboard — glass card */}
       <div className="relative z-10 mx-auto mt-10 w-full max-w-[1142px] sm:mt-16">
         <div className="liquid-glass rounded-2xl px-4 pb-4 pt-4 sm:rounded-[32px] sm:px-[40px] sm:pb-6">
-          <p className="mb-4 text-center text-[12px] leading-normal text-[#040407]">
+          <p className="mb-4 text-center text-[12px] leading-normal text-ink">
             Mais de 40 operações editoriais ativas confiam nessa estrutura todos os dias.
           </p>
           <div className="overflow-hidden rounded-[16px] shadow-[0_30px_70px_-30px_rgba(8,4,40,0.35)]">
@@ -87,4 +87,3 @@ export function Hero() {
     </section>
   )
 }
-

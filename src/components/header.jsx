@@ -45,7 +45,7 @@ export function SiteNav({ links = [], cta = null }) {
         <a
           key={link.id ?? link.href}
           href={link.href}
-          className="text-[16px] font-medium text-black transition-colors hover:text-primary"
+          className="text-[16px] font-medium text-ink transition-colors hover:text-primary"
         >
           {link.label}
         </a>

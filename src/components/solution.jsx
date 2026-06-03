@@ -121,19 +121,19 @@ const WHY_BULLETS = [
 
 export function WhySection() {
   return (
-    <section id="clientes" className="bg-white py-24 lg:py-[120px]">
+    <section id="clientes" className="bg-primary py-24 lg:py-[120px]">
       <Shell>
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
-            <Eyebrow className="justify-center">Validação</Eyebrow>
+            <Eyebrow className="justify-center" dark>Validação</Eyebrow>
           </Reveal>
           <Reveal delay={80}>
-            <h2 className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
+            <h2 className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-white sm:text-[42px]">
               Estrutura validada diariamente por operações editoriais reais.
             </h2>
           </Reveal>
           <Reveal delay={140}>
-            <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.66] text-mute">
+            <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.66] text-white/55">
               Números que vêm de operação real. Especialização que vem de foco real. Suporte que vem de pessoas reais.
             </p>
           </Reveal>
