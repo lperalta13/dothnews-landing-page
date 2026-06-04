@@ -1,21 +1,21 @@
-import { Reveal, Shell, Eyebrow, Card, Icon } from './ui'
+import { Reveal, Shell, Chip, Card, Icon } from './ui'
 
 const PAINS = [
-  { icon: 'clock',  text: 'Suporte que responde em horas quando o problema exige minutos.' },
-  { icon: 'gauge',  text: 'Instabilidade em momentos de pico — exatamente quando mais importa.' },
-  { icon: 'search', text: 'Lentidão que prejudica SEO e impacta a receita publicitária.' },
-  { icon: 'block',  text: 'Limitações técnicas que travam a evolução editorial.' },
-  { icon: 'plug',   text: 'Dependência de plugins que ninguém controla de verdade.' },
-  { icon: 'layers', text: 'Plataforma que cresceu junto com o portal — mas parou de acompanhar.' },
+  { icon: 'schedule',             text: 'Suporte que responde em horas quando o problema exige minutos.' },
+  { icon: 'speed',                text: 'Instabilidade em momentos de pico: exatamente quando a cobertura não pode parar.' },
+  { icon: 'search',               text: 'Lentidão que prejudica SEO e impacta a receita publicitária.' },
+  { icon: 'grid_view',            text: 'Limitações técnicas que travam a evolução editorial.' },
+  { icon: 'electrical_services',  text: 'Dependência de plugins que ninguém controla de verdade.' },
+  { icon: 'layers',               text: 'Plataforma que cresceu junto com o portal, mas parou de acompanhar.' },
 ]
 
 export function GrowthSection() {
   return (
-    <section id="estrutura" className="bg-white py-24 lg:py-[120px]">
+    <section id="estrutura" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-white py-24 lg:py-[120px]">
       <Shell>
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-end lg:gap-16">
           <Reveal>
-            <Eyebrow>Operação</Eyebrow>
+            <Chip>Operação</Chip>
             <h2 className="headline mt-5 text-[34px] font-bold leading-[1.1] tracking-[-0.015em] text-ink sm:text-[44px]">
               Soluções simples funcionam.<br />
               <span className="text-faint">Até o crescimento começar.</span>
@@ -23,7 +23,7 @@ export function GrowthSection() {
           </Reveal>
           <Reveal delay={120}>
             <p className="pretty text-[17px] leading-[1.66] text-mute">
-              Audiência crescendo, anunciantes exigindo mais — e, no meio disso tudo, uma plataforma que trava
+              Audiência crescendo, anunciantes exigindo mais. No meio disso tudo, uma plataforma que trava
               exatamente quando a cobertura não pode parar. Cada minuto de instabilidade é uma impressão de anúncio
               perdida. Cada página lenta é um leitor que não volta. Não é falta de esforço. É que a estrutura não foi
               construída para esse nível de operação.
@@ -36,7 +36,7 @@ export function GrowthSection() {
             <Reveal key={i} delay={(i % 3) * 80}>
               <Card className="h-full">
                 <div className="text-primary">
-                  <Icon name={p.icon} className="h-6 w-6" />
+                  <Icon name={p.icon} className="text-[32px]" />
                 </div>
                 <p className="mt-6 text-[15.5px] leading-[1.5] text-subink">{p.text}</p>
               </Card>
@@ -50,10 +50,10 @@ export function GrowthSection() {
 
 export function ReflectionSection() {
   return (
-    <section className="bg-primary py-24 lg:py-[120px]">
+    <section className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 lg:py-[120px]">
       <Shell className="max-w-4xl text-center">
         <Reveal>
-          <Eyebrow className="justify-center" dark>Reflexão</Eyebrow>
+          <Chip className="justify-center" variant="dark">Reflexão</Chip>
         </Reveal>
         <Reveal delay={80}>
           <h2 className="headline mx-auto mt-7 max-w-3xl text-[32px] font-bold leading-[1.13] tracking-[-0.015em] text-white sm:text-[46px]">
@@ -63,7 +63,7 @@ export function ReflectionSection() {
 
         <Reveal delay={140}>
           <p className="pretty mx-auto mt-9 max-w-2xl text-[17px] leading-[1.7] text-white/75">
-            Portais crescem, audiência cresce, receita cresce — mas a infraestrutura nem sempre acompanha. O
+            Portais crescem, audiência cresce, receita cresce. Mas a infraestrutura nem sempre acompanha. O
             resultado é uma operação que funciona, mas opera no limite. Com desgaste acumulado, improvisos que
             viraram rotina e potencial represado pela arquitetura errada.
           </p>

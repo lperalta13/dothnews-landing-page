@@ -1,6 +1,69 @@
+const paletteColorNames = [
+  'primary',
+  'primary-dark',
+  'primary-soft',
+  'primary-50',
+  'primary-100',
+  'primary-200',
+  'primary-300',
+  'primary-400',
+  'primary-500',
+  'primary-600',
+  'primary-700',
+  'primary-800',
+  'primary-900',
+  'primary-950',
+  'neutral-0',
+  'neutral-50',
+  'neutral-100',
+  'neutral-200',
+  'neutral-300',
+  'neutral-400',
+  'neutral-500',
+  'neutral-600',
+  'neutral-700',
+  'neutral-800',
+  'neutral-900',
+  'neutral-950',
+  'ink',
+  'subink',
+  'mute',
+  'faint',
+  'line',
+  'tint',
+  'surface',
+  'canvas',
+  'night',
+  'nightcard',
+]
+
+const colorUtilities = [
+  'bg',
+  'text',
+  'border',
+  'ring',
+  'fill',
+  'stroke',
+  'from',
+  'via',
+  'to',
+]
+
+const colorVariants = ['hover', 'focus', 'group-hover']
+
+const colorSafelist = paletteColorNames.flatMap((color) => [
+  ...colorUtilities.flatMap((utility) => [
+    `${utility}-${color}`,
+    ...colorVariants.map((variant) => `${variant}:${utility}-${color}`),
+  ]),
+  `placeholder:text-${color}`,
+  `focus:placeholder:text-${color}`,
+])
+
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{js,jsx}'],
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx,html,scss}'],
+  safelist: colorSafelist,
   theme: {
     extend: {
       colors: {

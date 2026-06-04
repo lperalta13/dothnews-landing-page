@@ -1,11 +1,16 @@
+import { useState, useCallback } from 'react'
 import { Hero } from './components/hero'
 import { SiteHeader } from './components/header'
 import { GrowthSection, ReflectionSection } from './components/problem'
 import { WhatSection, WhySection } from './components/solution'
 import { EvolutionSection, FaqSection } from './components/evolution'
-import { DiagnosisSection, FinalCta, Footer } from './components/closing'
+import { DiagnosisSection, FinalCta, Footer, DiagnosisModal } from './components/closing'
 
 export default function App() {
+  const [formOpen, setFormOpen] = useState(false)
+  const openForm = useCallback(() => setFormOpen(true), [])
+  const closeForm = useCallback(() => setFormOpen(false), [])
+
   return (
     <>
       {/*
@@ -22,9 +27,9 @@ export default function App() {
           </filter>
         </defs>
       </svg>
-      <SiteHeader />
+      <SiteHeader onOpenForm={openForm} />
       <main>
-        <Hero />
+        <Hero onOpenForm={openForm} />
         <GrowthSection />
         <ReflectionSection />
         <WhatSection />
@@ -32,9 +37,10 @@ export default function App() {
         <EvolutionSection />
         <FaqSection />
         <DiagnosisSection />
-        <FinalCta />
+        <FinalCta onOpenForm={openForm} />
       </main>
       <Footer />
+      <DiagnosisModal open={formOpen} onClose={closeForm} />
     </>
   )
 }

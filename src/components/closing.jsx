@@ -1,5 +1,8 @@
-import { useState } from 'react'
-import { Reveal, Shell, Eyebrow, Card, Icon } from './ui'
+import { useState, useEffect, useRef } from 'react'
+import { Reveal, Shell, Chip, Card, Icon, Button } from './ui'
+import { FormInput } from './form/FormInput'
+import { FormSelect } from './form/FormSelect'
+import { FormTextarea } from './form/FormTextarea'
 
 const STEPS = [
   {
@@ -20,118 +23,58 @@ const STEPS = [
   {
     n: '04',
     title: 'Recomendação estratégica',
-    text: 'Se fizer sentido para os dois lados, apresentamos um caminho — incluindo como seria a transição. Se não fizer, dizemos isso também.',
+    text: 'Se fizer sentido para os dois lados, apresentamos um caminho com os próximos passos e como seria a transição. Se não fizer, dizemos isso também.',
   },
 ]
 
-const inputCls =
-  'w-full rounded-[10px] border border-line bg-white px-4 py-3 text-[15px] text-ink placeholder:text-faint transition-colors focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/15'
+const AUDIENCIA_OPTIONS = [
+  { value: 'ate-1m', label: 'Até 1M pageviews/mês' },
+  { value: '1m-5m', label: '1M – 5M pageviews/mês' },
+  { value: '5m-20m', label: '5M – 20M pageviews/mês' },
+  { value: '20m+', label: '20M+ pageviews/mês' },
+]
 
-function Field({ label, children }) {
-  return (
-    <label className="block">
-      <span className="mb-1.5 block text-[13px] font-medium text-subink">{label}</span>
-      {children}
-    </label>
-  )
-}
+const PLATAFORMA_OPTIONS = [
+  { value: 'wordpress', label: 'WordPress' },
+  { value: 'cms-proprio', label: 'CMS próprio' },
+  { value: 'outra-plataforma', label: 'Outra plataforma' },
+  { value: 'outra', label: 'Outra' },
+]
 
-function DiagnosisForm() {
-  const [sent, setSent] = useState(false)
-  const [data, setData] = useState({
-    nome: '',
-    portal: '',
-    url: '',
-    contato: '',
-    audiencia: '',
-    plataforma: '',
-    dificuldade: '',
-  })
+const EMPTY_FORM = { nome: '', portal: '', url: '', contato: '', audiencia: '', plataforma: '', dificuldade: '' }
 
-  const set = (k) => (e) => setData({ ...data, [k]: e.target.value })
+function DiagnosisForm({ onSuccess }) {
+  const [data, setData] = useState(EMPTY_FORM)
+  const set = (k) => (e) => setData((d) => ({ ...d, [k]: e.target.value }))
   const valid = data.nome && data.portal && data.contato
-
-  if (sent) {
-    return (
-      <div className="flex h-full min-h-[440px] flex-col items-center justify-center rounded-2xl border border-line bg-white p-10 text-center">
-        <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft text-primary">
-          <Icon name="shield" className="h-7 w-7" />
-        </div>
-        <h3 className="headline mt-6 text-[24px] font-bold text-ink">Solicitação recebida.</h3>
-        <p className="pretty mt-3 max-w-sm text-[15px] leading-[1.6] text-mute">
-          Obrigado, {data.nome.split(' ')[0] || 'tudo certo'}. Nossa equipe retorna em até 48 horas úteis com os
-          próximos passos do seu diagnóstico.
-        </p>
-        <button
-          onClick={() => {
-            setSent(false)
-            setData({ nome: '', portal: '', url: '', contato: '', audiencia: '', plataforma: '', dificuldade: '' })
-          }}
-          className="mt-7 text-[14px] font-semibold text-primary hover:underline"
-        >
-          Enviar outra solicitação
-        </button>
-      </div>
-    )
-  }
 
   return (
     <form
-      onSubmit={(e) => { e.preventDefault(); if (valid) setSent(true) }}
-      className="rounded-2xl border border-line bg-white p-7 sm:p-9"
+      onSubmit={(e) => { e.preventDefault(); if (valid) onSuccess(data.nome) }}
+      className="p-6 sm:p-8"
     >
       <div className="grid gap-5 sm:grid-cols-2">
-        <Field label="Nome completo">
-          <input required value={data.nome} onChange={set('nome')} className={inputCls} placeholder="Seu nome" />
-        </Field>
-        <Field label="Nome do portal">
-          <input required value={data.portal} onChange={set('portal')} className={inputCls} placeholder="Nome do veículo" />
-        </Field>
-        <Field label="URL do portal">
-          <input value={data.url} onChange={set('url')} className={inputCls} placeholder="https://" />
-        </Field>
-        <Field label="WhatsApp / Contato">
-          <input required value={data.contato} onChange={set('contato')} className={inputCls} placeholder="(00) 00000-0000" />
-        </Field>
-        <Field label="Faixa de audiência mensal">
-          <select value={data.audiencia} onChange={set('audiencia')} className={inputCls + ' appearance-none'}>
-            <option value="">Selecione</option>
-            <option>Até 1M pageviews/mês</option>
-            <option>1M – 5M pageviews/mês</option>
-            <option>5M – 20M pageviews/mês</option>
-            <option>20M+ pageviews/mês</option>
-          </select>
-        </Field>
-        <Field label="Plataforma atual">
-          <select value={data.plataforma} onChange={set('plataforma')} className={inputCls + ' appearance-none'}>
-            <option value="">Selecione</option>
-            <option>WordPress</option>
-            <option>CMS próprio</option>
-            <option>Outra plataforma</option>
-            <option>Outra</option>
-          </select>
-        </Field>
+        <FormInput name="nome" label="Nome completo" required value={data.nome} onChange={set('nome')} />
+        <FormInput name="portal" label="Nome do portal" required value={data.portal} onChange={set('portal')} />
+        <FormInput name="url" label="URL do portal" type="url" value={data.url} onChange={set('url')} />
+        <FormInput name="contato" label="WhatsApp / Contato" required value={data.contato} onChange={set('contato')} />
+        <FormSelect name="audiencia" label="Faixa de audiência mensal" value={data.audiencia} options={AUDIENCIA_OPTIONS} onChange={set('audiencia')} />
+        <FormSelect name="plataforma" label="Plataforma atual" value={data.plataforma} options={PLATAFORMA_OPTIONS} onChange={set('plataforma')} />
       </div>
       <div className="mt-5">
-        <Field label="Principal dificuldade hoje">
-          <textarea
-            value={data.dificuldade}
-            onChange={set('dificuldade')}
-            rows="3"
-            className={inputCls + ' resize-none'}
-            placeholder="Conte, em poucas linhas, o que mais te incomoda na estrutura atual."
-          />
-        </Field>
+        <FormTextarea
+          name="dificuldade"
+          label="Principal dificuldade hoje"
+          value={data.dificuldade}
+          onChange={set('dificuldade')}
+          rows={3}
+          resize="none"
+          helper="Conte, em poucas linhas, o que mais te incomoda na estrutura atual."
+        />
       </div>
-      <button
-        type="submit"
-        className="group mt-7 flex w-full items-center justify-center gap-2 whitespace-nowrap rounded-[10px] bg-primary px-7 py-4 text-[16px] font-semibold text-white transition-all duration-300 hover:bg-primary-dark"
-      >
+      <Button type="submit" variant="primary" size="lg" icon="arrow_outward" className="mt-7 w-full justify-center">
         Solicitar diagnóstico
-        <span className="text-[1.05em] leading-none transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-          ↗
-        </span>
-      </button>
+      </Button>
       <p className="mt-4 text-center text-[12.5px] text-faint">
         Retornamos em até 48 horas úteis · Sem compromisso · Sem proposta na primeira conversa
       </p>
@@ -139,13 +82,114 @@ function DiagnosisForm() {
   )
 }
 
+export function DiagnosisModal({ open, onClose }) {
+  const [sent, setSent] = useState(false)
+  const [firstName, setFirstName] = useState('')
+  const closeRef = useRef(null)
+
+  // Lock body scroll and manage focus when open
+  useEffect(() => {
+    if (!open) return
+    document.body.style.overflow = 'hidden'
+    // Small delay so the element is rendered before focusing
+    const t = setTimeout(() => closeRef.current?.focus(), 50)
+    return () => {
+      clearTimeout(t)
+      document.body.style.overflow = ''
+    }
+  }, [open])
+
+  // Close on ESC
+  useEffect(() => {
+    if (!open) return
+    const handler = (e) => { if (e.key === 'Escape') onClose() }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [open, onClose])
+
+  // Reset success state when modal closes
+  useEffect(() => {
+    if (!open) {
+      const t = setTimeout(() => setSent(false), 300)
+      return () => clearTimeout(t)
+    }
+  }, [open])
+
+  if (!open) return null
+
+  return (
+    <div
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="diagnosis-modal-title"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+    >
+      {/* Backdrop */}
+      <div
+        className="absolute inset-0 bg-ink/60 backdrop-blur-sm"
+        onClick={onClose}
+        aria-hidden="true"
+      />
+
+      {/* Card */}
+      <div className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white shadow-2xl">
+        {/* Header */}
+        <div className="flex items-start justify-between border-b border-line px-6 pt-6 pb-5 sm:px-8">
+          <div>
+            <h2 id="diagnosis-modal-title" className="headline text-[20px] font-bold text-ink">
+              Diagnóstico gratuito
+            </h2>
+            <p className="mt-1 text-[14px] text-mute">
+              Nossa equipe retorna em até 48 horas úteis.
+            </p>
+          </div>
+          <button
+            ref={closeRef}
+            onClick={onClose}
+            aria-label="Fechar"
+            className="ml-4 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-faint transition-colors hover:bg-tint hover:text-ink focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          >
+            <Icon name="close" className="text-[20px]" />
+          </button>
+        </div>
+
+        {/* Body */}
+        {sent ? (
+          <div className="flex flex-col items-center justify-center px-8 py-16 text-center">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-soft text-primary">
+              <Icon name="check_circle" className="text-[28px]" />
+            </div>
+            <h3 className="headline mt-6 text-[22px] font-bold text-ink">Solicitação recebida.</h3>
+            <p className="pretty mt-3 max-w-sm text-[15px] leading-[1.6] text-mute">
+              Obrigado, {firstName}. Nossa equipe retorna em até 48 horas úteis com os próximos passos do seu diagnóstico.
+            </p>
+            <button
+              onClick={() => setSent(false)}
+              className="mt-7 text-[14px] font-semibold text-primary hover:underline"
+            >
+              Enviar outra solicitação
+            </button>
+          </div>
+        ) : (
+          <DiagnosisForm
+            onSuccess={(nome) => {
+              setFirstName(nome.split(' ')[0] || 'tudo certo')
+              setSent(true)
+            }}
+          />
+        )}
+      </div>
+    </div>
+  )
+}
+
 export function DiagnosisSection() {
   return (
-    <section id="diagnostico" className="bg-tint py-24 lg:py-[120px]">
+    <section id="diagnostico" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden py-24 lg:py-[120px]">
       <Shell>
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
-            <Eyebrow className="justify-center">Diagnóstico</Eyebrow>
+            <Chip className="justify-center">Diagnóstico</Chip>
           </Reveal>
           <Reveal delay={80}>
             <h2 className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
@@ -154,7 +198,7 @@ export function DiagnosisSection() {
           </Reveal>
           <Reveal delay={140}>
             <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.66] text-mute">
-              O diagnóstico começa pelo entendimento real do seu cenário — não por uma proposta genérica.
+              O diagnóstico começa pelo entendimento real do seu cenário, não por uma proposta genérica.
             </p>
           </Reveal>
         </div>
@@ -172,48 +216,22 @@ export function DiagnosisSection() {
           ))}
         </div>
 
-        <Reveal delay={120}>
+        <Reveal delay={160}>
           <p className="mx-auto mt-10 max-w-2xl text-center text-[16px] leading-[1.6] text-subink">
-            Não existe proposta padrão. Existe o entendimento da sua operação — e uma recomendação baseada nisso.
+            Não existe proposta padrão. Existe o entendimento da sua operação e uma recomendação baseada nisso.
           </p>
         </Reveal>
-
-        {/* Form + discrete product evidence */}
-        <div className="mt-12 grid gap-6 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-start">
-          <Reveal>
-            <DiagnosisForm />
-          </Reveal>
-          <Reveal delay={120} className="lg:pt-2">
-            <Card className="h-full">
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
-                // depois do diagnóstico
-              </span>
-              <p className="pretty mt-4 text-[18px] leading-[1.5] text-subink">
-                O diagnóstico é a porta de entrada. Por trás dele existe uma plataforma de gestão completa, madura e em
-                operação real.
-              </p>
-              <div className="mt-6 overflow-hidden rounded-xl border border-line">
-                <img
-                  src="/assets/sgi-config.png"
-                  alt="Tela de configurações do SGI"
-                  loading="lazy"
-                  className="block w-full"
-                />
-              </div>
-            </Card>
-          </Reveal>
-        </div>
       </Shell>
     </section>
   )
 }
 
-export function FinalCta() {
+export function FinalCta({ onOpenForm }) {
   return (
-    <section className="bg-primary py-24 text-white lg:py-32">
+    <section className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 text-white lg:py-32">
       <Shell className="max-w-3xl text-center">
         <Reveal>
-          <Eyebrow className="justify-center" dark>Próximo passo</Eyebrow>
+          <Chip className="justify-center" variant="dark">Próximo passo</Chip>
         </Reveal>
         <Reveal delay={80}>
           <h2 className="headline mt-7 text-[34px] font-bold leading-[1.1] tracking-[-0.015em] sm:text-[48px]">
@@ -228,20 +246,20 @@ export function FinalCta() {
         </Reveal>
         <Reveal delay={200}>
           <p className="pretty mx-auto mt-5 max-w-xl text-[16px] leading-[1.6] text-white/45">
-            Se algo nessa página fez sentido para você, o próximo passo é simples — e começa por entender o seu cenário.
+            Se algo nessa página fez sentido para você, o próximo passo começa por entender o seu cenário.
           </p>
         </Reveal>
         <Reveal delay={260}>
           <div className="mt-10 flex flex-col items-center gap-3">
-            <a
-              href="#diagnostico"
-              className="group inline-flex items-center gap-3 rounded-[12px] bg-white px-8 py-4 text-[16px] font-semibold text-primary shadow-[0_22px_50px_-20px_rgba(0,0,0,0.5)] transition-transform duration-300 hover:-translate-y-0.5"
+            <Button
+              variant="white"
+              size="lg"
+              icon="arrow_outward"
+              className="shadow-[0_22px_50px_-20px_rgba(0,0,0,0.5)]"
+              onClick={onOpenForm}
             >
               Solicitar diagnóstico
-              <span className="grid h-6 w-6 place-items-center rounded-full bg-primary text-white text-[12px] transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
-                ↗
-              </span>
-            </a>
+            </Button>
             <span className="text-[13px] text-white/55">
               Análise consultiva · Retorno em até 48h · Sem compromisso
             </span>
@@ -261,31 +279,29 @@ export function FinalCta() {
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 bg-night pb-12 pt-16 text-white/55">
+    <footer className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 mb-3 sm:mb-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-white pb-12 pt-16 ">
       <Shell>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start">
           <div>
-            <img src="/assets/logo-white.svg" alt="DothNews" className="h-7 w-auto" />
-            <p className="mt-5 max-w-sm text-[15px] leading-[1.55] text-white/70">
-              Infraestrutura especializada para portais de notícias.
-            </p>
-            <p className="mt-4 max-w-md text-[13.5px] leading-[1.65] text-white/45">
+            <img src="/assets/logo-dothnews.svg" alt="DothNews" className="h-[25px] w-auto" />
+            <p className="mt-5 max-w-md text-[13.5px] leading-[1.65] text-mute">
               A DothNews é desenvolvida pela{' '}
-              <span className="font-medium text-white/70">Dotcom</span>, empresa com mais
+              <span className="font-medium text-subink">Dotcom</span>, empresa com mais
               de 22 anos de experiência em tecnologia para operações editoriais digitais no Brasil.
             </p>
           </div>
-          <div className="flex flex-col gap-3 lg:items-end">
-            <nav className="flex flex-wrap gap-x-7 gap-y-2 text-[14px] lg:justify-end">
-              <a href="#" className="transition-colors hover:text-white">Política de Privacidade</a>
-              <a href="#" className="transition-colors hover:text-white">Termos de Uso</a>
-              <a href="#diagnostico" className="transition-colors hover:text-white">Contato</a>
-            </nav>
+          <div className="flex flex-col lg:items-end lg:justify-center">
+            <p className="text-[15px] leading-[1.55] text-ink lg:text-right">
+              Infraestrutura especializada para portais de notícias.
+            </p>
           </div>
         </div>
-        <div className="mt-12 flex flex-col gap-2 border-t border-white/10 pt-6 text-[12.5px] text-white/35 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-[12.5px] text-faint sm:flex-row sm:items-center sm:justify-between">
           <span>© 2026 DothNews · Dotcom Tecnologia. Todos os direitos reservados.</span>
-          <span className="font-mono">infraestrutura editorial · desde 2004</span>
+          <span className="flex items-center gap-2">
+            infraestrutura editorial · desde 2004 · 
+            <img src="/assets/logo-dothcom.svg" alt="DothCom" className="h-[48px] w-auto opacity-70" />
+          </span>
         </div>
       </Shell>
     </footer>

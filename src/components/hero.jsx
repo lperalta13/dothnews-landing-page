@@ -1,6 +1,26 @@
-import { Button } from './Button'
+import { useState, useEffect } from 'react'
+import { Chip, Button } from './ui'
 
-export function Hero() {
+const SLIDES = [
+  { src: '/assets/sgi-dashboard.png', alt: 'Painel de gestão editorial SGI da DothNews' },
+  { src: '/assets/sgi-posts.png', alt: 'Lista de posts do SGI DothNews' },
+  { src: '/assets/sgi-criar-post.png', alt: 'Editor de post do SGI DothNews' },
+  { src: '/assets/sgi-config.png', alt: 'Configurações do SGI DothNews' },
+  { src: '/assets/sgi-usuarios.png', alt: 'Gerenciamento de usuários do SGI DothNews' },
+]
+
+const SLIDE_INTERVAL = 3500
+
+export function Hero({ onOpenForm }) {
+  const [current, setCurrent] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrent(prev => (prev + 1) % SLIDES.length)
+    }, SLIDE_INTERVAL)
+    return () => clearInterval(timer)
+  }, [])
+
   return (
     <section id="top" className="hero relative bg-white">
 
@@ -8,9 +28,7 @@ export function Hero() {
       <div className="relative z-20 mx-auto flex max-w-[1104px] flex-col items-center gap-8 sm:gap-[60px] pt-[60px] text-center">
         {/* Tag + headline */}
         <div className="flex flex-col items-center gap-5">
-          <span className="inline-flex items-center rounded-full border border-faint px-[12px] py-[6px] text-[14px] leading-normal text-faint">
-            22 anos de Infraestrutura editorial
-          </span>
+          <Chip>22 anos de Infraestrutura editorial</Chip>
 
           <h1 className="text-ink">
             <span className="block font-sans text-[26px] font-normal leading-[30px] sm:text-[38px] sm:leading-[44px] lg:text-[48px] lg:leading-[48px]">
@@ -30,10 +48,10 @@ export function Hero() {
           <Button
             variant="primary"
             size="lg"
-            href="#diagnostico"
             icon="arrow_outward"
             iconPosition="left"
             description="Inicie seu diagnóstico editorial gratuito com a equipe DothNews"
+            onClick={onOpenForm}
           >
             Quero escalar minha operação
           </Button>
@@ -47,12 +65,23 @@ export function Hero() {
             Mais de 40 operações editoriais ativas confiam nessa estrutura todos os dias.
           </p>
           <div className="overflow-hidden rounded-[16px] shadow-[0_30px_70px_-30px_rgba(8,4,40,0.35)]">
-            <img
-              src="/assets/sgi-dashboard.png"
-              alt="Painel de gestão editorial SGI da DothNews"
-              className="block w-full"
-              loading="lazy"
-            />
+            <div
+              className="flex transition-transform duration-700 ease-in-out"
+              style={{ transform: `translateX(-${current * 100}%)` }}
+            >
+              {SLIDES.map((slide, i) => (
+                <img
+                  key={slide.src}
+                  src={slide.src}
+                  alt={slide.alt}
+                  width="1920"
+                  height="1066"
+                  className="block w-full flex-shrink-0"
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  fetchPriority={i === 0 ? 'high' : undefined}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>

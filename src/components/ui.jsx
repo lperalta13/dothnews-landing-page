@@ -72,14 +72,12 @@ export function Shell({ children, className = '' }) {
   )
 }
 
-export function Eyebrow({ children, className = '', dark = false }) {
+export function Chip({ children, className = '', variant = 'default' }) {
   return (
     <div className={'flex ' + className}>
       <span className={
-        'inline-flex items-center rounded-full border px-3.5 py-1.5 text-[12.5px] font-medium leading-none ' +
-        (dark
-          ? 'border-white/20 bg-white/5 text-white/75'
-          : 'border-line bg-white text-subink')
+        'liquid-glass inline-flex items-center rounded-full px-3.5 py-1.5 text-[12.5px] font-medium leading-none ' +
+        (variant === 'dark' ? 'text-white/90' : 'text-subink')
       }>
         {children}
       </span>
@@ -87,35 +85,39 @@ export function Eyebrow({ children, className = '', dark = false }) {
   )
 }
 
-export function PrimaryBtn({ children, href = '#diagnostico', className = '', big = false }) {
-  return (
-    <a
-      href={href}
-      className={
-        'group inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-[10px] bg-primary font-semibold text-white ' +
-        'transition-all duration-300 hover:bg-primary-dark ' +
-        (big ? 'px-8 py-4 text-[16px] ' : 'px-6 py-3.5 text-[14.5px] ') + className
-      }
-    >
-      {children}
-      <span className="text-[1.05em] leading-none transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">↗</span>
-    </a>
-  )
+const BTN_SIZES = {
+  sm: { wrap: 'px-3 py-[6px] gap-1 rounded-[10px] text-[14px]',          icon: 'text-[18px]' },
+  md: { wrap: 'px-[16px] py-[8px] gap-[6px] rounded-[12px] text-[16px]', icon: 'text-[24px]' },
+  lg: { wrap: 'px-8 py-4 gap-2 rounded-[16px] text-[18px]',              icon: 'text-[20px]' },
 }
 
-export function GhostBtn({ children, href = '#estrutura', className = '', dark = false }) {
+const BTN_VARIANTS = {
+  primary:   'bg-primary text-white hover:bg-primary-dark',
+  secondary: 'border border-primary text-primary hover:bg-primary-soft',
+  ghost:     'text-primary hover:text-primary-dark',
+  white:     'bg-white text-primary hover:bg-white/90 hover:-translate-y-0.5',
+}
+
+export function Button({ as: Tag, variant = 'primary', size = 'md', icon, iconPosition = 'right', description, href, children, className = '', ...rest }) {
+  const s = BTN_SIZES[size] ?? BTN_SIZES.md
+  const v = BTN_VARIANTS[variant] ?? BTN_VARIANTS.primary
+  const Root = Tag ?? (href ? 'a' : 'button')
+  const linkProps = href ? { href } : {}
+  const a11yProps = description ? { title: description, 'aria-description': description } : {}
+  const iconEl = icon ? (
+    <span className={`material-symbols-outlined ${s.icon}`} aria-hidden="true">{icon}</span>
+  ) : null
   return (
-    <a
-      href={href}
-      className={
-        'inline-flex items-center gap-2 rounded-[10px] border font-semibold transition-colors duration-300 px-6 py-3.5 text-[14.5px] ' +
-        (dark
-          ? 'border-white/25 text-white hover:bg-white/10 '
-          : 'border-primary/35 text-primary hover:bg-primary/[0.05] ') + className
-      }
+    <Root
+      {...linkProps}
+      {...a11yProps}
+      className={['inline-flex items-center font-medium transition-all duration-300', s.wrap, v, className].join(' ')}
+      {...rest}
     >
-      {children}
-    </a>
+      {iconPosition === 'left' && iconEl}
+      <span>{children}</span>
+      {iconPosition === 'right' && iconEl}
+    </Root>
   )
 }
 
@@ -124,7 +126,7 @@ export function Card({ children, highlight = false, className = '' }) {
     <div className={
       'rounded-2xl p-7 transition-all duration-300 ' +
       (highlight
-        ? 'bg-primary text-white '
+        ? 'bg-primary-400 text-white '
         : 'border border-line bg-white hover:border-ink/20 ') + className
     }>
       {children}
@@ -158,41 +160,20 @@ export function ScreenFrame({ src, alt, className = '', imgClass = '' }) {
   )
 }
 
-export function Icon({ name, className = 'h-6 w-6', stroke = 1.6 }) {
-  const c = { fill: 'none', stroke: 'currentColor', strokeWidth: stroke, strokeLinecap: 'round', strokeLinejoin: 'round' }
-  const paths = {
-    clock:   <><circle cx="12" cy="12" r="9" {...c} /><path d="M12 7.5V12l3 2" {...c} /></>,
-    bolt:    <path d="M13 3 5 13h6l-1 8 8-11h-6l1-7Z" {...c} />,
-    gauge:   <><path d="M4 18a8 8 0 1 1 16 0" {...c} /><path d="M12 14l4-4" {...c} /></>,
-    block:   <><rect x="4" y="4" width="16" height="16" rx="2" {...c} /><path d="M4 10h16M10 4v16" {...c} /></>,
-    plug:    <><path d="M9 3v5M15 3v5" {...c} /><path d="M6 8h12v3a6 6 0 0 1-12 0V8Z" {...c} /><path d="M12 17v4" {...c} /></>,
-    layers:  <><path d="M12 3 3 8l9 5 9-5-9-5Z" {...c} /><path d="M3 13l9 5 9-5" {...c} /></>,
-    code:    <><path d="M8 8l-4 4 4 4M16 8l4 4-4 4" {...c} /></>,
-    shield:  <><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6l7-3Z" {...c} /><path d="M9 12l2 2 4-4" {...c} /></>,
-    server:  <><rect x="4" y="4" width="16" height="7" rx="1.5" {...c} /><rect x="4" y="13" width="16" height="7" rx="1.5" {...c} /><path d="M7.5 7.5h.01M7.5 16.5h.01" {...c} /></>,
-    headset: <><path d="M5 13v-1a7 7 0 0 1 14 0v1" {...c} /><rect x="3.5" y="13" width="3.5" height="6" rx="1.2" {...c} /><rect x="17" y="13" width="3.5" height="6" rx="1.2" {...c} /><path d="M19 19a4 4 0 0 1-4 3h-2" {...c} /></>,
-    refresh: <><path d="M4 12a8 8 0 0 1 13.7-5.6L20 8" {...c} /><path d="M20 4v4h-4" {...c} /><path d="M20 12a8 8 0 0 1-13.7 5.6L4 16" {...c} /><path d="M4 20v-4h4" {...c} /></>,
-    spark:   <><path d="M12 4l1.6 5.4L19 11l-5.4 1.6L12 18l-1.6-5.4L5 11l5.4-1.6L12 4Z" {...c} /></>,
-    search:  <><circle cx="11" cy="11" r="6" {...c} /><path d="M20 20l-4.5-4.5" {...c} /></>,
-    expand:  <><path d="M4 9V4h5M20 15v5h-5M15 4h5v5M9 20H4v-5" {...c} /></>,
-    monitor: <><rect x="3" y="4" width="18" height="12" rx="1.5" {...c} /><path d="M8 20h8M12 16v4" {...c} /><path d="M7 11l2.5-3 2 2L14 7l3 4" {...c} /></>,
-    target:  <><circle cx="12" cy="12" r="8" {...c} /><circle cx="12" cy="12" r="3.5" {...c} /></>,
-  }
+export function Icon({ name, className = 'text-[32px]' }) {
   return (
-    <svg viewBox="0 0 24 24" className={className} aria-hidden="true">
-      {paths[name] || paths.block}
-    </svg>
+    <span className={`material-symbols-outlined ${className}`} aria-hidden="true">{name}</span>
   )
 }
 
 export const CLIENT_LOGOS = [
-  { name: 'Correio do Estado',    file: '/assets/clients/correiodoestado.svg' },
-  { name: 'Folha de Pernambuco',  file: '/assets/clients/folhadepernambuco.svg' },
-  { name: 'Diário do Estado',     file: '/assets/clients/diariadoestado.svg' },
-  { name: 'Capital do Pantanal',  file: '/assets/clients/capitaldopantanal.svg' },
-  { name: 'Expressão MS',         file: '/assets/clients/expressaoms.svg' },
-  { name: 'Folha de Alphaville',  file: '/assets/clients/folhadealphaville.svg' },
-  { name: 'Portal Mais 360',      file: '/assets/clients/portalmais360.svg' },
-  { name: 'Diário da Baixada',    file: '/assets/clients/diariadabaixada.svg' },
-  { name: 'Portal de Prefeitura', file: '/assets/clients/portaldeprefeitura.svg' },
+  { name: 'Correio do Estado',    file: '/assets/clients/correiodoestado.png' },
+  { name: 'Folha de Pernambuco',  file: '/assets/clients/folhadepernambuco.png' },
+  { name: 'Diário do Estado',     file: '/assets/clients/diariadoestado.png' },
+  { name: 'Capital do Pantanal',  file: '/assets/clients/capitaldopantanal.png' },
+  { name: 'Expressão MS',         file: '/assets/clients/expressaoms.png' },
+  { name: 'Folha de Alphaville',  file: '/assets/clients/folhadealphaville.png' },
+  { name: 'Portal Mais 360',      file: '/assets/clients/portalmais360.png' },
+  { name: 'Diário da Baixada',    file: '/assets/clients/diariadabaixada.png' },
+  { name: 'Portal de Prefeitura', file: '/assets/clients/portaldeprefeitura.png' },
 ]

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Shell } from './ui'
-import { Button } from './Button'
+import { Shell, Button } from './ui'
 
 /**
  * Dados padrão do header — substitua por payload de API.
@@ -35,7 +34,7 @@ export const DEFAULT_HEADER = {
 // ─── SiteNav ──────────────────────────────────────────────────────────────────
 // Barra de navegação desktop. Recebe links e CTA como props.
 
-export function SiteNav({ links = [], cta = null }) {
+export function SiteNav({ links = [], cta = null, onOpenForm }) {
   return (
     <nav
       className="hidden items-center gap-[40px] md:flex"
@@ -55,10 +54,10 @@ export function SiteNav({ links = [], cta = null }) {
         <Button
           variant="primary"
           size="md"
-          href={cta.href}
           icon={cta.icon}
           iconPosition={cta.iconPosition ?? 'right'}
           description={cta.description}
+          onClick={onOpenForm}
         >
           {cta.label}
         </Button>
@@ -74,6 +73,7 @@ export function SiteHeader({
   logo  = DEFAULT_HEADER.logo,
   links = DEFAULT_HEADER.links,
   cta   = DEFAULT_HEADER.cta,
+  onOpenForm,
 }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
@@ -97,11 +97,11 @@ export function SiteHeader({
       <Shell className="flex items-center justify-between py-4">
         {/* Logo */}
         <a href={logo.href} aria-label={logo.alt} className="flex items-center">
-          <img src={logo.src} alt={logo.alt} className="h-[25px] w-auto" />
+          <img src={logo.src} alt={logo.alt} className="h-[25px] w-auto logo-glow" />
         </a>
 
         {/* Nav desktop */}
-        <SiteNav links={links} cta={cta} />
+        <SiteNav links={links} cta={cta} onOpenForm={onOpenForm} />
 
         {/* Botão hambúrguer mobile */}
         <button
@@ -136,11 +136,10 @@ export function SiteHeader({
               <Button
                 variant="primary"
                 size="md"
-                href={cta.href}
                 icon={cta.icon}
                 iconPosition={cta.iconPosition ?? 'right'}
                 className="mt-2 w-full justify-center"
-                onClick={() => setOpen(false)}
+                onClick={() => { setOpen(false); onOpenForm?.() }}
               >
                 {cta.label}
               </Button>
