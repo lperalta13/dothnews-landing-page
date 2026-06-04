@@ -22,15 +22,15 @@ export function Hero({ onOpenForm }) {
   }, [])
 
   return (
-    <section id="top" className="hero relative bg-white">
+    <section id="top" aria-labelledby="hero-title" className="hero relative bg-white">
 
       {/* Copy — centered */}
-      <div className="relative z-20 mx-auto flex max-w-[1104px] flex-col items-center gap-8 sm:gap-[60px] pt-[60px] text-center">
+      <div className="relative z-20 mx-auto flex max-w-[1104px] flex-col items-center gap-8 sm:gap-[60px] pt-[24px] sm:pt-[60px] text-center">
         {/* Tag + headline */}
         <div className="flex flex-col items-center gap-5">
           <Chip>22 anos de Infraestrutura editorial</Chip>
 
-          <h1 className="text-ink">
+          <h1 id="hero-title" className="text-ink">
             <span className="block font-sans text-[26px] font-normal leading-[30px] sm:text-[38px] sm:leading-[44px] lg:text-[48px] lg:leading-[48px]">
               Infraestrutura editorial feita para crescer.
             </span>
@@ -59,7 +59,7 @@ export function Hero({ onOpenForm }) {
       </div>
 
       {/* Dashboard — glass card */}
-      <div className="relative z-10 mx-auto mt-10 w-full max-w-[1142px] sm:mt-16">
+      <div className="relative z-10 mt-10 -mb-[100px] sm:mb-0 -mx-[24px] sm:mx-auto w-auto  sm:w-full max-w-[1142px] sm:mt-16">
         <div className="liquid-glass rounded-2xl px-4 pb-4 pt-4 sm:rounded-[32px] sm:px-[40px] sm:pb-6">
           <p className="mb-4 text-center text-[12px] leading-normal text-ink">
             Mais de 40 operações editoriais ativas confiam nessa estrutura todos os dias.
@@ -78,7 +78,7 @@ export function Hero({ onOpenForm }) {
                   height="1066"
                   className="block w-full flex-shrink-0"
                   loading={i === 0 ? 'eager' : 'lazy'}
-                  fetchPriority={i === 0 ? 'high' : undefined}
+                  fetchpriority={i === 0 ? 'high' : undefined}
                 />
               ))}
             </div>

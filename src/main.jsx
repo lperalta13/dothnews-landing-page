@@ -1,11 +1,22 @@
 import React from 'react'
-import ReactDOM from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import './index.css'
 import './styles/components.scss'
 import App from './App'
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+const rootElement = document.getElementById('root')
+const app = (
   <React.StrictMode>
     <App />
   </React.StrictMode>
 )
+
+if (!rootElement) {
+  throw new Error('Root element #root was not found.')
+}
+
+if (rootElement.children.length > 0) {
+  hydrateRoot(rootElement, app)
+} else {
+  createRoot(rootElement).render(app)
+}

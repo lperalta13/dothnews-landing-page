@@ -3,8 +3,10 @@ import { useEffect, useRef } from 'react'
 // Scroll reveal — module-level singleton (only registers listeners once)
 const revealEls = new Set()
 let checkQueued = false
+const canUseDOM = typeof window !== 'undefined' && typeof document !== 'undefined'
 
 const checkReveal = () => {
+  if (!canUseDOM) return
   checkQueued = false
   const vh = window.innerHeight || document.documentElement.clientHeight
   revealEls.forEach((el) => {
@@ -15,7 +17,7 @@ const checkReveal = () => {
       revealEls.delete(el)
       // Self-heal: snap if transition froze (background tab / throttled context)
       setTimeout(() => {
-        if (parseFloat(getComputedStyle(el).opacity) < 0.9) {
+        if (parseFloat(window.getComputedStyle(el).opacity) < 0.9) {
           el.style.transition = 'none'
           el.style.opacity = '1'
           el.style.transform = 'none'
@@ -26,6 +28,7 @@ const checkReveal = () => {
 }
 
 const scheduleCheck = () => {
+  if (!canUseDOM) return
   if (!checkQueued) {
     checkQueued = true
     setTimeout(checkReveal, 16)
@@ -33,6 +36,7 @@ const scheduleCheck = () => {
 }
 
 const snapAll = () => {
+  if (!canUseDOM) return
   document.querySelectorAll('.reveal').forEach((el) => {
     el.style.transition = 'none'
     el.style.opacity = '1'
@@ -41,16 +45,18 @@ const snapAll = () => {
   revealEls.clear()
 }
 
-window.addEventListener('scroll', scheduleCheck, { passive: true })
-window.addEventListener('resize', scheduleCheck)
-window.addEventListener('load', scheduleCheck)
-document.addEventListener('visibilitychange', () => { if (document.hidden) snapAll() })
-if (document.hidden) setTimeout(snapAll, 50)
-// Safety net: never leave content hidden if scroll never fires
-setTimeout(() => {
-  revealEls.forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none' })
-  revealEls.clear()
-}, 2600)
+if (canUseDOM) {
+  window.addEventListener('scroll', scheduleCheck, { passive: true })
+  window.addEventListener('resize', scheduleCheck)
+  window.addEventListener('load', scheduleCheck)
+  document.addEventListener('visibilitychange', () => { if (document.hidden) snapAll() })
+  if (document.hidden) setTimeout(snapAll, 50)
+  // Safety net: never leave content hidden if scroll never fires
+  setTimeout(() => {
+    revealEls.forEach((el) => { el.style.opacity = '1'; el.style.transform = 'none' })
+    revealEls.clear()
+  }, 2600)
+}
 
 export function Reveal({ children, delay = 0, as: Tag = 'div', className = '', ...rest }) {
   const ref = useRef(null)

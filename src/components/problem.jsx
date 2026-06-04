@@ -11,12 +11,12 @@ const PAINS = [
 
 export function GrowthSection() {
   return (
-    <section id="estrutura" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-white py-24 lg:py-[120px]">
+    <section id="estrutura" aria-labelledby="estrutura-title" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-white py-24 lg:py-[120px]">
       <Shell>
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-end lg:gap-16">
           <Reveal>
             <Chip>Operação</Chip>
-            <h2 className="headline mt-5 text-[34px] font-bold leading-[1.1] tracking-[-0.015em] text-ink sm:text-[44px]">
+            <h2 id="estrutura-title" className="headline mt-5 text-[34px] font-bold leading-[1.1] tracking-[-0.015em] text-ink sm:text-[44px]">
               Soluções simples funcionam.<br />
               <span className="text-faint">Até o crescimento começar.</span>
             </h2>
@@ -50,13 +50,13 @@ export function GrowthSection() {
 
 export function ReflectionSection() {
   return (
-    <section className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 lg:py-[120px]">
+    <section aria-labelledby="reflexao-title" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 lg:py-[120px]">
       <Shell className="max-w-4xl text-center">
         <Reveal>
           <Chip className="justify-center" variant="dark">Reflexão</Chip>
         </Reveal>
         <Reveal delay={80}>
-          <h2 className="headline mx-auto mt-7 max-w-3xl text-[32px] font-bold leading-[1.13] tracking-[-0.015em] text-white sm:text-[46px]">
+          <h2 id="reflexao-title" className="headline mx-auto mt-7 max-w-3xl text-[32px] font-bold leading-[1.13] tracking-[-0.015em] text-white sm:text-[46px]">
             O problema nem sempre é o crescimento do portal. Às vezes, é a estrutura que ficou para trás.
           </h2>
         </Reveal>

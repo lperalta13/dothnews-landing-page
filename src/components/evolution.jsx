@@ -65,12 +65,12 @@ function EvoCard({ c }) {
 
 export function EvolutionSection() {
   return (
-    <section className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden py-24 lg:py-[120px]">
+    <section id="evolucao" aria-labelledby="evolucao-title" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden py-24 lg:py-[120px]">
       <Shell>
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] lg:items-end lg:gap-16">
           <Reveal>
             <Chip>Evolução</Chip>
-            <h2 className="headline mt-5 text-[30px] font-bold leading-[1.12] tracking-[-0.015em] text-ink sm:text-[42px]">
+            <h2 id="evolucao-title" className="headline mt-5 text-[30px] font-bold leading-[1.12] tracking-[-0.015em] text-ink sm:text-[42px]">
               Crescimento sustentável exige evolução contínua da estrutura.
             </h2>
           </Reveal>
@@ -169,11 +169,11 @@ export function FaqSection() {
   const [open, setOpen] = useState(0)
 
   return (
-    <section className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-neutral-50 py-24 lg:py-[120px]">
+    <section id="duvidas" aria-labelledby="duvidas-title" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-neutral-50 py-24 lg:py-[120px]">
       <Shell className="max-w-4xl">
         <Reveal className="text-center">
           <Chip className="justify-center">Dúvidas</Chip>
-          <h2 className="headline mx-auto mt-6 max-w-2xl text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
+          <h2 id="duvidas-title" className="headline mx-auto mt-6 max-w-2xl text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
             As perguntas que você provavelmente está fazendo.
           </h2>
         </Reveal>

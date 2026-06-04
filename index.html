@@ -3,13 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>DothNews — Infraestrutura Especializada para Portais de Notícias</title>
-    <meta name="description" content="Tecnologia própria, suporte especializado e infraestrutura dedicada para operações editoriais que cresceram além das soluções genéricas. 22+ anos, 40+ operações ativas, 99,9% de uptime." />
+    <title>DothNews | Plataforma e Infraestrutura para Portais de Notícias</title>
+    <meta name="description" content="Plataforma e infraestrutura especializada para portais de notícias: CMS editorial, performance, suporte técnico, monitoramento e migração segura." />
 
     <!-- SEO -->
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <meta name="author" content="DothCom" />
+    <meta name="application-name" content="DothNews" />
+    <meta name="publisher" content="DothCom" />
+    <meta name="format-detection" content="telephone=no" />
     <link rel="canonical" href="https://dothnews.com.br/" />
+    <link rel="alternate" hreflang="pt-BR" href="https://dothnews.com.br/" />
+    <link rel="alternate" hreflang="x-default" href="https://dothnews.com.br/" />
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/assets/favicon.png" />
@@ -19,19 +24,21 @@
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="DothNews" />
-    <meta property="og:title" content="DothNews — Infraestrutura Especializada para Portais de Notícias" />
-    <meta property="og:description" content="Tecnologia própria, suporte especializado e infraestrutura dedicada para operações editoriais que cresceram além das soluções genéricas. 22+ anos, 40+ operações ativas, 99,9% de uptime." />
+    <meta property="og:title" content="DothNews | Plataforma e Infraestrutura para Portais de Notícias" />
+    <meta property="og:description" content="Plataforma e infraestrutura especializada para portais de notícias: CMS editorial, performance, suporte técnico, monitoramento e migração segura." />
     <meta property="og:url" content="https://dothnews.com.br/" />
     <meta property="og:image" content="https://dothnews.com.br/assets/og-image.png" />
+    <meta property="og:image:alt" content="DothNews, plataforma e infraestrutura especializada para portais de notícias" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:locale" content="pt_BR" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="DothNews — Infraestrutura Especializada para Portais de Notícias" />
-    <meta name="twitter:description" content="Tecnologia própria, suporte especializado e infraestrutura dedicada para operações editoriais que cresceram além das soluções genéricas. 22+ anos, 40+ operações ativas, 99,9% de uptime." />
+    <meta name="twitter:title" content="DothNews | Plataforma e Infraestrutura para Portais de Notícias" />
+    <meta name="twitter:description" content="Plataforma e infraestrutura especializada para portais de notícias: CMS editorial, performance, suporte técnico, monitoramento e migração segura." />
     <meta name="twitter:image" content="https://dothnews.com.br/assets/og-image.png" />
+    <meta name="twitter:image:alt" content="DothNews, plataforma e infraestrutura especializada para portais de notícias" />
 
     <!-- Performance: preload da imagem LCP (primeiro slide do carousel hero) -->
     <link rel="preload" as="image" href="/assets/sgi-dashboard.png" fetchpriority="high" />
@@ -40,81 +47,135 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
-    <!-- Structured Data: Organization -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "DothNews",
-      "url": "https://dothnews.com.br",
-      "logo": "https://dothnews.com.br/assets/logo-dothnews.svg",
-      "description": "Infraestrutura especializada para operações editoriais digitais. Tecnologia própria, suporte especializado e dedicação exclusiva a portais de notícias.",
-      "foundingDate": "2002",
-      "parentOrganization": {
-        "@type": "Organization",
-        "name": "DothCom",
-        "url": "https://dothnews.com.br"
-      },
-      "areaServed": "BR",
-      "knowsAbout": [
-        "infraestrutura editorial",
-        "portais de notícias",
-        "CMS editorial",
-        "performance web",
-        "SEO técnico para portais"
-      ],
-      "numberOfEmployees": {
-        "@type": "QuantitativeValue",
-        "description": "Equipe especializada em tecnologia editorial"
-      },
-      "slogan": "Infraestrutura editorial feita para crescer."
-    }
+    <script>
+      document.documentElement.classList.add('js')
     </script>
 
-    <!-- Structured Data: WebSite -->
+    <!-- Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "DothNews",
-      "url": "https://dothnews.com.br",
-      "description": "Infraestrutura especializada para portais de notícias em crescimento."
-    }
-    </script>
-
-    <!-- Structured Data: Service -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Service",
-      "serviceType": "Infraestrutura Editorial Digital",
-      "name": "DothNews — Plataforma Editorial",
-      "description": "Plataforma de infraestrutura dedicada para operações editoriais: CMS próprio, servidores dedicados, suporte especializado, monitoramento 24/7 e uptime de 99,9%.",
-      "provider": {
-        "@type": "Organization",
-        "name": "DothNews"
-      },
-      "areaServed": "BR",
-      "audience": {
-        "@type": "Audience",
-        "audienceType": "Portais de notícias e operações editoriais digitais"
-      },
-      "offers": {
-        "@type": "Offer",
-        "description": "Diagnóstico editorial gratuito. Infraestrutura sob medida para operações em crescimento.",
-        "price": "0",
-        "priceCurrency": "BRL",
-        "name": "Diagnóstico Editorial Gratuito"
-      }
-    }
-    </script>
-
-    <!-- Structured Data: FAQPage -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "FAQPage",
-      "mainEntity": [
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://dothnews.com.br/#organization",
+          "name": "DothNews",
+          "url": "https://dothnews.com.br/",
+          "logo": {
+            "@type": "ImageObject",
+            "@id": "https://dothnews.com.br/#logo",
+            "url": "https://dothnews.com.br/assets/logo-dothnews.svg"
+          },
+          "description": "Infraestrutura especializada para operações editoriais digitais. Tecnologia própria, suporte especializado e dedicação exclusiva a portais de notícias.",
+          "foundingDate": "2004",
+          "parentOrganization": {
+            "@type": "Organization",
+            "name": "DothCom"
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "BR"
+          },
+          "knowsAbout": [
+            "infraestrutura editorial",
+            "portais de notícias",
+            "CMS editorial",
+            "performance web",
+            "SEO técnico para portais"
+          ],
+          "slogan": "Infraestrutura editorial feita para crescer."
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://dothnews.com.br/#website",
+          "name": "DothNews",
+          "url": "https://dothnews.com.br/",
+          "description": "Infraestrutura especializada para portais de notícias em crescimento.",
+          "publisher": {
+            "@id": "https://dothnews.com.br/#organization"
+          },
+          "inLanguage": "pt-BR"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://dothnews.com.br/#webpage",
+          "url": "https://dothnews.com.br/",
+          "name": "DothNews | Plataforma e Infraestrutura para Portais de Notícias",
+          "description": "Plataforma e infraestrutura especializada para portais de notícias: CMS editorial, performance, suporte técnico, monitoramento e migração segura.",
+          "isPartOf": {
+            "@id": "https://dothnews.com.br/#website"
+          },
+          "about": {
+            "@id": "https://dothnews.com.br/#service"
+          },
+          "primaryImageOfPage": {
+            "@type": "ImageObject",
+            "url": "https://dothnews.com.br/assets/og-image.png",
+            "width": 1200,
+            "height": 630
+          },
+          "dateModified": "2026-06-04",
+          "inLanguage": "pt-BR",
+          "hasPart": [
+            { "@id": "https://dothnews.com.br/#estrutura" },
+            { "@id": "https://dothnews.com.br/#plataforma" },
+            { "@id": "https://dothnews.com.br/#clientes" },
+            { "@id": "https://dothnews.com.br/#evolucao" },
+            { "@id": "https://dothnews.com.br/#duvidas" },
+            { "@id": "https://dothnews.com.br/#diagnostico" }
+          ]
+        },
+        {
+          "@type": "Service",
+          "@id": "https://dothnews.com.br/#service",
+          "serviceType": "Infraestrutura Editorial Digital",
+          "name": "DothNews — Plataforma Editorial",
+          "description": "Plataforma de infraestrutura dedicada para operações editoriais: CMS próprio, servidores dedicados, suporte especializado, monitoramento 24/7 e uptime de 99,9%.",
+          "provider": {
+            "@id": "https://dothnews.com.br/#organization"
+          },
+          "areaServed": {
+            "@type": "Country",
+            "name": "BR"
+          },
+          "audience": {
+            "@type": "Audience",
+            "audienceType": "Portais de notícias e operações editoriais digitais"
+          },
+          "offers": {
+            "@type": "Offer",
+            "description": "Diagnóstico editorial gratuito. Infraestrutura sob medida para operações em crescimento.",
+            "price": "0",
+            "priceCurrency": "BRL",
+            "name": "Diagnóstico Editorial Gratuito",
+            "url": "https://dothnews.com.br/#diagnostico"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://dothnews.com.br/#software",
+          "name": "DothNews",
+          "applicationCategory": "BusinessApplication",
+          "operatingSystem": "Web",
+          "description": "Plataforma editorial para portais de notícias com CMS próprio, infraestrutura dedicada, monitoramento ativo e suporte especializado.",
+          "publisher": {
+            "@id": "https://dothnews.com.br/#organization"
+          },
+          "offers": {
+            "@type": "Offer",
+            "name": "Diagnóstico Editorial Gratuito",
+            "price": "0",
+            "priceCurrency": "BRL",
+            "url": "https://dothnews.com.br/#diagnostico"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://dothnews.com.br/#faq",
+          "isPartOf": {
+            "@id": "https://dothnews.com.br/#webpage"
+          },
+          "mainEntity": [
         {
           "@type": "Question",
           "name": "Vou perder meu posicionamento no Google durante a migração?",
@@ -155,12 +216,68 @@
             "text": "É uma equipe que conhece a sua operação e o que está em jogo, não um sistema de tickets. O objetivo é que você nunca precise lembrar que tem suporte. As coisas simplesmente funcionam."
           }
         }
+          ]
+        },
+        {
+          "@type": "WebPageElement",
+          "@id": "https://dothnews.com.br/#estrutura",
+          "name": "Estrutura para crescimento editorial",
+          "url": "https://dothnews.com.br/#estrutura",
+          "isPartOf": {
+            "@id": "https://dothnews.com.br/#webpage"
+          }
+        },
+        {
+          "@type": "WebPageElement",
+          "@id": "https://dothnews.com.br/#plataforma",
+          "name": "Plataforma editorial especializada",
+          "url": "https://dothnews.com.br/#plataforma",
+          "isPartOf": {
+            "@id": "https://dothnews.com.br/#webpage"
+          }
+        },
+        {
+          "@type": "WebPageElement",
+          "@id": "https://dothnews.com.br/#clientes",
+          "name": "Validação por operações editoriais reais",
+          "url": "https://dothnews.com.br/#clientes",
+          "isPartOf": {
+            "@id": "https://dothnews.com.br/#webpage"
+          }
+        },
+        {
+          "@type": "WebPageElement",
+          "@id": "https://dothnews.com.br/#evolucao",
+          "name": "Evolução contínua da infraestrutura",
+          "url": "https://dothnews.com.br/#evolucao",
+          "isPartOf": {
+            "@id": "https://dothnews.com.br/#webpage"
+          }
+        },
+        {
+          "@type": "WebPageElement",
+          "@id": "https://dothnews.com.br/#duvidas",
+          "name": "Dúvidas sobre migração e suporte",
+          "url": "https://dothnews.com.br/#duvidas",
+          "isPartOf": {
+            "@id": "https://dothnews.com.br/#webpage"
+          }
+        },
+        {
+          "@type": "WebPageElement",
+          "@id": "https://dothnews.com.br/#diagnostico",
+          "name": "Diagnóstico editorial gratuito",
+          "url": "https://dothnews.com.br/#diagnostico",
+          "isPartOf": {
+            "@id": "https://dothnews.com.br/#webpage"
+          }
+        }
       ]
     }
     </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root"><!--app-html--></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

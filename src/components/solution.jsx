@@ -1,10 +1,10 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Reveal, Shell, Chip, Card, Icon, CLIENT_LOGOS } from './ui'
 
 function LogoMarquee() {
   const ref = useRef(null)
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     const el = ref.current
     if (!el) return
     // scrollWidth = soma real de todos os 18 logos + gaps
@@ -14,7 +14,7 @@ function LogoMarquee() {
   }, [])
 
   return (
-    <div className=" mt-auto overflow-hidden border-t border-line pt-7 -mx-7">
+    <div className="mt-7 sm:mt-auto overflow-hidden border-t border-line pt-7 -mx-7">
       <div ref={ref} className="logo-marquee">
         {[...CLIENT_LOGOS, ...CLIENT_LOGOS].map((c, i) => (
           <img
@@ -98,14 +98,14 @@ function PillarCard({ p }) {
 
 export function WhatSection() {
   return (
-    <section className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden py-24 lg:py-[120px]">
+    <section id="plataforma" aria-labelledby="plataforma-title" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden py-24 lg:py-[120px]">
       <Shell>
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
             <Chip className="justify-center">Plataforma</Chip>
           </Reveal>
           <Reveal delay={80}>
-            <h2 className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
+            <h2 id="plataforma-title" className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
               Infraestrutura especializada para operações editoriais que cresceram além das soluções genéricas.
             </h2>
           </Reveal>
@@ -204,7 +204,7 @@ const WHY_BULLETS = [
 
 export function WhySection() {
   return (
-    <section id="clientes" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 lg:py-[120px]">
+    <section id="clientes" aria-labelledby="clientes-title" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 lg:py-[120px]">
 
       {/*
         Background negativo do hero: SVGs brancos (brightness(0)+invert(1))
@@ -226,7 +226,7 @@ export function WhySection() {
             <Chip className="justify-center" variant="dark">Validação</Chip>
           </Reveal>
           <Reveal delay={80}>
-            <h2 className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-white sm:text-[42px]">
+            <h2 id="clientes-title" className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-white sm:text-[42px]">
               Estrutura validada diariamente por operações editoriais reais.
             </h2>
           </Reveal>
@@ -291,7 +291,7 @@ export function WhySection() {
                 Nossa equipe sabe o que significa uma queda às 6h num dia de pauta quente. Sabe o que está em jogo para a
                 redação, para a audiência e para a receita.
               </p>
-              <p className="headline mt-auto border-t border-white/15 pt-7 text-[18px] font-semibold leading-[1.35] text-white">
+              <p className="headline mt-7 sm:mt-auto  border-t border-white/15 pt-7 text-[18px] font-semibold leading-[1.35] text-white">
                 Não somos um helpdesk. Somos o time técnico que operações editoriais sérias precisam ter.
               </p>
             </Card>

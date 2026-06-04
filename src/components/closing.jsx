@@ -185,14 +185,14 @@ export function DiagnosisModal({ open, onClose }) {
 
 export function DiagnosisSection() {
   return (
-    <section id="diagnostico" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden py-24 lg:py-[120px]">
+    <section id="diagnostico" aria-labelledby="diagnostico-title" className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden py-24 lg:py-[120px]">
       <Shell>
         <div className="mx-auto max-w-3xl text-center">
           <Reveal>
             <Chip className="justify-center">Diagnóstico</Chip>
           </Reveal>
           <Reveal delay={80}>
-            <h2 className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
+            <h2 id="diagnostico-title" className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
               Antes de indicar uma solução, entendemos a estrutura da sua operação.
             </h2>
           </Reveal>
