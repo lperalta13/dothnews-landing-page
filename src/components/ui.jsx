@@ -93,8 +93,8 @@ export function Chip({ children, className = '', variant = 'default' }) {
 
 const BTN_SIZES = {
   sm: { wrap: 'px-3 py-[6px] gap-1 rounded-[10px] text-[14px]',          icon: 'text-[18px]' },
-  md: { wrap: 'px-[16px] py-[8px] gap-[6px] rounded-[12px] text-[16px]', icon: 'text-[24px]' },
-  lg: { wrap: 'px-8 py-4 gap-2 rounded-[16px] text-[18px]',              icon: 'text-[20px]' },
+  md: { wrap: 'px-[16px] py-[10px] gap-[8px] rounded-[12px] text-[16px]', icon: 'text-[20px]' },
+  lg: { wrap: 'px-8 py-4 gap-2 rounded-[16px] text-[16px] sm:text-[18px]',              icon: 'text-[24px]' },
 }
 
 const BTN_VARIANTS = {
