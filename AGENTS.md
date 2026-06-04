@@ -33,6 +33,17 @@ Use `npm run build` como validacao principal antes de finalizar alteracoes de co
 - Cuidado ao alterar o hero: ele combina layout, blobs SVG e blur para reproduzir a direcao visual atual.
 - Preserve acessibilidade basica: `alt` em imagens relevantes, labels em formulario e estados claros em botoes.
 
+## SEO e boas praticas
+
+- Preserve o pre-render do build: `npm run build` roda Vite client, Vite SSR com `src/entry-server.jsx` e `scripts/prerender.mjs`.
+- Nao remova o marcador `<div id="root"><!--app-html--></div>` de `index.html`; ele e usado pelo pre-render.
+- Mantenha consistentes title, meta description, canonical, hreflang, Open Graph, Twitter Card, JSON-LD, `public/robots.txt` e `public/sitemap.xml`.
+- A URL canonica atual e `https://dothnews.com.br/`; se ela mudar, atualize todas as referencias absolutas.
+- Quando alterar headline, proposta, secoes, FAQ, ancoras, oferta, dados institucionais ou assets sociais, revise os metadados e schemas em `index.html`.
+- Se alterar perguntas/respostas visiveis do FAQ, atualize tambem o schema `FAQPage`.
+- Atualize `dateModified` no JSON-LD e `lastmod` no sitemap em publicacoes relevantes de conteudo.
+- Preserve `public/assets/og-image.png` como imagem social 1200x630 ou ajuste os metadados correspondentes.
+
 ## Documentacao e commits
 
 Sempre que o usuario pedir para commitar:
@@ -42,6 +53,7 @@ Sempre que o usuario pedir para commitar:
 3. Se houver impacto relevante, atualize `README.md` antes de commitar.
 4. Confirme que arquivos gerados, dependencias, `.env*`, `.claude/`, `dist/`, `node_modules/` e `._*` nao entraram no commit.
 5. Rode `npm run build` quando houver alteracao de codigo, estilos ou assets usados pela aplicacao.
+6. Quando houver alteracao de SEO, copy publica, FAQ, assets sociais ou URLs, confira `index.html`, `public/robots.txt`, `public/sitemap.xml`, `README.md` e este arquivo.
 
 ## Regras de colaboracao
 

@@ -22,6 +22,11 @@ Landing page da DothNews para posicionar a solucao como infraestrutura editorial
 - O header usa estado de scroll e menu mobile. Teste visualmente alteracoes nessa area.
 - O reveal de scroll fica em `src/components/ui.jsx` e registra listeners globais no modulo.
 - O liquid glass usa pseudo-elementos SCSS e filtro SVG em `src/App.jsx`; mudar um lado pode quebrar o outro.
+- O build faz pre-render usando `src/entry-server.jsx` e `scripts/prerender.mjs`; preserve o marcador `<div id="root"><!--app-html--></div>` em `index.html`.
+- SEO tecnico fica principalmente em `index.html`, `public/robots.txt`, `public/sitemap.xml` e `public/assets/og-image.png`.
+- Se mudar copy publica, secoes, FAQ, ancoras, oferta, URL canonica, imagem social ou dados institucionais, revise title, description, canonical, hreflang, Open Graph, Twitter Card, JSON-LD e sitemap.
+- Se alterar perguntas/respostas do FAQ visual, sincronize o schema `FAQPage` em `index.html`.
+- Atualize `dateModified` no JSON-LD e `lastmod` no sitemap quando publicar mudancas relevantes de conteudo.
 - Os arquivos `._*` sao artefatos do macOS/volume externo e devem continuar ignorados.
 
 ## Antes de commitar
@@ -31,6 +36,7 @@ Quando o usuario pedir commit, faca uma varredura objetiva:
 - Leia o diff.
 - Rode `npm run build` se houve mudanca em codigo, estilos ou assets usados pela pagina.
 - Atualize `README.md` se as mudancas alterarem o que a landing e, como ela funciona, quais tecnologias usa, comandos, estrutura, assets ou observacoes de manutencao.
+- Confira se mudancas de SEO, copy publica, FAQ, assets sociais ou URLs exigem ajuste em `index.html`, `public/robots.txt`, `public/sitemap.xml`, `README.md` ou `AGENTS.md`.
 - Crie commit somente com autorizacao explicita do usuario.
 - Faca push somente com autorizacao explicita do usuario.
 

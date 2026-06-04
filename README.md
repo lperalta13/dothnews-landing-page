@@ -36,7 +36,20 @@ Esta landing foi criada para apoiar a captacao de operacoes editoriais que cresc
 - Tailwind CSS 3
 - Sass/SCSS
 - PostCSS e Autoprefixer
+- Pre-render SSR no build para entregar HTML indexavel
 - JavaScript com ES Modules
+
+## SEO e indexacao
+
+O projeto usa uma landing de rota unica em `https://dothnews.com.br/`, com SEO tecnico concentrado em `index.html`, arquivos publicos e no build de pre-render:
+
+- `index.html`: title, meta description, canonical, hreflang, robots, Open Graph, Twitter Card, preload da imagem LCP e JSON-LD.
+- `public/robots.txt`: libera indexacao e aponta para o sitemap oficial.
+- `public/sitemap.xml`: declara a URL canonica da landing e deve ter `lastmod` atualizado em publicacoes relevantes.
+- `public/assets/og-image.png`: imagem social usada por Open Graph e Twitter Card.
+- `src/entry-server.jsx` e `scripts/prerender.mjs`: geram HTML pre-renderizado dentro de `dist/index.html` ao rodar `npm run build`.
+
+Ao alterar proposta, headline, secoes, FAQ, URLs de ancora, imagens sociais ou data de publicacao, revise tambem os metadados, JSON-LD, sitemap e textos compartilhados para manter consistencia entre pagina, SEO e redes sociais.
 
 ## Assets
 
@@ -67,6 +80,8 @@ npm run build
 npm run preview
 ```
 
+`npm run build` executa tres etapas: build client do Vite, build SSR de `src/entry-server.jsx` e pre-render via `scripts/prerender.mjs`. O script tambem remove a pasta temporaria `dist/server` e artefatos AppleDouble `._*` do `dist`.
+
 ## Desenvolvimento
 
 Use `npm run dev` para rodar localmente com Vite. Para validar uma entrega antes de publicar ou commitar, rode:
@@ -78,6 +93,11 @@ npm run build
 ## Observacoes de manutencao
 
 - O formulario de diagnostico hoje e local: ele apenas altera o estado visual de envio, sem integracao com backend.
+- A landing e pre-renderizada no build para melhorar indexacao; preserve o marcador `<div id="root"><!--app-html--></div>` em `index.html`.
+- Mantenha a URL canonica `https://dothnews.com.br/` sincronizada entre canonical, Open Graph, Twitter Card, JSON-LD, sitemap e robots.
+- Atualize `dateModified` no JSON-LD e `lastmod` no sitemap quando publicar mudancas relevantes de conteudo.
+- Se mudar perguntas/respostas do FAQ visual, atualize tambem o schema `FAQPage` em `index.html`.
+- Se trocar imagem de compartilhamento, mantenha `og-image.png` em proporcao 1200x630 ou ajuste as dimensoes nos metadados.
 - Mantenha `node_modules/`, `dist/`, `.env*`, `.claude/` e arquivos `._*` fora do Git.
 - Ao alterar seções, mensagens comerciais, tecnologias, assets relevantes ou fluxo de conversao, atualize este README junto com o commit.
 - Antes de qualquer commit futuro, faca uma varredura no que mudou e confirme se este README precisa refletir as alteracoes.
