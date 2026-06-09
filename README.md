@@ -36,8 +36,11 @@ Esta landing foi criada para apoiar a captacao de operacoes editoriais que cresc
 - Tailwind CSS 3
 - Sass/SCSS
 - PostCSS e Autoprefixer
-- Pre-render SSR no build para entregar HTML indexavel
+- Pre-render SSR no build para entregar HTML indexável
 - JavaScript com ES Modules
+- Express (servidor de produção e endpoint de email)
+- Nodemailer (envio SMTP)
+- dotenv (configuração de ambiente)
 
 ## SEO e indexacao
 
@@ -74,26 +77,178 @@ O efeito liquid glass depende do filtro SVG `#container-glass` definido em `src/
 ## Scripts
 
 ```bash
-npm install
-npm run dev
-npm run build
-npm run preview
+npm install        # instala dependências
+npm run dev        # dev server Vite (porta 5299)
+npm run build      # build de produção com pre-render
+npm run preview    # preview do build estático
+npm start          # inicia o servidor Express de produção (requer build prévio)
 ```
 
-`npm run build` executa tres etapas: build client do Vite, build SSR de `src/entry-server.jsx` e pre-render via `scripts/prerender.mjs`. O script tambem remove a pasta temporaria `dist/server` e artefatos AppleDouble `._*` do `dist`.
+`npm run build` executa três etapas: build client do Vite, build SSR de `src/entry-server.jsx` e pre-render via `scripts/prerender.mjs`. O script também remove a pasta temporária `dist/server` e artefatos AppleDouble `._*` do `dist`.
 
 ## Desenvolvimento
 
-Use `npm run dev` para rodar localmente com Vite. Para validar uma entrega antes de publicar ou commitar, rode:
+Para o servidor de email funcionar em ambiente local, são necessários dois terminais:
+
+```bash
+# Terminal 1 — servidor Express (API de email)
+node server.js
+
+# Terminal 2 — Vite dev server
+npm run dev
+```
+
+O Vite faz proxy automático de `/api/*` para `localhost:3000`, então o formulário funciona no dev sem nenhuma configuração adicional.
+
+Para validar apenas o build estático (sem testar o email):
 
 ```bash
 npm run build
 ```
 
-## Observacoes de manutencao
+## Formulário de Diagnóstico — Envio de Email
 
-- O formulario de diagnostico hoje e local: ele apenas altera o estado visual de envio, sem integracao com backend.
-- A landing e pre-renderizada no build para melhorar indexacao; preserve o marcador `<div id="root"><!--app-html--></div>` em `index.html`.
+### O que foi implementado
+
+O formulário de diagnóstico em `DiagnosisSection` (e no modal `DiagnosisModal`) agora faz um `POST /api/contact` ao clicar em "Solicitar diagnóstico". O endpoint é servido pelo `server.js` — um servidor Express incluído neste repositório.
+
+Campos coletados pelo formulário:
+- **Nome completo** (obrigatório)
+- **Nome do portal** (obrigatório)
+- **WhatsApp / Contato** (obrigatório)
+- URL do portal (opcional)
+- Faixa de audiência mensal (opcional)
+- Plataforma atual (opcional)
+- Principal dificuldade hoje (opcional, textarea)
+
+Ao submeter, o servidor valida os três campos obrigatórios e envia um email HTML via SMTP em **BCC** para os três destinatários configurados em `server.js` (linhas 13–15):
+
+```js
+const DESTINATARIOS = [
+  'semproblema@gmail.com',
+  'ajuda@dothcom.net',
+  'dothcom@gmail.com',
+]
+```
+
+Para alterar os destinatários, basta editar essa constante em `server.js`.
+
+O formulário exibe feedback visual durante o envio (botão com texto "Enviando…" e desabilitado) e mensagem de erro inline caso o servidor não responda ou retorne falha.
+
+### Arquitetura
+
+```
+Usuário preenche o formulário
+    ↓
+React faz POST /api/contact com JSON
+    ↓
+Express (server.js) valida campos obrigatórios
+    ↓
+Nodemailer monta email HTML e envia via SMTP
+    ↓
+Email chega em BCC para os 3 destinatários
+    ↓
+Servidor retorna { rs: 'ok' } → formulário mostra tela de sucesso
+```
+
+Em produção, o Express serve também os arquivos estáticos do `dist/`, sendo o único processo necessário para rodar a aplicação completa.
+
+### O que ainda precisa ser feito para o disparo funcionar
+
+**Passo 1 — Preencher as credenciais SMTP no servidor de produção**
+
+Copie `.env.example` para `.env` e preencha:
+
+```
+MAIL_HOST=smtp.zoho.com
+MAIL_PORT=587
+MAIL_SECURE=false
+MAIL_USER=<endereço-de-email-remetente>
+MAIL_PASS=<senha-do-email-ou-app-password>
+MAIL_FROM=nao-responda@dothcom.net
+MAIL_FROM_NAME=dothNews
+```
+
+O domínio usa Zoho como provedor de email (registros MX apontam para Zoho). As credenciais SMTP podem ser geradas no painel Zoho em **Settings → Security → App Passwords** (recomendado) ou usando a senha da conta. O endereço em `MAIL_USER` e `MAIL_FROM` deve ser uma conta ativa no Zoho do domínio `dothcom.net`.
+
+O arquivo `.env` **não deve ser commitado** — ele já consta no `.gitignore`.
+
+**Passo 2 — Garantir que o servidor Node.js esteja rodando**
+
+O site não pode mais ser servido como arquivos estáticos puros. É necessário um processo Node.js ativo. O comando de inicialização é:
+
+```bash
+node server.js
+# ou, via npm:
+npm start
+```
+
+Se o servidor for gerenciado por PM2:
+
+```bash
+pm2 start server.js --name dothnews-landing
+pm2 save
+```
+
+Se for um container Docker, o `CMD` do Dockerfile deve ser `node server.js`.
+
+**Passo 3 — Configurar a porta no servidor/proxy**
+
+Por padrão, o Express escuta na porta `3000`. Ajuste a variável `PORT` no `.env` conforme necessário:
+
+```
+PORT=3000
+```
+
+Se houver um Nginx ou proxy reverso na frente (recomendado), configure-o para fazer proxy para `localhost:3000`. Exemplo de bloco Nginx:
+
+```nginx
+location / {
+    proxy_pass http://127.0.0.1:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+}
+```
+
+**Passo 4 — Build antes de subir**
+
+Sempre faça o build antes de iniciar o servidor em produção:
+
+```bash
+npm run build
+npm start
+```
+
+O `server.js` serve os arquivos de `dist/`. Se `dist/` não existir, as páginas retornarão 404.
+
+### Variáveis de ambiente — referência completa
+
+| Variável | Obrigatória | Padrão | Descrição |
+|---|---|---|---|
+| `PORT` | Não | `3000` | Porta em que o Express escuta |
+| `MAIL_HOST` | Sim | — | Host SMTP (ex: `smtp.zoho.com`) |
+| `MAIL_PORT` | Sim | `587` | Porta SMTP |
+| `MAIL_SECURE` | Não | `false` | `true` para porta 465 (SSL), `false` para 587 (STARTTLS) |
+| `MAIL_USER` | Sim | — | Usuário/email de autenticação SMTP |
+| `MAIL_PASS` | Sim | — | Senha ou app password SMTP |
+| `MAIL_FROM` | Sim | — | Endereço remetente (deve ser válido na conta SMTP) |
+| `MAIL_FROM_NAME` | Não | `dothNews` | Nome exibido no campo "De:" |
+
+### Arquivos relevantes
+
+| Arquivo | Função |
+|---|---|
+| `server.js` | Servidor Express: static files + endpoint `/api/contact` |
+| `.env` | Credenciais e configurações locais (não commitado) |
+| `.env.example` | Modelo de configuração a ser copiado para `.env` |
+| `src/components/closing.jsx` | Formulário React com lógica de submit, loading e erro |
+
+---
+
+## Observações de manutenção
+
+- A landing é pre-renderizada no build para melhorar indexação; preserve o marcador `<div id="root"><!--app-html--></div>` em `index.html`.
 - Mantenha a URL canonica `https://dothnews.com.br/` sincronizada entre canonical, Open Graph, Twitter Card, JSON-LD, sitemap e robots.
 - Atualize `dateModified` no JSON-LD e `lastmod` no sitemap quando publicar mudancas relevantes de conteudo.
 - Se mudar perguntas/respostas do FAQ visual, atualize tambem o schema `FAQPage` em `index.html`.

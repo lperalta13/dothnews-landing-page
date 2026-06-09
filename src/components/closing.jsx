@@ -40,14 +40,38 @@ const EMPTY_FORM = { nome: '', portal: '', url: '', contato: '', audiencia: '', 
 
 function DiagnosisForm({ onSuccess }) {
   const [data, setData] = useState(EMPTY_FORM)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
   const set = (k) => (e) => setData((d) => ({ ...d, [k]: e.target.value }))
   const valid = data.nome && data.portal && data.contato
 
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    if (!valid || loading) return
+    setLoading(true)
+    setError(null)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      const json = await res.json()
+      if (json.rs === 'ok') {
+        onSuccess(data.nome)
+      } else {
+        setError('Ocorreu um erro ao enviar. Tente novamente.')
+      }
+    } catch {
+      setError('Não foi possível conectar ao servidor. Verifique sua conexão.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
-    <form
-      onSubmit={(e) => { e.preventDefault(); if (valid) onSuccess(data.nome) }}
-      className="p-6 sm:p-8"
-    >
+    <form onSubmit={handleSubmit} className="p-6 sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
         <FormInput name="nome" label="Nome completo" required value={data.nome} onChange={set('nome')} />
         <FormInput name="portal" label="Nome do portal" required value={data.portal} onChange={set('portal')} />
@@ -67,9 +91,21 @@ function DiagnosisForm({ onSuccess }) {
           helper="Conte, em poucas linhas, o que mais te incomoda na estrutura atual."
         />
       </div>
-      <Button type="submit" variant="primary" size="lg" icon="arrow_outward" className="mt-7 w-full justify-center">
-        Solicitar diagnóstico
+      <Button
+        type="submit"
+        variant="primary"
+        size="lg"
+        icon={loading ? null : 'arrow_outward'}
+        disabled={loading}
+        className="mt-7 w-full justify-center"
+      >
+        {loading ? 'Enviando…' : 'Solicitar diagnóstico'}
       </Button>
+      {error && (
+        <p role="alert" className="mt-3 text-center text-[13px] text-red-600">
+          {error}
+        </p>
+      )}
       <p className="mt-4 text-center text-[12.5px] text-faint">
         Retornamos em até 48 horas úteis · Sem compromisso · Sem proposta na primeira conversa
       </p>
