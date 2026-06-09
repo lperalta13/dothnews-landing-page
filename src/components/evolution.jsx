@@ -76,9 +76,11 @@ export function EvolutionSection() {
           </Reveal>
           <Reveal delay={120}>
             <p className="pretty text-[16px] leading-[1.66] text-mute">
-              A plataforma que você contrata hoje não é a mesma de dois anos atrás. E não será a mesma daqui a dois
-              anos, porque o mercado editorial não para. A DothNews acompanha essa evolução e traz ela para dentro
-              da sua operação. Não como um extra. Como parte da estrutura que você já tem.
+              A operação evolui.<br />
+              O comportamento da audiência muda.<br />
+              Novas formas de monetização surgem.<br />
+              A tecnologia também precisa acompanhar.<br />
+              Por isso a DothNews evolui continuamente sua infraestrutura, seus recursos e sua capacidade operacional.
             </p>
           </Reveal>
         </div>
@@ -114,23 +116,27 @@ export function EvolutionSection() {
 
 const FAQS = [
   {
-    q: 'Vou perder meu posicionamento no Google durante a migração?',
-    a: 'Não. Preservação de SEO é parte central do nosso processo, não um detalhe tratado depois. Redirecionamentos, estrutura de URLs, sitemap e histórico de indexação são mapeados antes e validados depois. Portais que migram com planejamento não perdem SEO.',
+    q: 'Como funciona a migração?',
+    a: 'O processo começa com um diagnóstico estrutural da sua operação. Mapeamos conteúdo, URLs, configurações e dependências antes de qualquer movimento. A migração acontece em etapas planejadas, com validações em cada fase. Você não vai descobrir um problema depois que já aconteceu.',
   },
   {
-    q: 'O portal vai ficar fora do ar durante a migração?',
+    q: 'Eu perco conteúdo?',
+    a: 'Não. Todo o conteúdo é migrado: publicações, categorias, autores, imagens, histórico editorial. Parte do diagnóstico é justamente mapear o que existe e garantir que nada fique para trás. Portais com anos de produção migram sem perda.',
+  },
+  {
+    q: 'Meu portal sai do ar durante a migração?',
     a: 'Não. A migração acontece em etapas, com o portal operando normalmente durante todo o processo. Cada transição tem janelas controladas e plano de rollback disponível. Para uma operação editorial, downtime não é aceitável. O processo é construído com essa premissa.',
   },
   {
-    q: 'Já tentei mudar de plataforma antes. Foi um trauma.',
-    a: 'A maioria das migrações falha por falta de planejamento, não de intenção. O nosso processo começa com diagnóstico estrutural: entendemos a sua operação antes de propor qualquer coisa. Se identificarmos riscos, falamos antes. Preferimos uma relação de longo prazo a uma venda que vai dar problema.',
+    q: 'Quanto tempo leva a implantação?',
+    a: 'Depende do tamanho e da complexidade da operação. Portais menores podem ser migrados em poucas semanas. Operações maiores, com múltiplos veículos ou alto volume de conteúdo, exigem um cronograma mais detalhado. O diagnóstico é onde isso fica claro.',
   },
   {
-    q: 'Isso é para operações de qual tamanho?',
-    a: 'Atendemos operações editoriais com audiência relevante, desde portais em crescimento acelerado até grupos com múltiplos veículos e alto volume de tráfego. O diagnóstico existe para entender o seu momento e se faz sentido para os dois lados.',
+    q: 'É possível migrar de outra plataforma?',
+    a: 'Sim. Já migramos portais de WordPress, CMSs proprietários e outras plataformas. O processo de migração foi desenvolvido para absorver diferentes estruturas de dados e configurações. O diagnóstico identifica o que precisa de atenção específica antes do início.',
   },
   {
-    q: 'Como funciona o suporte no dia a dia?',
+    q: 'Como funciona o suporte?',
     a: 'É uma equipe que conhece a sua operação e o que está em jogo, não um sistema de tickets. O objetivo é que você nunca precise lembrar que tem suporte. As coisas simplesmente funcionam.',
   },
 ]

@@ -149,6 +149,20 @@
   }
 }
 
+// ─── Carousel transitions (slide / push) ─────────────────────────────────────
+// Usado pela prop transition='slide' ou 'push' no componente Carousel (hero.jsx).
+// Para trocar o efeito: alterar transition="fade" → "slide" ou "push" no <Carousel>.
+
+.carousel-enter-right { animation: carousel-in-right  700ms ease-in-out both; }
+.carousel-enter-left  { animation: carousel-in-left   700ms ease-in-out both; }
+.carousel-exit-right  { animation: carousel-out-right 700ms ease-in-out both; }
+.carousel-exit-left   { animation: carousel-out-left  700ms ease-in-out both; }
+
+@keyframes carousel-in-right  { from { transform: translateX(100%);  } to { transform: translateX(0);     } }
+@keyframes carousel-in-left   { from { transform: translateX(-100%); } to { transform: translateX(0);     } }
+@keyframes carousel-out-right { from { transform: translateX(0);     } to { transform: translateX(100%);  } }
+@keyframes carousel-out-left  { from { transform: translateX(0);     } to { transform: translateX(-100%); } }
+
 // ─── FAQ accordion ────────────────────────────────────────────────────────────
 
 .faq-answer {
@@ -158,3 +172,17 @@
     grid-template-rows: 1fr;
   }
 }
+
+// ─── ScreenCarousel push transitions (SGI / Monitoramento) ───────────────────
+
+.sc-img-enter-right { animation: sc-in-right  0.38s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.sc-img-enter-left  { animation: sc-in-left   0.38s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.sc-img-exit-right  { animation: sc-out-right 0.38s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.sc-img-exit-left   { animation: sc-out-left  0.38s cubic-bezier(0.4, 0, 0.2, 1) both; }
+.sc-text-enter      { animation: sc-text-in   0.30s ease both; }
+
+@keyframes sc-in-right  { from { transform: translateX(100%);  } to { transform: translateX(0);     } }
+@keyframes sc-in-left   { from { transform: translateX(-100%); } to { transform: translateX(0);     } }
+@keyframes sc-out-right { from { transform: translateX(0);     } to { transform: translateX(100%);  } }
+@keyframes sc-out-left  { from { transform: translateX(0);     } to { transform: translateX(-100%); } }
+@keyframes sc-text-in   { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }

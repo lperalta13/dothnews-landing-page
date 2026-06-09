@@ -1,49 +1,179 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Chip, Button } from './ui'
 
-const SLIDES = [
-  { src: '/assets/sgi-dashboard.png', alt: 'Painel de gestão editorial SGI da DothNews' },
-  { src: '/assets/sgi-posts.png', alt: 'Lista de posts do SGI DothNews' },
-  { src: '/assets/sgi-criar-post.png', alt: 'Editor de post do SGI DothNews' },
-  { src: '/assets/sgi-config.png', alt: 'Configurações do SGI DothNews' },
-  { src: '/assets/sgi-usuarios.png', alt: 'Gerenciamento de usuários do SGI DothNews' },
-]
+// ─── Carousel ────────────────────────────────────────────────────────────────
+// transition: 'fade' | 'slide' | 'push'
+//   fade  — opacidade cruzada entre slides
+//   slide — novo slide entra por cima do anterior (cover)
+//   push  — os dois slides se movem juntos (empurra)
 
-const SLIDE_INTERVAL = 3500
+const DRAG_THRESHOLD = 50
+const TRANSITION_DURATION = 700
 
-export function Hero({ onOpenForm }) {
+function Carousel({ slides, interval = 3500, transition = 'fade' }) {
   const [current, setCurrent] = useState(0)
+  const [exiting, setExiting] = useState(null)
+  const [dir, setDir] = useState('right')
+  const currentRef = useRef(0)
+  const timerRef = useRef(null)
+  const dragRef = useRef({ startX: 0, active: false })
+
+  function startTimer() {
+    clearInterval(timerRef.current)
+    timerRef.current = setInterval(() => {
+      const c = currentRef.current
+      const next = (c + 1) % slides.length
+      setExiting(c)
+      setDir('right')
+      setCurrent(next)
+      currentRef.current = next
+    }, interval)
+  }
+
+  function goTo(index) {
+    const c = currentRef.current
+    if (index === c) return
+    setExiting(c)
+    setDir(index > c ? 'right' : 'left')
+    setCurrent(index)
+    currentRef.current = index
+    startTimer()
+  }
+
+  function onPointerDown(e) {
+    dragRef.current = { startX: e.clientX, active: true }
+    e.currentTarget.setPointerCapture(e.pointerId)
+  }
+
+  function onPointerUp(e) {
+    if (!dragRef.current.active) return
+    const delta = e.clientX - dragRef.current.startX
+    dragRef.current.active = false
+    if (Math.abs(delta) < DRAG_THRESHOLD) return
+    const direction = delta < 0 ? 'right' : 'left'
+    const c = currentRef.current
+    const next = direction === 'right'
+      ? (c + 1) % slides.length
+      : (c - 1 + slides.length) % slides.length
+    setExiting(c)
+    setDir(direction)
+    setCurrent(next)
+    currentRef.current = next
+    startTimer()
+  }
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent(prev => (prev + 1) % SLIDES.length)
-    }, SLIDE_INTERVAL)
-    return () => clearInterval(timer)
+    startTimer()
+    return () => clearInterval(timerRef.current)
   }, [])
 
+  // Limpa o slide saindo depois da animação
+  useEffect(() => {
+    if (exiting === null) return
+    const t = setTimeout(() => setExiting(null), TRANSITION_DURATION)
+    return () => clearTimeout(t)
+  }, [current])
+
+  function slideClass(i) {
+    const base = 'absolute inset-0 w-full h-full object-cover'
+    if (transition === 'fade') {
+      return `${base} transition-opacity duration-700 ease-in-out ${i === current ? 'opacity-100' : 'opacity-0'}`
+    }
+    if (transition === 'slide') {
+      if (i === current) return `${base} z-10 ${dir === 'right' ? 'carousel-enter-right' : 'carousel-enter-left'}`
+      if (i === exiting)  return base
+      return `${base} opacity-0`
+    }
+    if (transition === 'push') {
+      if (i === current) return `${base} z-10 ${dir === 'right' ? 'carousel-enter-right' : 'carousel-enter-left'}`
+      if (i === exiting)  return `${base} ${dir === 'right' ? 'carousel-exit-left' : 'carousel-exit-right'}`
+      return `${base} opacity-0`
+    }
+    return `${base} ${i === current ? 'opacity-100' : 'opacity-0'}`
+  }
+
+  return (
+    <div className="relative z-10 mt-10 -mb-[100px] sm:mb-0 -mx-[24px] sm:mx-auto w-auto sm:w-full max-w-[1142px] sm:mt-16">
+      <div className="liquid-glass rounded-2xl p-4 pb-0 sm:rounded-[32px] sm:p-[40px] sm:pb-0">
+
+        {/* Slides */}
+        <div
+          className="relative overflow-hidden rounded-[16px] cursor-grab active:cursor-grabbing select-none"
+          style={{ aspectRatio: '1920/1066' }}
+          onPointerDown={onPointerDown}
+          onPointerUp={onPointerUp}
+          onPointerCancel={() => { dragRef.current.active = false }}
+        >
+          {slides.map((slide, i) => (
+            <img
+              key={slide.src}
+              src={slide.src}
+              alt={slide.alt}
+              width="1920"
+              height="1066"
+              draggable="false"
+              className={slideClass(i)}
+              loading={i === 0 ? 'eager' : 'lazy'}
+              fetchpriority={i === 0 ? 'high' : undefined}
+            />
+          ))}
+        </div>
+
+        {/* Caption */}
+        <p className="py-3 text-center text-[14px] leading-normal text-neutral-500">
+          {slides[current].label}
+        </p>
+
+      </div>
+
+      {/* Dots — fora do glass card, conforme ajuste visual */}
+      <div className="mt-4 flex justify-center gap-2">
+        {slides.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goTo(i)}
+            aria-label={`Ver tela ${i + 1}: ${slides[i].label}`}
+            className={`h-3 rounded-full transition-all duration-300 ${
+              i === current ? 'w-10 bg-primary-400' : 'w-3 bg-neutral-200 hover:bg-primary-300'
+            }`}
+          />
+        ))}
+      </div>
+    </div>
+  )
+}
+
+// ─── Slides ───────────────────────────────────────────────────────────────────
+
+const SLIDES = [
+  { src: '/assets/sgi-dashboard.png',  alt: 'Painel de gestão editorial SGI da DothNews',  label: 'Painel principal' },
+  { src: '/assets/sgi-posts.png',      alt: 'Lista de posts do SGI DothNews',              label: 'Gestão de publicações' },
+  { src: '/assets/sgi-criar-post.png', alt: 'Editor de post do SGI DothNews',              label: 'Editor de conteúdo' },
+  { src: '/assets/sgi-config.png',     alt: 'Configurações do SGI DothNews',               label: 'Configurações da plataforma' },
+  { src: '/assets/sgi-usuarios.png',   alt: 'Gerenciamento de usuários do SGI DothNews',   label: 'Gerenciamento de usuários' },
+]
+
+// ─── Hero ─────────────────────────────────────────────────────────────────────
+
+export function Hero({ onOpenForm }) {
   return (
     <section id="top" aria-labelledby="hero-title" className="hero relative bg-white">
 
       {/* Copy — centered */}
-      <div className="relative z-20 mx-auto flex max-w-[1104px] flex-col items-center gap-8 sm:gap-[60px] pt-[24px] sm:pt-[60px] text-center">
-        {/* Tag + headline */}
+      <div className="relative z-20 mx-auto flex max-w-[1104px] flex-col items-center gap-6 sm:gap-8 pt-[24px] sm:pt-[60px] text-center">
         <div className="flex flex-col items-center gap-5">
           <Chip>22 anos de Infraestrutura editorial</Chip>
 
           <h1 id="hero-title" className="text-ink">
-            <span className="block font-sans text-[26px] font-normal leading-[30px] sm:text-[38px] sm:leading-[44px] lg:text-[48px] lg:leading-[48px]">
-              Infraestrutura editorial feita para crescer.
-            </span>
-            <span className="block font-sans text-[34px] font-bold leading-[40px] sm:text-[50px] sm:leading-[58px] lg:text-[62px] lg:leading-[70px]">
-              Não adaptada. Construída.
+            <span className="block font-sans text-[24px] font-bold leading-[32px] sm:text-[36px] sm:leading-[44px] lg:text-[46px] lg:leading-[54px]">
+              Existe uma diferença entre ter um portal online e ter uma estrutura preparada para crescer.
             </span>
           </h1>
         </div>
 
-        {/* Body text + CTA */}
         <div className="flex w-full flex-col items-center gap-5">
           <p className="max-w-[822px] text-[17px] leading-[28px] text-ink">
-            Quando audiência, monetização e operação evoluem, soluções improvisadas começam a limitar o negócio. A DothNews desenvolve infraestrutura especializada para operações editoriais há mais de duas décadas.
+            A DothNews é a infraestrutura tecnológica por trás de operações editoriais que precisam crescer com estabilidade, segurança e suporte especializado.
           </p>
           <Button
             variant="primary"
@@ -58,34 +188,8 @@ export function Hero({ onOpenForm }) {
         </div>
       </div>
 
-      {/* Dashboard — glass card */}
-      <div className="relative z-10 mt-10 -mb-[100px] sm:mb-0 -mx-[24px] sm:mx-auto w-auto  sm:w-full max-w-[1142px] sm:mt-16">
-        <div className="liquid-glass rounded-2xl px-4 pb-4 pt-4 sm:rounded-[32px] sm:px-[40px] sm:pb-6">
-          <p className="mb-4 text-center text-[12px] leading-normal text-ink">
-            Mais de 40 operações editoriais ativas confiam nessa estrutura todos os dias.
-          </p>
-          <div className="overflow-hidden rounded-[16px] shadow-[0_30px_70px_-30px_rgba(8,4,40,0.35)]">
-            <div
-              className="flex transition-transform duration-700 ease-in-out"
-              style={{ transform: `translateX(-${current * 100}%)` }}
-            >
-              {SLIDES.map((slide, i) => (
-                <img
-                  key={slide.src}
-                  src={slide.src}
-                  alt={slide.alt}
-                  width="1920"
-                  height="1066"
-                  className="block w-full flex-shrink-0"
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                  fetchpriority={i === 0 ? 'high' : undefined}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-      
+      <Carousel slides={SLIDES} interval={3500} transition="fade" />
+
       {/*
         Background: dois SVGs vetoriais ("DOTHNEWS") sobrepostos com baixa opacidade.
         O overlay com backdrop-blur-[125px] os difunde em nuvens gradiente,
@@ -94,24 +198,13 @@ export function Hero({ onOpenForm }) {
           purple: top=232px h=138px  |  blue: top=199px h=171px
       */}
       <div className="hero-background pointer-events-none z-0 inset-0 select-none" aria-hidden="true">
-        {/* Blob roxo — #2600FF + #00FFE1, opacidade 48% */}
-        <div
-          className="absolute hero-blob-purple opacity-[0.48]"
-        >
+        <div className="absolute hero-blob-purple opacity-[0.48]">
           <img src="/assets/bg/blob-purple.svg" alt="" className="block h-full w-full" />
         </div>
-
-        {/* Blob azul — #1500FF + #394AF7, opacidade 80% */}
-        <div
-          className="absolute hero-blob-blue opacity-80"
-        >
+        <div className="absolute hero-blob-blue opacity-80">
           <img src="/assets/bg/blob-blue.svg" alt="" className="block h-full w-full" />
         </div>
-
-        {/* Overlay com backdrop-blur que difunde os blobs em gradiente suave */}
-        <div
-          className="absolute hero-blur-overlay rounded-[20px] backdrop-blur-[125px]"
-        />
+        <div className="absolute hero-blur-overlay rounded-[20px] backdrop-blur-[125px]" />
       </div>
     </section>
   )

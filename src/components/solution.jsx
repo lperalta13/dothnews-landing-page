@@ -1,35 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Reveal, Shell, Chip, Card, Icon, CLIENT_LOGOS } from './ui'
 
-function LogoMarquee() {
-  const ref = useRef(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    // scrollWidth = soma real de todos os 18 logos + gaps
-    // Dividir por 2 = largura exata de 1 grupo (9 logos)
-    // Esse é o deslocamento preciso para o loop perfeito
-    el.style.setProperty('--mw', `-${el.scrollWidth / 2}px`)
-  }, [])
-
-  return (
-    <div className="mt-7 sm:mt-auto overflow-hidden border-t border-line pt-7 -mx-7">
-      <div ref={ref} className="logo-marquee">
-        {[...CLIENT_LOGOS, ...CLIENT_LOGOS].map((c, i) => (
-          <img
-            key={i}
-            src={c.file}
-            alt={c.name}
-            title={c.name}
-            loading="lazy"
-            className="h-12 w-auto flex-none opacity-60 transition-opacity hover:opacity-100"
-          />
-        ))}
-      </div>
-    </div>
-  )
-}
 
 function BlobPurple({ fill1 = '#2600FF', fill2 = '#00FFE1' }) {
   return (
@@ -53,33 +24,77 @@ const PILLARS = [
   {
     icon: 'code',
     title: 'Tecnologia Própria',
-    text: 'Controle total da infraestrutura, do código e da evolução. Sem plugins de terceiro no caminho crítico.',
+    text: 'Controle total da evolução da plataforma.',
   },
   {
-    icon: 'speed',
-    title: 'Performance que Protege Receita',
-    text: 'Uptime de 99,9% e carregamento otimizado para que suas campanhas entreguem o que foi contratado.',
+    icon: 'article',
+    title: 'Operação Editorial',
+    text: 'Fluxos pensados para redações reais.',
     highlight: true,
   },
   {
-    icon: 'my_location',
-    title: 'Foco Exclusivo em Portais',
-    text: 'Não atendemos tudo. Cada decisão de produto parte da realidade de quem opera um portal editorial de verdade.',
+    icon: 'speed',
+    title: 'Performance',
+    text: 'Estrutura preparada para alto volume de audiência.',
   },
   {
     icon: 'headset_mic',
     title: 'Suporte Especializado',
-    text: 'Uma equipe que entende editorial e tecnologia, não um helpdesk com tickets e SLA genérico.',
+    text: 'Equipe que vive diariamente o mercado de notícias.',
+  },
+]
+
+const SGI_SLIDES = [
+  {
+    src: '/assets/sgi-dashboard.png',
+    alt: 'Painel principal do SGI com visão geral da operação editorial',
+    label: '// painel principal do sgi',
+    text: 'Visão geral consolidada da operação: publicações recentes, métricas de conteúdo e atividade da redação em um único painel.',
   },
   {
-    icon: 'dns',
-    title: 'Infraestrutura Dedicada',
-    text: 'Servidores e monitoramento dimensionados para o ritmo das notícias: sem pausas, sem fins de semana, sem feriados.',
+    src: '/assets/sgi-criar-post.png',
+    alt: 'Editor de criação de post do SGI',
+    label: '// editor de post',
+    text: 'O mesmo editor que centenas de jornalistas usam todos os dias. Pensado para o fluxo de uma redação, não adaptado de um CMS genérico.',
   },
   {
-    icon: 'autorenew',
-    title: 'Evolução Constante',
-    text: 'Novas versões, novos recursos e novas capacidades incluídas na estrutura, sem custo adicional.',
+    src: '/assets/sgi-posts.png',
+    alt: 'Listagem e gestão de publicações no SGI',
+    label: '// gestão de publicações',
+    text: 'Listagem, filtros e controle de todo o conteúdo publicado. Fluxo editorial pensado para agilidade sem perder rastreabilidade.',
+  },
+  {
+    src: '/assets/sgi-usuarios.png',
+    alt: 'Gestão de usuários e permissões no SGI',
+    label: '// gestão de usuários',
+    text: 'Perfis e permissões por nível de acesso. Controle granular de quem publica, edita ou aprova conteúdo na redação.',
+  },
+  {
+    src: '/assets/sgi-config.png',
+    alt: 'Tela de configurações do SGI',
+    label: '// configurações do sistema',
+    text: 'Controle total das configurações da plataforma. Nenhuma dependência de plugin externo para ajustar o comportamento do sistema.',
+  },
+]
+
+const MONITORING_SLIDES = [
+  {
+    src: '/assets/grafana-overview.png',
+    alt: 'Visão geral do ambiente de monitoramento no Grafana',
+    label: '// visão geral do ambiente',
+    text: 'Painel consolidado com o estado de toda a infraestrutura. CPU, memória, disco e rede de cada servidor em um único lugar.',
+  },
+  {
+    src: '/assets/monitoramento-grafana-dashboard-nave-mae-mysql.png',
+    alt: 'Dashboard MySQL com QPS, conexões e buffer pool em tempo real',
+    label: '// banco de dados em operação real',
+    text: 'QPS, conexões e buffer pool visíveis a todo momento. Infraestrutura que não esconde o que está acontecendo.',
+  },
+  {
+    src: '/assets/grafana-nginx.png',
+    alt: 'Dashboard de monitoramento do Nginx com requisições e latência',
+    label: '// camada web em tempo real',
+    text: 'Requisições por segundo, tempo de resposta e status HTTP monitorados no Nginx. Anomalias detectadas antes de virarem incidente.',
   },
 ]
 
@@ -93,6 +108,116 @@ function PillarCard({ p }) {
       <h3 className={'mt-6 text-[18px] font-semibold ' + (hl ? 'text-white' : 'text-ink')}>{p.title}</h3>
       <p className={'mt-2.5 text-[14.5px] leading-[1.55] ' + (hl ? 'text-white/80' : 'text-mute')}>{p.text}</p>
     </Card>
+  )
+}
+
+function ScreenCarousel({ slides, imageRight = true }) {
+  const [index, setIndex] = useState(0)
+  const [prevIndex, setPrevIndex] = useState(null)
+  const [dir, setDir] = useState(1)
+  const timerRef = useRef(null)
+  const hasAnimated = useRef(false)
+  const total = slides.length
+  const showNav = total > 1
+
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current) }, [])
+
+  const go = (newIndex, direction) => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    hasAnimated.current = true
+    setPrevIndex(index)
+    setDir(direction)
+    setIndex(newIndex)
+    timerRef.current = setTimeout(() => setPrevIndex(null), 400)
+  }
+
+  const goNext = () => go((index + 1) % total, 1)
+  const goPrev = () => go((index - 1 + total) % total, -1)
+
+  const slide = slides[index]
+  const prevSlide = prevIndex !== null ? slides[prevIndex] : null
+
+  // dir=1 (próximo): entra pela direita, sai pela esquerda
+  // dir=-1 (anterior): entra pela esquerda, sai pela direita
+  const enterClass = hasAnimated.current ? (dir > 0 ? 'sc-img-enter-right' : 'sc-img-enter-left') : ''
+  const exitClass  = dir > 0 ? 'sc-img-exit-left' : 'sc-img-exit-right'
+
+  const borderClass = imageRight
+    ? 'border-t border-line lg:border-l lg:border-t-0'
+    : 'border-b border-line lg:border-b-0 lg:border-r'
+
+  const imageBlock = (
+    <div className={`relative overflow-hidden min-h-[260px] ${borderClass}`}>
+      {prevSlide && (
+        <img
+          key={`prev-${prevIndex}`}
+          src={prevSlide.src}
+          alt={prevSlide.alt}
+          className={`absolute inset-0 h-full w-full object-cover object-left-top ${exitClass}`}
+        />
+      )}
+      <img
+        key={`curr-${index}`}
+        src={slide.src}
+        alt={slide.alt}
+        loading="lazy"
+        className={`absolute inset-0 h-full w-full object-cover object-left-top ${enterClass}`}
+      />
+    </div>
+  )
+
+  const textBlock = (
+    <div className="flex flex-col justify-center p-8 lg:p-12">
+      <div key={index} className={hasAnimated.current ? 'sc-text-enter' : ''}>
+        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
+          {slide.label}
+        </span>
+        <p className="pretty mt-4 text-[19px] leading-[1.5] text-subink">
+          {slide.text}
+        </p>
+      </div>
+      {showNav && (
+        <div className="mt-8 flex items-center gap-3">
+          <button
+            onClick={goPrev}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-ink transition-colors hover:bg-surface"
+            aria-label="Tela anterior"
+          >
+            <Icon name="chevron_left" className="text-[20px]" />
+          </button>
+          <div className="flex gap-1.5">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => go(i, i > index ? 1 : -1)}
+                className={'h-1.5 rounded-full transition-all ' + (i === index ? 'w-4 bg-primary' : 'w-1.5 bg-line hover:bg-primary/40')}
+                aria-label={`Ir para tela ${i + 1}`}
+              />
+            ))}
+          </div>
+          <button
+            onClick={goNext}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-line text-ink transition-colors hover:bg-surface"
+            aria-label="Próxima tela"
+          >
+            <Icon name="chevron_right" className="text-[20px]" />
+          </button>
+          <span className="ml-1 text-[12px] tabular-nums text-faint">
+            {index + 1} / {total}
+          </span>
+        </div>
+      )}
+    </div>
+  )
+
+  const cols = imageRight
+    ? 'lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]'
+    : 'lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]'
+
+  return (
+    <div className={'grid items-stretch overflow-hidden rounded-2xl border border-line bg-white ' + cols}>
+      {imageRight ? <>{textBlock}{imageBlock}</> : <>{imageBlock}{textBlock}</>}
+    </div>
   )
 }
 
@@ -111,75 +236,38 @@ export function WhatSection() {
           </Reveal>
           <Reveal delay={140}>
             <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.66] text-mute">
-              Não é um CMS adaptado nem uma plataforma genérica. É uma estrutura construída especificamente para portais de
-              notícias, que sustenta a operação e protege a receita.
+              A DothNews foi desenvolvida exclusivamente para portais de notícias.<br />
+              Não é uma adaptação.<br />
+              Não depende de dezenas de componentes externos.<br />
+              É uma plataforma construída para lidar com os desafios reais de operações editoriais profissionais.
             </p>
           </Reveal>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {PILLARS.slice(0, 3).map((p, i) => (
+        <div className="mt-12 grid gap-5 md:grid-cols-2">
+          {PILLARS.slice(0, 2).map((p, i) => (
             <Reveal key={i} delay={i * 80}>
               <PillarCard p={p} />
             </Reveal>
           ))}
         </div>
 
-        {/* Editorial product detail */}
+        {/* Carrossel SGI — interface editorial */}
         <Reveal delay={120} className="mt-6">
-          <div className="grid items-stretch overflow-hidden rounded-2xl border border-line bg-white lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
-            <div className="flex flex-col justify-center p-8 lg:p-12">
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
-                // interface editorial em uso real
-              </span>
-              <p className="pretty mt-4 text-[19px] leading-[1.5] text-subink">
-                O mesmo editor que centenas de jornalistas usam todos os dias. Pensado para o fluxo de uma redação,
-                não adaptado de um CMS genérico.
-              </p>
-            </div>
-            <div className="relative min-h-[260px] border-t border-line lg:border-l lg:border-t-0">
-              <img
-                src="/assets/sgi-criar-post.png"
-                alt="Editor de criação de post do SGI"
-                width="1920"
-                height="1066"
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover object-left-top"
-              />
-            </div>
-          </div>
+          <ScreenCarousel slides={SGI_SLIDES} imageRight={true} />
         </Reveal>
 
-        <div className="mt-6 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {PILLARS.slice(3).map((p, i) => (
+        <div className="mt-6 grid gap-5 md:grid-cols-2">
+          {PILLARS.slice(2).map((p, i) => (
             <Reveal key={i} delay={i * 80}>
               <PillarCard p={p} />
             </Reveal>
           ))}
         </div>
 
-        {/* Database infrastructure detail */}
+        {/* Carrossel Monitoramento — infraestrutura */}
         <Reveal delay={120} className="mt-6">
-          <div className="grid items-stretch overflow-hidden rounded-2xl border border-line bg-white lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)]">
-            <div className="relative min-h-[260px] border-b border-line lg:border-b-0 lg:border-r">
-              <img
-                src="/assets/monitoramento-grafana-dashboard-nave-mae-mysql.png"
-                alt="Dashboard MySQL com QPS, conexões e buffer pool em tempo real"
-                width="1897"
-                height="910"
-                loading="lazy"
-                className="absolute inset-0 h-full w-full object-cover object-left-top"
-              />
-            </div>
-            <div className="flex flex-col justify-center p-8 lg:p-12">
-              <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
-                // banco de dados em operação real
-              </span>
-              <p className="pretty mt-4 text-[19px] leading-[1.5] text-subink">
-                QPS, conexões e buffer pool visíveis a todo momento. Infraestrutura que não esconde o que está acontecendo.
-              </p>
-            </div>
-          </div>
+          <ScreenCarousel slides={MONITORING_SLIDES} imageRight={false} />
         </Reveal>
       </Shell>
     </section>
@@ -187,12 +275,11 @@ export function WhatSection() {
 }
 
 const METRICS = [
-  { value: '22+',      label: 'anos de mercado' },
-  { value: '100+',     label: 'plataformas entregues' },
-  { value: '40+',      label: 'operações ativas hoje' },
-  { value: '100M+',    label: 'pageviews mensais' },
-  { value: '99,9%',    label: 'de uptime garantido' },
-  { value: 'Centenas', label: 'de jornalistas diariamente' },
+  { value: '22+',   label: 'anos de mercado' },
+  { value: '100+',  label: 'plataformas entregues' },
+  { value: '40+',   label: 'operações ativas hoje' },
+  { value: '100M+', label: 'pageviews mensais' },
+  { value: '99,9%', label: 'de uptime garantido' },
 ]
 
 const WHY_BULLETS = [
@@ -202,9 +289,55 @@ const WHY_BULLETS = [
   'Evolução planejada para portais editoriais',
 ]
 
+function LogoMarqueeWide() {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    // Com marginRight em cada item (em vez de gap no container),
+    // scrollWidth = 2 × (soma de larguras + todas as margens),
+    // então scrollWidth/2 é exatamente a largura de um conjunto — loop perfeito.
+    function measure() {
+      el.style.setProperty('--mw', `-${el.scrollWidth / 2}px`)
+    }
+
+    const imgs = [...el.querySelectorAll('img')]
+    const pending = imgs.filter(img => !img.complete)
+
+    if (pending.length === 0) {
+      measure()
+    } else {
+      let done = 0
+      pending.forEach(img => {
+        const finish = () => { if (++done === pending.length) measure() }
+        img.addEventListener('load', finish, { once: true })
+        img.addEventListener('error', finish, { once: true })
+      })
+    }
+  }, [])
+
+  return (
+    <div ref={ref} className="logo-marquee" style={{ gap: 0 }}>
+      {[...CLIENT_LOGOS, ...CLIENT_LOGOS].map((c, i) => (
+        <img
+          key={i}
+          src={c.file}
+          alt={c.name}
+          title={c.name}
+          loading="lazy"
+          className="h-10 w-auto flex-none brightness-0 invert opacity-50 transition-opacity hover:opacity-90"
+          style={{ marginRight: '56px' }}
+        />
+      ))}
+    </div>
+  )
+}
+
 export function WhySection() {
   return (
-    <section id="clientes" aria-labelledby="clientes-title" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 lg:py-[120px]">
+    <section id="clientes" aria-labelledby="clientes-title" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary pt-24 lg:pt-[120px]">
 
       {/*
         Background negativo do hero: SVGs brancos (brightness(0)+invert(1))
@@ -232,73 +365,35 @@ export function WhySection() {
           </Reveal>
           <Reveal delay={140}>
             <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.66] text-white/55">
-              Números que vêm de operação real. Especialização que vem de foco real. Suporte que vem de pessoas reais.
+              A confiança não vem apenas do discurso.<br />
+              Ela é construída diariamente por portais que dependem da plataforma para publicar, monetizar e crescer.
             </p>
           </Reveal>
         </div>
 
-        <div className="mt-12 grid gap-5 lg:grid-cols-3">
-          {/* Col 1 — Authority */}
-          <Reveal>
-            <Card className="flex h-full flex-col">
-              <span className="text-[12.5px] font-medium text-faint">Validados pelo mercado</span>
-              <div className="mt-6 grid grid-cols-2 gap-y-6 gap-x-4">
-                {METRICS.map((m, i) => (
-                  <div key={i}>
-                    <div className="headline text-[30px] font-bold leading-none text-ink">{m.value}</div>
-                    <div className="mt-1.5 text-[12.5px] leading-tight text-mute">{m.label}</div>
-                  </div>
-                ))}
+        {/* Metrics — linha proeminente */}
+        <Reveal delay={100} className="mt-12">
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-white/80 rounded-2xl overflow-hidden">
+            {METRICS.map((m, i) => (
+              <div
+                key={i}
+                className={'flex flex-col items-center justify-center gap-2 px-4 py-8 bg-white' + (i === 4 ? ' col-span-2 sm:col-span-1' : '')}
+              >
+                <div className="headline text-[40px] font-bold leading-none text-primary-700 sm:text-[48px]">{m.value}</div>
+                <div className="mt-1 text-[13px] leading-tight text-neutral-600 text-center">{m.label}</div>
               </div>
-              <p className="mt-7 text-[13.5px] leading-[1.55] text-mute">
-                Duas décadas operando portais que precisam funcionar, em qualquer dia da semana.
-              </p>
-              <LogoMarquee />
-            </Card>
-          </Reveal>
+            ))}
+          </div>
+        </Reveal>
 
-          {/* Col 2 — Structural difference */}
-          <Reveal delay={100}>
-            <Card className="h-full">
-              <span className="text-[12.5px] font-medium text-faint">Especializados, não adaptados</span>
-              <h3 className="headline mt-6 text-[22px] font-semibold leading-[1.22] text-ink">
-                Existe diferença entre adaptar uma plataforma genérica e construir uma estrutura especializada.
-              </h3>
-              <p className="pretty mt-5 text-[14.5px] leading-[1.6] text-mute">
-                Soluções genéricas precisam ser adaptadas, configuradas e remendadas para cada caso. A DothNews foi
-                construída do zero para portais de notícias. Sem camadas de adaptação, sem plugins externos no caminho
-                crítico e sem limitações que aparecem quando a operação cresce.
-              </p>
-              <ul className="mt-7 space-y-3.5">
-                {WHY_BULLETS.map((b, i) => (
-                  <li key={i} className="flex gap-3 text-[14px] leading-[1.45] text-subink">
-                    <span className="mt-[7px] h-1.5 w-1.5 flex-none rotate-45 bg-primary"></span>
-                    {b}
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          </Reveal>
-
-          {/* Col 3 — Support (highlighted) */}
-          <Reveal delay={200}>
-            <Card highlight className="flex h-full flex-col">
-              <span className="text-[12.5px] font-medium text-white/65">Presentes quando importa</span>
-              <h3 className="headline mt-6 text-[22px] font-semibold leading-[1.22] text-white">
-                Seu portal não deveria depender de improviso quando precisa de suporte.
-              </h3>
-              <p className="pretty mt-5 text-[14.5px] leading-[1.6] text-white/75">
-                Nossa equipe sabe o que significa uma queda às 6h num dia de pauta quente. Sabe o que está em jogo para a
-                redação, para a audiência e para a receita.
-              </p>
-              <p className="headline mt-7 sm:mt-auto  border-t border-white/15 pt-7 text-[18px] font-semibold leading-[1.35] text-white">
-                Não somos um helpdesk. Somos o time técnico que operações editoriais sérias precisam ter.
-              </p>
-            </Card>
-          </Reveal>
-        </div>
+        {/* Bloco único — operação real da plataforma */}
 
       </Shell>
+
+      {/* Carrossel de logos — full-width, fora do Shell */}
+      <div className="relative z-10 mt-24 lg:mt-[120px] overflow-hidden border-t border-white/10 py-10">
+        <LogoMarqueeWide />
+      </div>
     </section>
   )
 }

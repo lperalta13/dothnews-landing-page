@@ -7,23 +7,18 @@ import { FormTextarea } from './form/FormTextarea'
 const STEPS = [
   {
     n: '01',
-    title: 'Envio das informações',
-    text: 'Você compartilha os dados básicos da sua operação. Simples e direto.',
+    title: 'Diagnóstico Inicial',
+    text: 'Você compartilha os dados básicos da sua operação. Nossa equipe entende o cenário atual e identifica os primeiros pontos de atenção.',
   },
   {
     n: '02',
-    title: 'Análise estrutural',
-    text: 'Nossa equipe analisa plataforma, audiência, operação, gargalos e riscos visíveis.',
+    title: 'Análise Estrutural',
+    text: 'Avaliamos plataforma, audiência, operação, gargalos e oportunidades de evolução com base no que realmente existe.',
   },
   {
     n: '03',
-    title: 'Diagnóstico consultivo',
-    text: 'Apresentamos o que encontramos com honestidade. Sem jargão, sem pressão, sem proposta antes da hora.',
-  },
-  {
-    n: '04',
-    title: 'Recomendação estratégica',
-    text: 'Se fizer sentido para os dois lados, apresentamos um caminho com os próximos passos e como seria a transição. Se não fizer, dizemos isso também.',
+    title: 'Recomendação Estratégica',
+    text: 'Apresentamos o que encontramos com honestidade e, se fizer sentido para os dois lados, um caminho claro para os próximos passos.',
   },
 ]
 
@@ -198,13 +193,15 @@ export function DiagnosisSection() {
           </Reveal>
           <Reveal delay={140}>
             <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.66] text-mute">
-              O diagnóstico começa pelo entendimento real do seu cenário, não por uma proposta genérica.
+              Nosso processo começa com um diagnóstico consultivo.
+              Entendemos o cenário atual do portal, identificamos gargalos e avaliamos oportunidades de evolução antes
+              de recomendar qualquer caminho.
             </p>
           </Reveal>
         </div>
 
         {/* Steps */}
-        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {STEPS.map((s, i) => (
             <Reveal key={i} delay={i * 70}>
               <Card className="h-full">
@@ -235,13 +232,13 @@ export function FinalCta({ onOpenForm }) {
         </Reveal>
         <Reveal delay={80}>
           <h2 className="headline mt-7 text-[34px] font-bold leading-[1.1] tracking-[-0.015em] sm:text-[48px]">
-            A estrutura do seu portal precisa acompanhar o crescimento da sua operação.
+            Seu portal merece uma estrutura à altura do que ele se tornou.
           </h2>
         </Reveal>
         <Reveal delay={140}>
           <p className="pretty mx-auto mt-7 max-w-2xl text-[18px] leading-[1.62] text-white/65">
-            A DothNews ajuda operações editoriais a crescer com estabilidade, receita protegida e infraestrutura
-            preparada para o longo prazo.
+            Se sua operação já cresceu além das soluções improvisadas, talvez seja o momento de entender qual
+            estrutura realmente faz sentido para o próximo ciclo de crescimento.
           </p>
         </Reveal>
         <Reveal delay={200}>
