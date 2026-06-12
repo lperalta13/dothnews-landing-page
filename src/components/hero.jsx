@@ -98,8 +98,8 @@ function Carousel({ slides, interval = 3500, transition = 'fade' }) {
 
         {/* Slides */}
         <div
-          className="relative overflow-hidden rounded-[16px] cursor-grab active:cursor-grabbing select-none"
-          style={{ aspectRatio: '1920/1066' }}
+          className="relative overflow-hidden rounded-[16px] border border-neutral-50 cursor-grab active:cursor-grabbing select-none"
+          style={{ aspectRatio: '1846/928' }}
           onPointerDown={onPointerDown}
           onPointerUp={onPointerUp}
           onPointerCancel={() => { dragRef.current.active = false }}
@@ -109,8 +109,8 @@ function Carousel({ slides, interval = 3500, transition = 'fade' }) {
               key={slide.src}
               src={slide.src}
               alt={slide.alt}
-              width="1920"
-              height="1066"
+              width="1846"
+              height="928"
               draggable="false"
               className={slideClass(i)}
               loading={i === 0 ? 'eager' : 'lazy'}

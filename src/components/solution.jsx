@@ -274,12 +274,30 @@ export function WhatSection() {
   )
 }
 
+const CLIENT_PORTAL_SLIDES = [
+  {
+    src: '/assets/clients/prints/correiodoestado.png',
+    alt: 'Portal Correio do Estado rodando na infraestrutura DothNews',
+    name: 'Correio do Estado',
+  },
+  {
+    src: '/assets/clients/prints/folhadepernambuco.png',
+    alt: 'Portal Folha de Pernambuco rodando na infraestrutura DothNews',
+    name: 'Folha de Pernambuco',
+  },
+  {
+    src: '/assets/clients/prints/capitaldopantanal.png',
+    alt: 'Portal Capital do Pantanal rodando na infraestrutura DothNews',
+    name: 'Capital do Pantanal',
+  },
+]
+
 const METRICS = [
-  { value: '22+',   label: 'anos de mercado' },
-  { value: '100+',  label: 'plataformas entregues' },
-  { value: '40+',   label: 'operações ativas hoje' },
-  { value: '100M+', label: 'pageviews mensais' },
-  { value: '99,9%', label: 'de uptime garantido' },
+  { value: '22+',   label: 'anos de história' },
+  { value: '100+',  label: 'plataformas ativas' },
+  { value: '40+',   label: 'operações editoriais' },
+  { value: '100M+', label: 'pageviews por mês' },
+  { value: '99,9%', label: 'uptime média' },
 ]
 
 const WHY_BULLETS = [
@@ -289,55 +307,173 @@ const WHY_BULLETS = [
   'Evolução planejada para portais editoriais',
 ]
 
-function LogoMarqueeWide() {
-  const ref = useRef(null)
-
-  useEffect(() => {
-    const el = ref.current
-    if (!el) return
-
-    // Com marginRight em cada item (em vez de gap no container),
-    // scrollWidth = 2 × (soma de larguras + todas as margens),
-    // então scrollWidth/2 é exatamente a largura de um conjunto — loop perfeito.
-    function measure() {
-      el.style.setProperty('--mw', `-${el.scrollWidth / 2}px`)
-    }
-
-    const imgs = [...el.querySelectorAll('img')]
-    const pending = imgs.filter(img => !img.complete)
-
-    if (pending.length === 0) {
-      measure()
-    } else {
-      let done = 0
-      pending.forEach(img => {
-        const finish = () => { if (++done === pending.length) measure() }
-        img.addEventListener('load', finish, { once: true })
-        img.addEventListener('error', finish, { once: true })
-      })
-    }
-  }, [])
-
+export function MetricsGrid({ metrics }) {
   return (
-    <div ref={ref} className="logo-marquee" style={{ gap: 0 }}>
-      {[...CLIENT_LOGOS, ...CLIENT_LOGOS].map((c, i) => (
-        <img
+    <div className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-white/80 rounded-2xl overflow-hidden">
+      {metrics.map((m, i) => (
+        <div
           key={i}
-          src={c.file}
-          alt={c.name}
-          title={c.name}
-          loading="lazy"
-          className="h-10 w-auto flex-none brightness-0 invert opacity-50 transition-opacity hover:opacity-90"
-          style={{ marginRight: '56px' }}
-        />
+          className={'flex flex-col items-center justify-center gap-2 px-4 py-8 bg-white' + (i === 4 ? ' col-span-2 sm:col-span-1' : '')}
+        >
+          <div className="headline text-[40px] font-bold leading-none text-primary-700 sm:text-[48px]">{m.value}</div>
+          <div className="mt-1 text-[13px] leading-tight text-neutral-600 text-center">{m.label}</div>
+        </div>
       ))}
     </div>
   )
 }
 
+const TRUST_FEATURES = [
+  {
+    icon: 'verified_user',
+    title: 'Segurança e estabilidade',
+    text: 'Infraestrutura robusta com monitoramento 24/7, backup automático e alta disponibilidade.',
+  },
+  {
+    icon: 'speed',
+    title: 'Performance de alto nível',
+    text: 'Arquitetura otimizada para alto tráfego, entrega rápida e experiência superior.',
+  },
+  {
+    icon: 'support_agent',
+    title: 'Suporte especializado',
+    text: 'Time que entende de jornalismo, disponível quando você precisa.',
+  },
+]
+
+function PortalCarousel({ slides }) {
+  const [index, setIndex] = useState(0)
+  const [prevIndex, setPrevIndex] = useState(null)
+  const [dir, setDir] = useState(1)
+  const timerRef = useRef(null)
+  const hasAnimated = useRef(false)
+  const total = slides.length
+
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current) }, [])
+
+  const go = (newIndex, direction) => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    hasAnimated.current = true
+    setPrevIndex(index)
+    setDir(direction)
+    setIndex(newIndex)
+    timerRef.current = setTimeout(() => setPrevIndex(null), 400)
+  }
+
+  const goNext = () => go((index + 1) % total, 1)
+  const goPrev = () => go((index - 1 + total) % total, -1)
+
+  const slide = slides[index]
+  const prevSlide = prevIndex !== null ? slides[prevIndex] : null
+  const enterClass = hasAnimated.current ? (dir > 0 ? 'sc-img-enter-right' : 'sc-img-enter-left') : ''
+  const exitClass  = dir > 0 ? 'sc-img-exit-left' : 'sc-img-exit-right'
+
+  return (
+    <div>
+      <div className="relative overflow-hidden rounded-xl border border-white/10" style={{ aspectRatio: '4/3' }}>
+        {prevSlide && (
+          <img
+            key={`prev-${prevIndex}`}
+            src={prevSlide.src}
+            alt={prevSlide.alt}
+            className={`absolute inset-0 h-full w-full object-cover object-top ${exitClass}`}
+          />
+        )}
+        <img
+          key={`curr-${index}`}
+          src={slide.src}
+          alt={slide.alt}
+          loading="lazy"
+          className={`absolute inset-0 h-full w-full object-cover object-top ${enterClass}`}
+        />
+      </div>
+      <div className="mt-4 flex items-center justify-between">
+        <div key={index} className={hasAnimated.current ? 'sc-text-enter' : ''}>
+          <span className="text-[13px] font-medium text-white/60">{slide.name}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={goPrev}
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 text-white/60 transition-colors hover:bg-white/10"
+            aria-label="Portal anterior"
+          >
+            <Icon name="chevron_left" className="text-[18px]" />
+          </button>
+          <div className="flex gap-1.5">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => go(i, i > index ? 1 : -1)}
+                className={'h-1.5 rounded-full transition-all ' + (i === index ? 'w-4 bg-white' : 'w-1.5 bg-white/30 hover:bg-white/50')}
+                aria-label={`Ir para portal ${i + 1}`}
+              />
+            ))}
+          </div>
+          <button
+            onClick={goNext}
+            className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 text-white/60 transition-colors hover:bg-white/10"
+            aria-label="Próximo portal"
+          >
+            <Icon name="chevron_right" className="text-[18px]" />
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function ClientShowcaseBlock() {
+  return (
+    <div className="grid overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
+      <div className="flex flex-col justify-center border-b border-white/10 p-8 lg:border-b-0 lg:border-r lg:p-10">
+        <p className="mb-7 text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
+          Portais que operam na DothNews
+        </p>
+        <div className="flex flex-wrap items-center gap-6">
+          {CLIENT_LOGOS.map((c, i) => (
+            <img
+              key={i}
+              src={c.file}
+              alt={c.name}
+              title={c.name}
+              loading="lazy"
+              className="h-8 w-auto  invert opacity-70 transition-opacity hover:opacity-75"
+            />
+          ))}
+        </div>
+      </div>
+      <div className="p-6 lg:p-8">
+        <PortalCarousel slides={CLIENT_PORTAL_SLIDES} />
+      </div>
+    </div>
+  )
+}
+
+export function ClientsSection() {
+  return (
+    <section className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-white py-16 lg:py-20">
+      <Shell>
+        <div className="grid gap-10 sm:grid-cols-3">
+          {TRUST_FEATURES.map((f, i) => (
+            <Reveal key={i} delay={i * 80}>
+              <div className="flex flex-col gap-3">
+                <div className="text-primary">
+                  <Icon name={f.icon} className="text-[40px]" />
+                </div>
+                <h3 className="text-[17px] font-semibold text-ink">{f.title}</h3>
+                <p className="text-[14.5px] leading-[1.6] text-mute">{f.text}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </Shell>
+    </section>
+  )
+}
+
 export function WhySection() {
   return (
-    <section id="clientes" aria-labelledby="clientes-title" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary pt-24 lg:pt-[120px]">
+    <section id="clientes" aria-labelledby="clientes-title" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 lg:py-[120px]">
 
       {/*
         Background negativo do hero: SVGs brancos (brightness(0)+invert(1))
@@ -366,34 +502,22 @@ export function WhySection() {
           <Reveal delay={140}>
             <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.66] text-white/55">
               A confiança não vem apenas do discurso.<br />
-              Ela é construída diariamente por portais que dependem da plataforma para publicar, monetizar e crescer.
+              Ela é construída diariamente por portais que dependem da DothNews para publicar, monetizar e crescer.
             </p>
           </Reveal>
         </div>
 
         {/* Metrics — linha proeminente */}
         <Reveal delay={100} className="mt-12">
-          <div className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-white/80 rounded-2xl overflow-hidden">
-            {METRICS.map((m, i) => (
-              <div
-                key={i}
-                className={'flex flex-col items-center justify-center gap-2 px-4 py-8 bg-white' + (i === 4 ? ' col-span-2 sm:col-span-1' : '')}
-              >
-                <div className="headline text-[40px] font-bold leading-none text-primary-700 sm:text-[48px]">{m.value}</div>
-                <div className="mt-1 text-[13px] leading-tight text-neutral-600 text-center">{m.label}</div>
-              </div>
-            ))}
-          </div>
+          <MetricsGrid metrics={METRICS} />
         </Reveal>
 
-        {/* Bloco único — operação real da plataforma */}
+        {/* Portais + logos — bloco combinado */}
+        <Reveal delay={120} className="mt-10">
+          <ClientShowcaseBlock />
+        </Reveal>
 
       </Shell>
-
-      {/* Carrossel de logos — full-width, fora do Shell */}
-      <div className="relative z-10 mt-24 lg:mt-[120px] overflow-hidden border-t border-white/10 py-10">
-        <LogoMarqueeWide />
-      </div>
     </section>
   )
 }

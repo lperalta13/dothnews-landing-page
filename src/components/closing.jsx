@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { Reveal, Shell, Chip, Card, Icon, Button } from './ui'
+import { MetricsGrid } from './solution'
 import { FormInput } from './form/FormInput'
 import { FormSelect } from './form/FormSelect'
 import { FormTextarea } from './form/FormTextarea'
@@ -34,6 +35,14 @@ const PLATAFORMA_OPTIONS = [
   { value: 'cms-proprio', label: 'CMS próprio' },
   { value: 'outra-plataforma', label: 'Outra plataforma' },
   { value: 'outra', label: 'Outra' },
+]
+
+const FINAL_METRICS = [
+  { value: '22+',   label: 'anos de história' },
+  { value: '100+',  label: 'plataformas entregues' },
+  { value: '40+',   label: 'portais ativos' },
+  { value: '100M+', label: 'pageviews por mês' },
+  { value: '99,9%', label: 'disponibilidade média' },
 ]
 
 const EMPTY_FORM = { nome: '', portal: '', url: '', contato: '', audiencia: '', plataforma: '', dificuldade: '' }
@@ -262,47 +271,45 @@ export function DiagnosisSection() {
 export function FinalCta({ onOpenForm }) {
   return (
     <section className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 text-white lg:py-32">
-      <Shell className="max-w-3xl text-center">
-        <Reveal>
-          <Chip className="justify-center" variant="dark">Próximo passo</Chip>
-        </Reveal>
-        <Reveal delay={80}>
-          <h2 className="headline mt-7 text-[34px] font-bold leading-[1.1] tracking-[-0.015em] sm:text-[48px]">
-            Seu portal merece uma estrutura à altura do que ele se tornou.
-          </h2>
-        </Reveal>
-        <Reveal delay={140}>
-          <p className="pretty mx-auto mt-7 max-w-2xl text-[18px] leading-[1.62] text-white/65">
-            Se sua operação já cresceu além das soluções improvisadas, talvez seja o momento de entender qual
-            estrutura realmente faz sentido para o próximo ciclo de crescimento.
-          </p>
-        </Reveal>
-        <Reveal delay={200}>
-          <p className="pretty mx-auto mt-5 max-w-xl text-[16px] leading-[1.6] text-white/45">
-            Se algo nessa página fez sentido para você, o próximo passo começa por entender o seu cenário.
-          </p>
-        </Reveal>
-        <Reveal delay={260}>
-          <div className="mt-10 flex flex-col items-center gap-3">
-            <Button
-              variant="white"
-              size="lg"
-              icon="arrow_outward"
-              className="shadow-[0_22px_50px_-20px_rgba(0,0,0,0.5)]"
-              onClick={onOpenForm}
-            >
-              Solicitar diagnóstico
-            </Button>
-            <span className="text-[13px] text-white/55">
-              Análise consultiva · Retorno em até 48h · Sem compromisso
-            </span>
-          </div>
-        </Reveal>
-        <Reveal delay={320}>
-          <div className="mx-auto mt-16 max-w-md border-t border-white/10 pt-8 text-[13.5px] leading-[1.7] text-white/45">
-            <p>Mais de 40 operações editoriais ativas.</p>
-            <p>Mais de 22 anos construindo infraestrutura para portais que levam o jornalismo a sério.</p>
-            <p className="mt-2 italic text-white/65">Essa estrutura pode ser a do seu portal.</p>
+      <Shell className="text-center">
+        <div className="mx-auto max-w-3xl">
+          <Reveal>
+            <Chip className="justify-center" variant="dark">Próximo passo</Chip>
+          </Reveal>
+          <Reveal delay={80}>
+            <h2 className="headline mt-7 text-[34px] font-bold leading-[1.1] tracking-[-0.015em] sm:text-[48px]">
+              <span className="block">O crescimento já aconteceu.</span>
+              <span className="block">Agora a estrutura precisa acompanhar.</span>
+            </h2>
+          </Reveal>
+          <Reveal delay={140}>
+            <p className="pretty mx-auto mt-7 max-w-2xl text-[18px] leading-[1.62] text-white/65">
+              Descubra se a infraestrutura atual do seu portal está preparada para sustentar os próximos ciclos de crescimento, monetização e operação.
+            </p>
+          </Reveal>
+          <Reveal delay={260}>
+            <div className="mt-10 flex flex-col items-center gap-3">
+              <Button
+                variant="white"
+                size="lg"
+                icon="arrow_outward"
+                className="shadow-[0_22px_50px_-20px_rgba(0,0,0,0.5)]"
+                onClick={onOpenForm}
+              >
+                Solicitar diagnóstico
+              </Button>
+              <span className="text-[13px] text-white/55">
+                Conversa inicial de aproximadamente 30 minutos.
+              </span>
+            </div>
+          </Reveal>
+        </div>
+        <Reveal delay={320} className="mt-16">
+          <div className="border-t border-white/10 pt-8">
+            <MetricsGrid metrics={FINAL_METRICS} />
+            <p className="mt-8 text-center text-[14px] italic text-white/55">
+              Você cuida da audiência. A infraestrutura cuida do resto.
+            </p>
           </div>
         </Reveal>
       </Shell>
