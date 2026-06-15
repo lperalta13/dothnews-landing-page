@@ -1,5 +1,5 @@
-import { useState, useEffect, useRef } from 'react'
-import { Reveal, Shell, Chip, Card, Icon, CLIENT_LOGOS } from './ui'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import { Reveal, Shell, Chip, Card, Icon } from './ui'
 
 
 function BlobPurple({ fill1 = '#2600FF', fill2 = '#00FFE1' }) {
@@ -169,7 +169,7 @@ function ScreenCarousel({ slides, imageRight = true }) {
   const textBlock = (
     <div className="flex flex-col justify-center p-8 lg:p-12">
       <div key={index} className={hasAnimated.current ? 'sc-text-enter' : ''}>
-        <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-faint">
+        <span className="text-[11px] uppercase tracking-[0.14em] text-faint">
           {slide.label}
         </span>
         <p className="pretty mt-4 text-[19px] leading-[1.5] text-subink">
@@ -274,22 +274,16 @@ export function WhatSection() {
   )
 }
 
-const CLIENT_PORTAL_SLIDES = [
-  {
-    src: '/assets/clients/prints/correiodoestado.png',
-    alt: 'Portal Correio do Estado rodando na infraestrutura DothNews',
-    name: 'Correio do Estado',
-  },
-  {
-    src: '/assets/clients/prints/folhadepernambuco.png',
-    alt: 'Portal Folha de Pernambuco rodando na infraestrutura DothNews',
-    name: 'Folha de Pernambuco',
-  },
-  {
-    src: '/assets/clients/prints/capitaldopantanal.png',
-    alt: 'Portal Capital do Pantanal rodando na infraestrutura DothNews',
-    name: 'Capital do Pantanal',
-  },
+const CLIENT_CARDS = [
+  { name: 'Correio do Estado',    logo: '/assets/clients/correiodoestado.png',    meta: 'Campo Grande · MS',    print: '/assets/clients/prints/correiodoestado.png' },
+  { name: 'Folha de Pernambuco',  logo: '/assets/clients/folhadepernambuco.png',  meta: 'Recife · PE',           print: '/assets/clients/prints/folhadepernambuco.png' },
+  { name: 'Capital do Pantanal',  logo: '/assets/clients/capitaldopantanal.png',  meta: 'Corumbá · MS',          print: '/assets/clients/prints/capitaldopantanal.png' },
+  { name: 'Diário do Estado',     logo: '/assets/clients/diariadoestado.png',     meta: 'Portal de notícias',   print: null },
+  { name: 'Expressão MS',         logo: '/assets/clients/expressaoms.png',        meta: 'Mato Grosso do Sul',   print: null },
+  { name: 'Folha de Alphaville',  logo: '/assets/clients/folhadealphaville.png',  meta: 'Alphaville · SP',       print: null },
+  { name: 'Portal Mais 360',      logo: '/assets/clients/portalmais360.png',      meta: 'Portal de notícias',   print: null },
+  { name: 'Diário da Baixada',    logo: '/assets/clients/diariadabaixada.png',    meta: 'Baixada Fluminense',   print: null },
+  { name: 'Portal de Prefeitura', logo: '/assets/clients/portaldeprefeitura.png', meta: 'Gestão pública',       print: null },
 ]
 
 const METRICS = [
@@ -341,109 +335,30 @@ const TRUST_FEATURES = [
   },
 ]
 
-function PortalCarousel({ slides }) {
-  const [index, setIndex] = useState(0)
-  const [prevIndex, setPrevIndex] = useState(null)
-  const [dir, setDir] = useState(1)
-  const timerRef = useRef(null)
-  const hasAnimated = useRef(false)
-  const total = slides.length
-
-  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current) }, [])
-
-  const go = (newIndex, direction) => {
-    if (timerRef.current) clearTimeout(timerRef.current)
-    hasAnimated.current = true
-    setPrevIndex(index)
-    setDir(direction)
-    setIndex(newIndex)
-    timerRef.current = setTimeout(() => setPrevIndex(null), 400)
-  }
-
-  const goNext = () => go((index + 1) % total, 1)
-  const goPrev = () => go((index - 1 + total) % total, -1)
-
-  const slide = slides[index]
-  const prevSlide = prevIndex !== null ? slides[prevIndex] : null
-  const enterClass = hasAnimated.current ? (dir > 0 ? 'sc-img-enter-right' : 'sc-img-enter-left') : ''
-  const exitClass  = dir > 0 ? 'sc-img-exit-left' : 'sc-img-exit-right'
-
+function ClientCard({ card }) {
   return (
-    <div>
-      <div className="relative overflow-hidden rounded-xl border border-white/10" style={{ aspectRatio: '4/3' }}>
-        {prevSlide && (
-          <img
-            key={`prev-${prevIndex}`}
-            src={prevSlide.src}
-            alt={prevSlide.alt}
-            className={`absolute inset-0 h-full w-full object-cover object-top ${exitClass}`}
-          />
-        )}
-        <img
-          key={`curr-${index}`}
-          src={slide.src}
-          alt={slide.alt}
-          loading="lazy"
-          className={`absolute inset-0 h-full w-full object-cover object-top ${enterClass}`}
-        />
-      </div>
-      <div className="mt-4 flex items-center justify-between">
-        <div key={index} className={hasAnimated.current ? 'sc-text-enter' : ''}>
-          <span className="text-[13px] font-medium text-white/60">{slide.name}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            onClick={goPrev}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 text-white/60 transition-colors hover:bg-white/10"
-            aria-label="Portal anterior"
+    <div data-cli-card className="group flex-none w-[280px] rounded-[18px] p-3 bg-white/[0.055] border border-white/10 transition-colors duration-200 hover:bg-white/[0.085] hover:border-white/20">
+      <div className="relative rounded-[11px] overflow-hidden bg-[#0C1336] border border-white/[0.07]" style={{ aspectRatio: '16/10' }}>
+        {card.print ? (
+          <>
+            <img src={card.print} alt={`Portal ${card.name} na DothNews`} loading="lazy" className="block w-full h-full object-cover object-top" />
+          </>
+        ) : (
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center gap-3.5"
+            style={{ background: 'repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 10px, rgba(255,255,255,0) 10px 20px), #0C1336' }}
           >
-            <Icon name="chevron_left" className="text-[18px]" />
-          </button>
-          <div className="flex gap-1.5">
-            {slides.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => go(i, i > index ? 1 : -1)}
-                className={'h-1.5 rounded-full transition-all ' + (i === index ? 'w-4 bg-white' : 'w-1.5 bg-white/30 hover:bg-white/50')}
-                aria-label={`Ir para portal ${i + 1}`}
-              />
-            ))}
+            <img src={card.logo} alt="" className="h-6 w-auto max-w-[62%] object-contain brightness-0 invert opacity-35" />
+            <span className="text-[10.5px] tracking-[0.08em] text-white/35">// print em breve</span>
           </div>
-          <button
-            onClick={goNext}
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-white/20 text-white/60 transition-colors hover:bg-white/10"
-            aria-label="Próximo portal"
-          >
-            <Icon name="chevron_right" className="text-[18px]" />
-          </button>
-        </div>
+        )}
       </div>
-    </div>
-  )
-}
-
-function ClientShowcaseBlock() {
-  return (
-    <div className="grid overflow-hidden rounded-2xl border border-white/10 bg-white/[0.06] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.5fr)]">
-      <div className="flex flex-col justify-center border-b border-white/10 p-8 lg:border-b-0 lg:border-r lg:p-10">
-        <p className="mb-7 text-[11px] font-medium uppercase tracking-[0.14em] text-white/40">
-          Portais que operam na DothNews
-        </p>
-        <div className="flex flex-wrap items-center gap-6">
-          {CLIENT_LOGOS.map((c, i) => (
-            <img
-              key={i}
-              src={c.file}
-              alt={c.name}
-              title={c.name}
-              loading="lazy"
-              className="h-8 w-auto  invert opacity-70 transition-opacity hover:opacity-75"
-            />
-          ))}
+      <div className="flex items-center justify-between gap-2.5 px-1.5 pt-3.5 pb-1.5">
+        <div className="min-w-0 flex-1">
+          <img src={card.logo} alt={card.name} title={card.name} loading="lazy" className="block h-[40px] w-auto max-w-[160px] object-contain brightness-0 invert opacity-90" />
+          <div className="text-[11px] text-white/45 truncate">{card.meta}</div>
         </div>
-      </div>
-      <div className="p-6 lg:p-8">
-        <PortalCarousel slides={CLIENT_PORTAL_SLIDES} />
+        
       </div>
     </div>
   )
@@ -472,14 +387,133 @@ export function ClientsSection() {
 }
 
 export function WhySection() {
-  return (
-    <section id="clientes" aria-labelledby="clientes-title" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-24 lg:py-[120px]">
+  const [index, setIndex] = useState(0)
+  const [maxIndex, setMaxIndex] = useState(0)
+  const refs = useRef({ index: 0, maxIndex: 0, step: 300, timer: null })
+  const trackRef = useRef(null)
+  const viewportRef = useRef(null)
+  const sectionRef = useRef(null)
 
-      {/*
-        Background negativo do hero: SVGs brancos (brightness(0)+invert(1))
-        desfocados diretamente via filter:blur, criando nuvens claras sobre
-        o fundo azul escuro — espelho invertido do efeito do hero.
-      */}
+  const go = useCallback((i) => {
+    const newIdx = Math.max(0, Math.min(i, refs.current.maxIndex))
+    refs.current.index = newIdx
+    setIndex(newIdx)
+    if (trackRef.current) {
+      trackRef.current.style.transform = `translateX(${-newIdx * refs.current.step}px)`
+    }
+  }, [])
+
+  const pauseAutoplay = useCallback(() => {
+    clearInterval(refs.current.timer)
+  }, [])
+
+  const restartAutoplay = useCallback(() => {
+    clearInterval(refs.current.timer)
+    refs.current.timer = setInterval(() => {
+      go(refs.current.index >= refs.current.maxIndex ? 0 : refs.current.index + 1)
+    }, 4000)
+  }, [go])
+
+  // measure card width, max scrollable index, and extend viewport to section right edge
+  useEffect(() => {
+    function measure() {
+      const track = trackRef.current
+      const viewport = viewportRef.current
+      const section = sectionRef.current
+      if (!track || !viewport || !section) return
+
+      // Reset inline width so getBoundingClientRect reflects natural layout
+      viewport.style.width = ''
+      const sectionRight = section.getBoundingClientRect().right
+      const vpLeft = viewport.getBoundingClientRect().left
+      viewport.style.width = Math.max(0, sectionRight - vpLeft) + 'px'
+
+      const card = track.querySelector('[data-cli-card]')
+      if (!card) return
+      const gap = parseFloat(getComputedStyle(track).gap) || 20
+      refs.current.step = card.offsetWidth + gap
+      const visible = Math.max(1, Math.floor((viewport.clientWidth + gap) / refs.current.step))
+      const newMax = Math.max(0, CLIENT_CARDS.length - visible)
+      refs.current.maxIndex = newMax
+      refs.current.index = Math.min(refs.current.index, newMax)
+      setMaxIndex(newMax)
+      if (track) {
+        track.style.transform = `translateX(${-refs.current.index * refs.current.step}px)`
+      }
+    }
+    measure()
+    window.addEventListener('resize', measure)
+    return () => window.removeEventListener('resize', measure)
+  }, [])
+
+  // autoplay
+  useEffect(() => {
+    restartAutoplay()
+    return () => clearInterval(refs.current.timer)
+  }, [restartAutoplay])
+
+  // drag / swipe
+  useEffect(() => {
+    const track = trackRef.current
+    if (!track) return
+    const drag = { active: false, startX: 0, startTranslate: 0, moved: 0 }
+
+    function onPointerDown(e) {
+      drag.active = true
+      drag.moved = 0
+      drag.startX = e.clientX
+      drag.startTranslate = -refs.current.index * refs.current.step
+      track.classList.add('is-dragging')
+      track.setPointerCapture(e.pointerId)
+      pauseAutoplay()
+    }
+    function onPointerMove(e) {
+      if (!drag.active) return
+      drag.moved = e.clientX - drag.startX
+      track.style.transform = `translateX(${drag.startTranslate + drag.moved}px)`
+    }
+    function onPointerEnd() {
+      if (!drag.active) return
+      drag.active = false
+      track.classList.remove('is-dragging')
+      if (Math.abs(drag.moved) > refs.current.step * 0.22) {
+        go(refs.current.index - Math.sign(drag.moved))
+      } else {
+        track.style.transform = `translateX(${-refs.current.index * refs.current.step}px)`
+      }
+      restartAutoplay()
+    }
+
+    track.addEventListener('pointerdown', onPointerDown)
+    track.addEventListener('pointermove', onPointerMove)
+    track.addEventListener('pointerup', onPointerEnd)
+    track.addEventListener('pointercancel', onPointerEnd)
+    return () => {
+      track.removeEventListener('pointerdown', onPointerDown)
+      track.removeEventListener('pointermove', onPointerMove)
+      track.removeEventListener('pointerup', onPointerEnd)
+      track.removeEventListener('pointercancel', onPointerEnd)
+    }
+  }, [go, pauseAutoplay, restartAutoplay])
+
+  // hover pause / resume
+  useEffect(() => {
+    const viewport = viewportRef.current
+    if (!viewport) return
+    viewport.addEventListener('mouseenter', pauseAutoplay)
+    viewport.addEventListener('mouseleave', restartAutoplay)
+    return () => {
+      viewport.removeEventListener('mouseenter', pauseAutoplay)
+      viewport.removeEventListener('mouseleave', restartAutoplay)
+    }
+  }, [pauseAutoplay, restartAutoplay])
+
+  const goNext = () => { go(index + 1); restartAutoplay() }
+  const goPrev = () => { go(index - 1); restartAutoplay() }
+
+  return (
+    <section ref={sectionRef} id="clientes" aria-labelledby="clientes-title" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-20 lg:py-[100px]">
+
       <div className="pointer-events-none absolute inset-0 select-none" aria-hidden="true">
         <div className="absolute why-blob-1" style={{ filter: 'blur(125px)' }}>
           <BlobPurple fill1="#FC52FF" fill2="#39FF85" />
@@ -490,33 +524,69 @@ export function WhySection() {
       </div>
 
       <Shell className="relative z-10">
-        <div className="mx-auto max-w-3xl text-center">
-          <Reveal>
-            <Chip className="justify-center" variant="dark">Validação</Chip>
-          </Reveal>
-          <Reveal delay={80}>
-            <h2 id="clientes-title" className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-white sm:text-[42px]">
-              Estrutura validada diariamente por operações editoriais reais.
-            </h2>
-          </Reveal>
-          <Reveal delay={140}>
-            <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.66] text-white/55">
-              A confiança não vem apenas do discurso.<br />
-              Ela é construída diariamente por portais que dependem da DothNews para publicar, monetizar e crescer.
-            </p>
+        {/* Two-column grid: text left, cards right */}
+        <div className="grid items-center gap-10 lg:gap-8 lg:grid-cols-[minmax(300px,0.82fr)_minmax(0,1.5fr)] ">
+
+          {/* Left: chip + headline + subtitle + nav */}
+          <div>
+            <Reveal>
+              <Chip variant="dark">Validação</Chip>
+            </Reveal>
+            <Reveal delay={80}>
+              <h2 id="clientes-title" className="headline mt-5 text-[28px] font-bold leading-[1.12] tracking-[-0.02em] text-white sm:text-[38px] max-w-[13ch]">
+                Estrutura validada diariamente por operações editoriais reais.
+              </h2>
+            </Reveal>
+            <Reveal delay={140}>
+              <p className="mt-4 text-[16px] leading-[1.6] text-white/60 max-w-[40ch]">
+                A confiança não vem apenas do discurso.<br />
+                Ela é construída diariamente por portais que dependem da DothNews para publicar, monetizar e crescer.
+              </p>
+            </Reveal>
+            
+          </div>
+
+          {/* Right: viewport expandido via JS até a borda direita da section */}
+          <Reveal delay={160}>
+            <div ref={viewportRef} className=" overflow-hidden py-2">
+
+
+            <Reveal delay={200}>
+                <div className="mr-8 mb-8 z-10 flex justify-end items-center gap-4">
+                  <button
+                    onClick={goPrev}
+                    disabled={index <= 0}
+                    className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-white/22 bg-transparent text-white transition-all hover:bg-white/12 disabled:opacity-30 disabled:cursor-default"
+                    aria-label="Portal anterior"
+                  >
+                    <Icon name="chevron_left" className="text-[20px]" />
+                  </button>
+                  <button
+                    onClick={goNext}
+                    disabled={index >= maxIndex}
+                    className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-white/22 bg-transparent text-white transition-all hover:bg-white/12 disabled:opacity-30 disabled:cursor-default"
+                    aria-label="Próximo portal"
+                  >
+                    <Icon name="chevron_right" className="text-[20px]" />
+                  </button>
+                </div>
+              </Reveal>
+
+
+              <div ref={trackRef} className="cards-track flex gap-5">
+                {CLIENT_CARDS.map((card, i) => (
+                  <ClientCard key={i} card={card} />
+                ))}
+              </div>
+            </div>
+            
           </Reveal>
         </div>
 
-        {/* Metrics — linha proeminente */}
-        <Reveal delay={100} className="mt-12">
+        {/* MetricsGrid abaixo — sem alteração */}
+        <Reveal delay={100} className="mt-12 lg:mt-16">
           <MetricsGrid metrics={METRICS} />
         </Reveal>
-
-        {/* Portais + logos — bloco combinado */}
-        <Reveal delay={120} className="mt-10">
-          <ClientShowcaseBlock />
-        </Reveal>
-
       </Shell>
     </section>
   )

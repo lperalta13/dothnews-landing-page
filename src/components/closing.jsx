@@ -37,6 +37,24 @@ const PLATAFORMA_OPTIONS = [
   { value: 'outra', label: 'Outra' },
 ]
 
+const NEXT_STEP_FEATURES = [
+  {
+    icon: 'analytics',
+    title: 'Diagnóstico consultivo',
+    text: 'Analisamos sua estrutura, identificamos gargalos e oportunidades de evolução.',
+  },
+  {
+    icon: 'verified_user',
+    title: 'Sem compromisso',
+    text: 'Entendemos seu cenário antes de recomendar qualquer caminho.',
+  },
+  {
+    icon: 'schedule',
+    title: 'Sem pressão comercial',
+    text: 'Conversa inicial leve e estratégica para entender o momento do seu portal.',
+  },
+]
+
 const FINAL_METRICS = [
   { value: '22+',   label: 'anos de história' },
   { value: '100+',  label: 'plataformas entregues' },
@@ -287,7 +305,21 @@ export function FinalCta({ onOpenForm }) {
               Descubra se a infraestrutura atual do seu portal está preparada para sustentar os próximos ciclos de crescimento, monetização e operação.
             </p>
           </Reveal>
-          <Reveal delay={260}>
+          <Reveal delay={200}>
+            <div className="mt-12 grid gap-10 sm:grid-cols-3 border-t border-white/10 pt-10">
+              {NEXT_STEP_FEATURES.map((f, i) => (
+                <div key={i} className="flex flex-col gap-3 text-left">
+                  <div className="text-white/80">
+                    <Icon name={f.icon} className="text-[40px]" />
+                  </div>
+                  <h3 className="text-[17px] font-semibold text-white">{f.title}</h3>
+                  <p className="text-[14.5px] leading-[1.6] text-white/65">{f.text}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal delay={280}>
             <div className="mt-10 flex flex-col items-center gap-3">
               <Button
                 variant="white"
