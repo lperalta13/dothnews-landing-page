@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Reveal, Shell, Chip, Card, Icon } from './ui'
 
 
@@ -335,184 +335,110 @@ const TRUST_FEATURES = [
   },
 ]
 
-function ClientCard({ card }) {
+function PrintCarousel() {
+  const slides = CLIENT_CARDS.filter(c => c.print)
+  const [index, setIndex] = useState(0)
+  const [prevIndex, setPrevIndex] = useState(null)
+  const [dir, setDir] = useState(1)
+  const timerRef = useRef(null)
+  const hasAnimated = useRef(false)
+  const total = slides.length
+
+  useEffect(() => () => { if (timerRef.current) clearTimeout(timerRef.current) }, [])
+
+  const go = (newIndex, direction) => {
+    if (timerRef.current) clearTimeout(timerRef.current)
+    hasAnimated.current = true
+    setPrevIndex(index)
+    setDir(direction)
+    setIndex(newIndex)
+    timerRef.current = setTimeout(() => setPrevIndex(null), 400)
+  }
+
+  const goNext = () => go((index + 1) % total, 1)
+  const goPrev = () => go((index - 1 + total) % total, -1)
+
+  const slide = slides[index]
+  const prevSlide = prevIndex !== null ? slides[prevIndex] : null
+
+  const enterClass = hasAnimated.current ? (dir > 0 ? 'sc-img-enter-right' : 'sc-img-enter-left') : ''
+  const exitClass  = dir > 0 ? 'sc-img-exit-left' : 'sc-img-exit-right'
+
   return (
-    <div data-cli-card className="group flex-none w-[280px] rounded-[18px] p-3 bg-white/[0.055] border border-white/10 transition-colors duration-200 hover:bg-white/[0.085] hover:border-white/20">
-      <div className="relative rounded-[11px] overflow-hidden bg-[#0C1336] border border-white/[0.07]" style={{ aspectRatio: '16/10' }}>
-        {card.print ? (
-          <>
-            <img src={card.print} alt={`Portal ${card.name} na DothNews`} loading="lazy" className="block w-full h-full object-cover object-top" />
-          </>
-        ) : (
-          <div
-            className="absolute inset-0 flex flex-col items-center justify-center gap-3.5"
-            style={{ background: 'repeating-linear-gradient(135deg, rgba(255,255,255,.03) 0 10px, rgba(255,255,255,0) 10px 20px), #0C1336' }}
-          >
-            <img src={card.logo} alt="" className="h-6 w-auto max-w-[62%] object-contain brightness-0 invert opacity-35" />
-            <span className="text-[10.5px] tracking-[0.08em] text-white/35">// print em breve</span>
-          </div>
-        )}
-      </div>
-      <div className="flex items-center justify-between gap-2.5 px-1.5 pt-3.5 pb-1.5">
-        <div className="min-w-0 flex-1">
-          <img src={card.logo} alt={card.name} title={card.name} loading="lazy" className="block h-[40px] w-auto max-w-[160px] object-contain brightness-0 invert opacity-90" />
-          <div className="text-[11px] text-white/45 truncate">{card.meta}</div>
+    <div className="relative overflow-hidden rounded-2xl border border-white/15" style={{ aspectRatio: '16/9' }}>
+      {prevSlide && (
+        <img
+          key={`prev-${prevIndex}`}
+          src={prevSlide.print}
+          alt={`Portal ${prevSlide.name} na DothNews`}
+          className={`absolute inset-0 h-full w-full object-cover object-top ${exitClass}`}
+        />
+      )}
+      <img
+        key={`curr-${index}`}
+        src={slide.print}
+        alt={`Portal ${slide.name} na DothNews`}
+        loading="lazy"
+        className={`absolute inset-0 h-full w-full object-cover object-top ${enterClass}`}
+      />
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 p-5 pt-16 bg-gradient-to-t from-black/60 via-black/20 to-transparent">
+        <div>
+          <p className="mt-0.5 text-[15px] font-semibold text-white">
+            {slide.name}
+          </p>
         </div>
-        
+        <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={goPrev}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/22 bg-black/20 text-white transition-all hover:bg-white/15"
+            aria-label="Portal anterior"
+          >
+            <Icon name="chevron_left" className="text-[20px]" />
+          </button>
+          <div className="flex gap-1.5">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => go(i, i > index ? 1 : -1)}
+                className={'h-1.5 rounded-full transition-all ' + (i === index ? 'w-4 bg-white' : 'w-1.5 bg-white/30 hover:bg-white/50')}
+                aria-label={`Portal ${i + 1}`}
+              />
+            ))}
+          </div>
+          <button
+            onClick={goNext}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-white/22 bg-black/20 text-white transition-all hover:bg-white/15"
+            aria-label="Próximo portal"
+          >
+            <Icon name="chevron_right" className="text-[20px]" />
+          </button>
+        </div>
       </div>
     </div>
   )
 }
 
-export function ClientsSection() {
+function ClientLogosGrid() {
   return (
-    <section className="mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-white py-16 lg:py-20">
-      <Shell>
-        <div className="grid gap-10 sm:grid-cols-3">
-          {TRUST_FEATURES.map((f, i) => (
-            <Reveal key={i} delay={i * 80}>
-              <div className="flex flex-col gap-3">
-                <div className="text-primary">
-                  <Icon name={f.icon} className="text-[40px]" />
-                </div>
-                <h3 className="text-[17px] font-semibold text-ink">{f.title}</h3>
-                <p className="text-[14.5px] leading-[1.6] text-mute">{f.text}</p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
-      </Shell>
-    </section>
+    <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-5">
+      {CLIENT_CARDS.map((card, i) => (
+        <img
+          key={i}
+          src={card.logo}
+          alt={card.name}
+          title={card.name}
+          loading="lazy"
+          className="h-10 w-auto object-contain brightness-0 invert opacity-50 transition-opacity hover:opacity-80"
+        />
+      ))}
+    </div>
   )
 }
 
+
 export function WhySection() {
-  const [index, setIndex] = useState(0)
-  const [maxIndex, setMaxIndex] = useState(0)
-  const refs = useRef({ index: 0, maxIndex: 0, step: 300, timer: null })
-  const trackRef = useRef(null)
-  const viewportRef = useRef(null)
-  const sectionRef = useRef(null)
-
-  const go = useCallback((i) => {
-    const newIdx = Math.max(0, Math.min(i, refs.current.maxIndex))
-    refs.current.index = newIdx
-    setIndex(newIdx)
-    if (trackRef.current) {
-      trackRef.current.style.transform = `translateX(${-newIdx * refs.current.step}px)`
-    }
-  }, [])
-
-  const pauseAutoplay = useCallback(() => {
-    clearInterval(refs.current.timer)
-  }, [])
-
-  const restartAutoplay = useCallback(() => {
-    clearInterval(refs.current.timer)
-    refs.current.timer = setInterval(() => {
-      go(refs.current.index >= refs.current.maxIndex ? 0 : refs.current.index + 1)
-    }, 4000)
-  }, [go])
-
-  // measure card width, max scrollable index, and extend viewport to section right edge
-  useEffect(() => {
-    function measure() {
-      const track = trackRef.current
-      const viewport = viewportRef.current
-      const section = sectionRef.current
-      if (!track || !viewport || !section) return
-
-      // Reset inline width so getBoundingClientRect reflects natural layout
-      viewport.style.width = ''
-      const sectionRight = section.getBoundingClientRect().right
-      const vpLeft = viewport.getBoundingClientRect().left
-      viewport.style.width = Math.max(0, sectionRight - vpLeft) + 'px'
-
-      const card = track.querySelector('[data-cli-card]')
-      if (!card) return
-      const gap = parseFloat(getComputedStyle(track).gap) || 20
-      refs.current.step = card.offsetWidth + gap
-      const visible = Math.max(1, Math.floor((viewport.clientWidth + gap) / refs.current.step))
-      const newMax = Math.max(0, CLIENT_CARDS.length - visible)
-      refs.current.maxIndex = newMax
-      refs.current.index = Math.min(refs.current.index, newMax)
-      setMaxIndex(newMax)
-      if (track) {
-        track.style.transform = `translateX(${-refs.current.index * refs.current.step}px)`
-      }
-    }
-    measure()
-    window.addEventListener('resize', measure)
-    return () => window.removeEventListener('resize', measure)
-  }, [])
-
-  // autoplay
-  useEffect(() => {
-    restartAutoplay()
-    return () => clearInterval(refs.current.timer)
-  }, [restartAutoplay])
-
-  // drag / swipe
-  useEffect(() => {
-    const track = trackRef.current
-    if (!track) return
-    const drag = { active: false, startX: 0, startTranslate: 0, moved: 0 }
-
-    function onPointerDown(e) {
-      drag.active = true
-      drag.moved = 0
-      drag.startX = e.clientX
-      drag.startTranslate = -refs.current.index * refs.current.step
-      track.classList.add('is-dragging')
-      track.setPointerCapture(e.pointerId)
-      pauseAutoplay()
-    }
-    function onPointerMove(e) {
-      if (!drag.active) return
-      drag.moved = e.clientX - drag.startX
-      track.style.transform = `translateX(${drag.startTranslate + drag.moved}px)`
-    }
-    function onPointerEnd() {
-      if (!drag.active) return
-      drag.active = false
-      track.classList.remove('is-dragging')
-      if (Math.abs(drag.moved) > refs.current.step * 0.22) {
-        go(refs.current.index - Math.sign(drag.moved))
-      } else {
-        track.style.transform = `translateX(${-refs.current.index * refs.current.step}px)`
-      }
-      restartAutoplay()
-    }
-
-    track.addEventListener('pointerdown', onPointerDown)
-    track.addEventListener('pointermove', onPointerMove)
-    track.addEventListener('pointerup', onPointerEnd)
-    track.addEventListener('pointercancel', onPointerEnd)
-    return () => {
-      track.removeEventListener('pointerdown', onPointerDown)
-      track.removeEventListener('pointermove', onPointerMove)
-      track.removeEventListener('pointerup', onPointerEnd)
-      track.removeEventListener('pointercancel', onPointerEnd)
-    }
-  }, [go, pauseAutoplay, restartAutoplay])
-
-  // hover pause / resume
-  useEffect(() => {
-    const viewport = viewportRef.current
-    if (!viewport) return
-    viewport.addEventListener('mouseenter', pauseAutoplay)
-    viewport.addEventListener('mouseleave', restartAutoplay)
-    return () => {
-      viewport.removeEventListener('mouseenter', pauseAutoplay)
-      viewport.removeEventListener('mouseleave', restartAutoplay)
-    }
-  }, [pauseAutoplay, restartAutoplay])
-
-  const goNext = () => { go(index + 1); restartAutoplay() }
-  const goPrev = () => { go(index - 1); restartAutoplay() }
-
   return (
-    <section ref={sectionRef} id="clientes" aria-labelledby="clientes-title" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-20 lg:py-[100px]">
+    <section id="clientes" aria-labelledby="clientes-title" className="why-section relative mx-[8px] sm:mx-[24px] lg:mx-[40px] mt-3 sm:mt-4 rounded-2xl sm:rounded-[32px] overflow-hidden bg-primary py-20 lg:py-[100px]">
 
       <div className="pointer-events-none absolute inset-0 select-none" aria-hidden="true">
         <div className="absolute why-blob-1" style={{ filter: 'blur(125px)' }}>
@@ -524,69 +450,52 @@ export function WhySection() {
       </div>
 
       <Shell className="relative z-10">
-        {/* Two-column grid: text left, cards right */}
-        <div className="grid items-center gap-10 lg:gap-8 lg:grid-cols-[minmax(300px,0.82fr)_minmax(0,1.5fr)] ">
-
-          {/* Left: chip + headline + subtitle + nav */}
+        <div className="grid items-center gap-10 lg:gap-12 lg:grid-cols-[minmax(280px,0.75fr)_minmax(0,1.25fr)]">
           <div>
             <Reveal>
               <Chip variant="dark">Validação</Chip>
             </Reveal>
             <Reveal delay={80}>
-              <h2 id="clientes-title" className="headline mt-5 text-[28px] font-bold leading-[1.12] tracking-[-0.02em] text-white sm:text-[38px] max-w-[13ch]">
+              <h2 id="clientes-title" className="headline mt-5 text-[28px] font-bold leading-[1.12] tracking-[-0.02em] text-white sm:text-[38px]">
                 Estrutura validada diariamente por operações editoriais reais.
               </h2>
             </Reveal>
             <Reveal delay={140}>
-              <p className="mt-4 text-[16px] leading-[1.6] text-white/60 max-w-[40ch]">
+              <p className="mt-4 text-[16px] leading-[1.6] text-white/60">
                 A confiança não vem apenas do discurso.<br />
                 Ela é construída diariamente por portais que dependem da DothNews para publicar, monetizar e crescer.
               </p>
             </Reveal>
-            
           </div>
 
-          {/* Right: viewport expandido via JS até a borda direita da section */}
           <Reveal delay={160}>
-            <div ref={viewportRef} className=" overflow-hidden py-2">
-
-
-            <Reveal delay={200}>
-                <div className="mr-8 mb-8 z-10 flex justify-end items-center gap-4">
-                  <button
-                    onClick={goPrev}
-                    disabled={index <= 0}
-                    className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-white/22 bg-transparent text-white transition-all hover:bg-white/12 disabled:opacity-30 disabled:cursor-default"
-                    aria-label="Portal anterior"
-                  >
-                    <Icon name="chevron_left" className="text-[20px]" />
-                  </button>
-                  <button
-                    onClick={goNext}
-                    disabled={index >= maxIndex}
-                    className="flex h-[42px] w-[42px] items-center justify-center rounded-full border border-white/22 bg-transparent text-white transition-all hover:bg-white/12 disabled:opacity-30 disabled:cursor-default"
-                    aria-label="Próximo portal"
-                  >
-                    <Icon name="chevron_right" className="text-[20px]" />
-                  </button>
-                </div>
-              </Reveal>
-
-
-              <div ref={trackRef} className="cards-track flex gap-5">
-                {CLIENT_CARDS.map((card, i) => (
-                  <ClientCard key={i} card={card} />
-                ))}
-              </div>
-            </div>
-            
+            <PrintCarousel />
           </Reveal>
         </div>
 
-        {/* MetricsGrid abaixo — sem alteração */}
-        <Reveal delay={100} className="mt-12 lg:mt-16">
+        <Reveal delay={100} className="mt-12 lg:mt-20">
           <MetricsGrid metrics={METRICS} />
         </Reveal>
+
+        <Reveal delay={120} className="mt-12 lg:mt-20">
+          <ClientLogosGrid />
+        </Reveal>
+
+        <div className="mt-12 lg:mt-16 border-t border-white/10 pt-12 lg:pt-16">
+          <div className="grid gap-10 sm:grid-cols-3">
+            {TRUST_FEATURES.map((f, i) => (
+              <Reveal key={i} delay={i * 80}>
+                <div className="flex flex-col gap-3">
+                  <div className="text-white/70">
+                    <Icon name={f.icon} className="text-[40px]" />
+                  </div>
+                  <h3 className="text-[17px] font-semibold text-white">{f.title}</h3>
+                  <p className="text-[14.5px] leading-[1.6] text-white/55">{f.text}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </Shell>
     </section>
   )

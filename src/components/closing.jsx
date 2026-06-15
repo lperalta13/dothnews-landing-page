@@ -339,8 +339,13 @@ export function FinalCta({ onOpenForm }) {
         <Reveal delay={320} className="mt-16">
           <div className="border-t border-white/10 pt-8">
             <MetricsGrid metrics={FINAL_METRICS} />
-            <p className="mt-8 text-center text-[14px] italic text-white/55">
-              Você cuida da audiência. A infraestrutura cuida do resto.
+            <p className="mt-12 text-center leading-[1.15] tracking-[-0.02em]">
+              <span className="block text-[26px] font-semibold text-white/50 sm:text-[36px] lg:text-[44px]">
+                Você cuida da audiência.
+              </span>
+              <span className="block text-[26px] font-bold text-white sm:text-[36px] lg:text-[44px]">
+                A infraestrutura cuida do resto.
+              </span>
             </p>
           </div>
         </Reveal>

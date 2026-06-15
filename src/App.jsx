@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react'
 import { Hero } from './components/hero'
 import { SiteHeader } from './components/header'
 import { GrowthSection, ReflectionSection } from './components/problem'
-import { WhatSection, WhySection, ClientsSection } from './components/solution'
+import { WhatSection, WhySection } from './components/solution'
 import { EvolutionSection, FaqSection } from './components/evolution'
 import { DiagnosisSection, FinalCta, Footer, DiagnosisModal } from './components/closing'
 
@@ -34,7 +34,6 @@ export default function App() {
         <ReflectionSection />
         <WhatSection />
         <WhySection />
-        <ClientsSection />
         <EvolutionSection />
         <FaqSection />
         <DiagnosisSection />
