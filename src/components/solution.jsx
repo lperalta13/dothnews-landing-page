@@ -46,31 +46,36 @@ const PILLARS = [
 
 const SGI_SLIDES = [
   {
-    src: '/assets/sgi-dashboard.png',
+    src: '/assets/sgi-dashboard.webp',
+    srcSet: '/assets/sgi-dashboard-sm.webp 800w, /assets/sgi-dashboard.webp 1846w',
     alt: 'Painel principal com visão geral da operação editorial',
     label: '// painel editorial',
     text: 'Visão geral consolidada da operação: publicações recentes, métricas de conteúdo e atividade da redação em um único painel.',
   },
   {
-    src: '/assets/sgi-criar-post.png',
+    src: '/assets/sgi-criar-post.webp',
+    srcSet: '/assets/sgi-criar-post-sm.webp 800w, /assets/sgi-criar-post.webp 1846w',
     alt: 'Editor de criação de post',
     label: '// editor de post',
     text: 'O mesmo editor que centenas de jornalistas usam todos os dias. Pensado para o fluxo de uma redação, não adaptado de um CMS genérico.',
   },
   {
-    src: '/assets/sgi-posts.png',
+    src: '/assets/sgi-posts.webp',
+    srcSet: '/assets/sgi-posts-sm.webp 800w, /assets/sgi-posts.webp 1846w',
     alt: 'Listagem e gestão de publicações no painel editorial',
     label: '// gestão de publicações',
     text: 'Listagem, filtros e controle de todo o conteúdo publicado. Fluxo editorial pensado para agilidade sem perder rastreabilidade.',
   },
   {
-    src: '/assets/sgi-usuarios.png',
+    src: '/assets/sgi-usuarios.webp',
+    srcSet: '/assets/sgi-usuarios-sm.webp 800w, /assets/sgi-usuarios.webp 1846w',
     alt: 'Gestão de usuários e permissões',
     label: '// gestão de usuários',
     text: 'Perfis e permissões por nível de acesso. Controle granular de quem publica, edita ou aprova conteúdo na redação.',
   },
   {
-    src: '/assets/sgi-config.png',
+    src: '/assets/sgi-config.webp',
+    srcSet: '/assets/sgi-config-sm.webp 800w, /assets/sgi-config.webp 1846w',
     alt: 'Tela de configurações da plataforma editorial',
     label: '// configurações do sistema',
     text: 'Controle total das configurações da plataforma. Nenhuma dependência de plugin externo para ajustar o comportamento do sistema.',
@@ -79,19 +84,19 @@ const SGI_SLIDES = [
 
 const MONITORING_SLIDES = [
   {
-    src: '/assets/grafana-overview.png',
+    src: '/assets/grafana-overview.webp',
     alt: 'Visão geral do ambiente de monitoramento no Grafana',
     label: '// visão geral do ambiente',
     text: 'Painel consolidado com o estado de toda a infraestrutura. CPU, memória, disco e rede de cada servidor em um único lugar.',
   },
   {
-    src: '/assets/monitoramento-grafana-dashboard-nave-mae-mysql.png',
+    src: '/assets/monitoramento-grafana-dashboard-nave-mae-mysql.webp',
     alt: 'Dashboard MySQL com QPS, conexões e buffer pool em tempo real',
     label: '// banco de dados em operação real',
     text: 'QPS, conexões e buffer pool visíveis a todo momento. Infraestrutura que não esconde o que está acontecendo.',
   },
   {
-    src: '/assets/grafana-nginx.png',
+    src: '/assets/grafana-nginx.webp',
     alt: 'Dashboard de monitoramento do Nginx com requisições e latência',
     label: '// camada web em tempo real',
     text: 'Requisições por segundo, tempo de resposta e status HTTP monitorados no Nginx. Anomalias detectadas antes de virarem incidente.',
@@ -152,6 +157,8 @@ function ScreenCarousel({ slides, imageRight = true }) {
         <img
           key={`prev-${prevIndex}`}
           src={prevSlide.src}
+          srcSet={prevSlide.srcSet}
+          sizes="(max-width: 640px) 100vw, 680px"
           alt={prevSlide.alt}
           className={`absolute inset-0 h-full w-full object-cover object-left-top ${exitClass}`}
         />
@@ -159,6 +166,8 @@ function ScreenCarousel({ slides, imageRight = true }) {
       <img
         key={`curr-${index}`}
         src={slide.src}
+        srcSet={slide.srcSet}
+        sizes="(max-width: 640px) 100vw, 680px"
         alt={slide.alt}
         loading="lazy"
         className={`absolute inset-0 h-full w-full object-cover object-left-top ${enterClass}`}
@@ -275,15 +284,15 @@ export function WhatSection() {
 }
 
 const CLIENT_CARDS = [
-  { name: 'Correio do Estado',    logo: '/assets/clients/correiodoestado.png',    meta: 'Campo Grande · MS',    print: '/assets/clients/prints/correiodoestado.png' },
-  { name: 'Folha de Pernambuco',  logo: '/assets/clients/folhadepernambuco.png',  meta: 'Recife · PE',           print: '/assets/clients/prints/folhadepernambuco.png' },
-  { name: 'Capital do Pantanal',  logo: '/assets/clients/capitaldopantanal.png',  meta: 'Corumbá · MS',          print: '/assets/clients/prints/capitaldopantanal.png' },
-  { name: 'Diário do Estado',     logo: '/assets/clients/diariadoestado.png',     meta: 'Portal de notícias',   print: null },
-  { name: 'Expressão MS',         logo: '/assets/clients/expressaoms.png',        meta: 'Mato Grosso do Sul',   print: null },
-  { name: 'Folha de Alphaville',  logo: '/assets/clients/folhadealphaville.png',  meta: 'Alphaville · SP',       print: null },
-  { name: 'Portal Mais 360',      logo: '/assets/clients/portalmais360.png',      meta: 'Portal de notícias',   print: null },
-  { name: 'Diário da Baixada',    logo: '/assets/clients/diariadabaixada.png',    meta: 'Baixada Fluminense',   print: null },
-  { name: 'Portal de Prefeitura', logo: '/assets/clients/portaldeprefeitura.png', meta: 'Gestão pública',       print: null },
+  { name: 'Correio do Estado',    logo: '/assets/clients/correiodoestado.webp',    meta: 'Campo Grande · MS',    print: '/assets/clients/prints/correiodoestado.webp' },
+  { name: 'Folha de Pernambuco',  logo: '/assets/clients/folhadepernambuco.webp',  meta: 'Recife · PE',           print: '/assets/clients/prints/folhadepernambuco.webp' },
+  { name: 'Capital do Pantanal',  logo: '/assets/clients/capitaldopantanal.webp',  meta: 'Corumbá · MS',          print: '/assets/clients/prints/capitaldopantanal.webp' },
+  { name: 'Diário do Estado',     logo: '/assets/clients/diariadoestado.webp',     meta: 'Portal de notícias',   print: null },
+  { name: 'Expressão MS',         logo: '/assets/clients/expressaoms.webp',        meta: 'Mato Grosso do Sul',   print: null },
+  { name: 'Folha de Alphaville',  logo: '/assets/clients/folhadealphaville.webp',  meta: 'Alphaville · SP',       print: null },
+  { name: 'Portal Mais 360',      logo: '/assets/clients/portalmais360.webp',      meta: 'Portal de notícias',   print: null },
+  { name: 'Diário da Baixada',    logo: '/assets/clients/diariadabaixada.webp',    meta: 'Baixada Fluminense',   print: null },
+  { name: 'Portal de Prefeitura', logo: '/assets/clients/portaldeprefeitura.webp', meta: 'Gestão pública',       print: null },
 ]
 
 const METRICS = [

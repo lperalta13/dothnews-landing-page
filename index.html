@@ -41,12 +41,13 @@
     <meta name="twitter:image:alt" content="DothNews, plataforma e infraestrutura especializada para portais de notícias" />
 
     <!-- Performance: preload da imagem LCP (primeiro slide do carousel hero) -->
-    <link rel="preload" as="image" href="/assets/sgi-dashboard.png" fetchpriority="high" />
+    <link rel="preload" as="image" href="/assets/sgi-dashboard.webp"
+      imagesrcset="/assets/sgi-dashboard-sm.webp 800w, /assets/sgi-dashboard.webp 1846w"
+      imagesizes="(max-width: 640px) 100vw, 1142px"
+      fetchpriority="high" />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional" rel="stylesheet" />
     <script>
       document.documentElement.classList.add('js')
     </script>

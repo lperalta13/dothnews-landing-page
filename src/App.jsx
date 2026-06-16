@@ -1,10 +1,16 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, lazy, Suspense } from 'react'
 import { Hero } from './components/hero'
 import { SiteHeader } from './components/header'
 import { GrowthSection, ReflectionSection } from './components/problem'
-import { WhatSection, WhySection } from './components/solution'
-import { EvolutionSection, FaqSection } from './components/evolution'
-import { DiagnosisSection, FinalCta, Footer, DiagnosisModal } from './components/closing'
+
+const WhatSection      = lazy(() => import('./components/solution').then(m => ({ default: m.WhatSection })))
+const WhySection       = lazy(() => import('./components/solution').then(m => ({ default: m.WhySection })))
+const EvolutionSection = lazy(() => import('./components/evolution').then(m => ({ default: m.EvolutionSection })))
+const FaqSection       = lazy(() => import('./components/evolution').then(m => ({ default: m.FaqSection })))
+const DiagnosisSection = lazy(() => import('./components/closing').then(m => ({ default: m.DiagnosisSection })))
+const FinalCta         = lazy(() => import('./components/closing').then(m => ({ default: m.FinalCta })))
+const Footer           = lazy(() => import('./components/closing').then(m => ({ default: m.Footer })))
+const DiagnosisModal   = lazy(() => import('./components/closing').then(m => ({ default: m.DiagnosisModal })))
 
 export default function App() {
   const [formOpen, setFormOpen] = useState(false)
@@ -32,15 +38,19 @@ export default function App() {
         <Hero onOpenForm={openForm} />
         <GrowthSection />
         <ReflectionSection />
-        <WhatSection />
-        <WhySection />
-        <EvolutionSection />
-        <FaqSection />
-        <DiagnosisSection />
-        <FinalCta onOpenForm={openForm} />
+        <Suspense fallback={null}>
+          <WhatSection />
+          <WhySection />
+          <EvolutionSection />
+          <FaqSection />
+          <DiagnosisSection />
+          <FinalCta onOpenForm={openForm} />
+        </Suspense>
       </main>
-      <Footer />
-      <DiagnosisModal open={formOpen} onClose={closeForm} />
+      <Suspense fallback={null}>
+        <Footer />
+        <DiagnosisModal open={formOpen} onClose={closeForm} />
+      </Suspense>
     </>
   )
 }

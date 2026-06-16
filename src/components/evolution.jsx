@@ -17,7 +17,7 @@ const EVO_CARDS = [
     icon: 'speed',
     title: 'Performance',
     text: 'Velocidade e estabilidade que audiência e anunciantes exigem.',
-    img: '/assets/grafana-nginx.png',
+    img: '/assets/grafana-nginx.webp',
   },
   {
     icon: 'layers',
@@ -33,7 +33,7 @@ const EVO_CARDS = [
     icon: 'monitor',
     title: 'Monitoramento Ativo',
     text: 'Visibilidade total da operação, em tempo real.',
-    img: '/assets/grafana-overview.png',
+    img: '/assets/grafana-overview.webp',
   },
 ]
 

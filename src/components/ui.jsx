@@ -173,13 +173,13 @@ export function Icon({ name, className = 'text-[32px]' }) {
 }
 
 export const CLIENT_LOGOS = [
-  { name: 'Correio do Estado',    file: '/assets/clients/correiodoestado.png' },
-  { name: 'Folha de Pernambuco',  file: '/assets/clients/folhadepernambuco.png' },
-  { name: 'Diário do Estado',     file: '/assets/clients/diariadoestado.png' },
-  { name: 'Capital do Pantanal',  file: '/assets/clients/capitaldopantanal.png' },
-  { name: 'Expressão MS',         file: '/assets/clients/expressaoms.png' },
-  { name: 'Folha de Alphaville',  file: '/assets/clients/folhadealphaville.png' },
-  { name: 'Portal Mais 360',      file: '/assets/clients/portalmais360.png' },
-  { name: 'Diário da Baixada',    file: '/assets/clients/diariadabaixada.png' },
-  { name: 'Portal de Prefeitura', file: '/assets/clients/portaldeprefeitura.png' },
+  { name: 'Correio do Estado',    file: '/assets/clients/correiodoestado.webp' },
+  { name: 'Folha de Pernambuco',  file: '/assets/clients/folhadepernambuco.webp' },
+  { name: 'Diário do Estado',     file: '/assets/clients/diariadoestado.webp' },
+  { name: 'Capital do Pantanal',  file: '/assets/clients/capitaldopantanal.webp' },
+  { name: 'Expressão MS',         file: '/assets/clients/expressaoms.webp' },
+  { name: 'Folha de Alphaville',  file: '/assets/clients/folhadealphaville.webp' },
+  { name: 'Portal Mais 360',      file: '/assets/clients/portalmais360.webp' },
+  { name: 'Diário da Baixada',    file: '/assets/clients/diariadabaixada.webp' },
+  { name: 'Portal de Prefeitura', file: '/assets/clients/portaldeprefeitura.webp' },
 ]
