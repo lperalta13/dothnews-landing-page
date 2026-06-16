@@ -295,7 +295,7 @@ export function FinalCta({ onOpenForm }) {
             <Chip className="justify-center" variant="dark">Próximo passo</Chip>
           </Reveal>
           <Reveal delay={80}>
-            <h2 className="headline mt-7 text-[34px] font-bold leading-[1.1] tracking-[-0.015em] sm:text-[48px]">
+            <h2 className="headline mt-7 text-[26px] font-bold leading-[1.1] tracking-[-0.015em] sm:text-[34px] lg:text-[48px]">
               <span className="block">O crescimento já aconteceu.</span>
               <span className="block">Agora a estrutura precisa acompanhar.</span>
             </h2>
@@ -363,7 +363,7 @@ export function Footer() {
             <img src="/assets/logo-dothnews.svg" alt="DothNews" className="h-[25px] w-auto" />
             <p className="mt-5 max-w-md text-[13.5px] leading-[1.65] text-mute">
               A DothNews é desenvolvida pela{' '}
-              <span className="font-medium text-subink">Dotcom</span>, empresa com mais
+              <span className="font-medium text-subink">DothCom</span>, empresa com mais
               de 22 anos de experiência em tecnologia para operações editoriais digitais no Brasil.
             </p>
           </div>
@@ -374,7 +374,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 flex flex-col gap-2 border-t border-line pt-6 text-[12.5px] text-faint sm:flex-row sm:items-center sm:justify-between">
-          <span>© 2026 DothNews · Dotcom Tecnologia. Todos os direitos reservados.</span>
+          <span>© 2026 DothNews · DothCom Tecnologia. Todos os direitos reservados.</span>
           <span className="flex items-center gap-2">
             infraestrutura editorial · desde 2004 · 
             <img src="/assets/logo-dothcom.svg" alt="DothCom" className="h-[48px] w-auto opacity-70" />

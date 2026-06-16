@@ -94,7 +94,7 @@ function Carousel({ slides, interval = 3500, transition = 'fade' }) {
 
   return (
     <div className="relative z-10 mt-10 -mb-[100px] sm:mb-0 -mx-[24px] sm:mx-auto w-auto sm:w-full max-w-[1142px] sm:mt-16">
-      <div className="liquid-glass rounded-2xl p-4 pb-0 sm:rounded-[32px] sm:p-[40px] sm:pb-0">
+      <div className="liquid-glass rounded-[16px] p-3 pb-0 sm:rounded-[32px] sm:p-[40px] sm:pb-0">
 
         {/* Slides */}
         <div
@@ -172,7 +172,7 @@ export function Hero({ onOpenForm }) {
         </div>
 
         <div className="flex w-full flex-col items-center gap-5">
-          <p className="max-w-[822px] text-[17px] leading-[28px] text-ink">
+          <p className="max-w-[822px] text-[15px] leading-[26px] sm:text-[17px] sm:leading-[28px] text-ink">
             A DothNews é a infraestrutura tecnológica por trás de operações editoriais que precisam crescer com estabilidade, segurança e suporte especializado.
           </p>
           <Button

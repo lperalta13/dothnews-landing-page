@@ -143,8 +143,8 @@ function ScreenCarousel({ slides, imageRight = true }) {
   const exitClass  = dir > 0 ? 'sc-img-exit-left' : 'sc-img-exit-right'
 
   const borderClass = imageRight
-    ? 'border-t border-line lg:border-l lg:border-t-0'
-    : 'border-b border-line lg:border-b-0 lg:border-r'
+    ? 'lg:border-l'
+    : 'lg:border-r'
 
   const imageBlock = (
     <div className={`relative overflow-hidden min-h-[260px] ${borderClass}`}>
