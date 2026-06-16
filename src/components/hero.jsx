@@ -93,8 +93,8 @@ function Carousel({ slides, interval = 3500, transition = 'fade' }) {
   }
 
   return (
-    <div className="relative z-10 mt-10 -mb-[100px] sm:mb-0 -mx-[24px] sm:mx-auto w-auto sm:w-full max-w-[1142px] sm:mt-16">
-      <div className="liquid-glass rounded-[16px] p-3 pb-0 sm:rounded-[32px] sm:p-[40px] sm:pb-0">
+    <div className="relative z-10 mt-10 -mb-[68px] lg:mb-0 sm:mx-[24px] lg:mx-auto w-auto lg:w-full max-w-[1142px] lg:mt-16">
+      <div className="liquid-glass max-sm:before:hidden max-sm:after:hidden rounded-[16px] p-0 sm:rounded-[24px] md:rounded-[32px] sm:p-[8px] sm:pb-0 md:p-[24px] md:pb-0 lg:p-[40px] lg:pb-0">
 
         {/* Slides */}
         <div
@@ -120,7 +120,7 @@ function Carousel({ slides, interval = 3500, transition = 'fade' }) {
         </div>
 
         {/* Caption */}
-        <p className="py-3 text-center text-[14px] leading-normal text-neutral-500">
+        <p className="py-3 text-center text-[14px] leading-normal text-neutral-0 md:text-neutral-500">
           {slides[current].label}
         </p>
 
@@ -146,11 +146,11 @@ function Carousel({ slides, interval = 3500, transition = 'fade' }) {
 // ─── Slides ───────────────────────────────────────────────────────────────────
 
 const SLIDES = [
-  { src: '/assets/sgi-dashboard.png',  alt: 'Painel de gestão editorial SGI da DothNews',  label: 'Painel principal' },
-  { src: '/assets/sgi-posts.png',      alt: 'Lista de posts do SGI DothNews',              label: 'Gestão de publicações' },
-  { src: '/assets/sgi-criar-post.png', alt: 'Editor de post do SGI DothNews',              label: 'Editor de conteúdo' },
-  { src: '/assets/sgi-config.png',     alt: 'Configurações do SGI DothNews',               label: 'Configurações da plataforma' },
-  { src: '/assets/sgi-usuarios.png',   alt: 'Gerenciamento de usuários do SGI DothNews',   label: 'Gerenciamento de usuários' },
+  { src: '/assets/sgi-dashboard.png',  alt: 'Painel de gestão editorial da DothNews',         label: 'Painel principal' },
+  { src: '/assets/sgi-posts.png',      alt: 'Listagem de publicações da plataforma DothNews',  label: 'Gestão de publicações' },
+  { src: '/assets/sgi-criar-post.png', alt: 'Editor de conteúdo da plataforma DothNews',       label: 'Editor de conteúdo' },
+  { src: '/assets/sgi-config.png',     alt: 'Configurações da plataforma DothNews',            label: 'Configurações da plataforma' },
+  { src: '/assets/sgi-usuarios.png',   alt: 'Gerenciamento de usuários da plataforma DothNews', label: 'Gerenciamento de usuários' },
 ]
 
 // ─── Hero ─────────────────────────────────────────────────────────────────────

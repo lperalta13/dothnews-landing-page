@@ -26,7 +26,7 @@ export function GrowthSection() {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.05fr)] lg:items-end lg:gap-16">
           <Reveal>
             <Chip>Operação</Chip>
-            <h2 id="estrutura-title" className="headline mt-5 text-[34px] font-bold leading-[1.1] tracking-[-0.015em] text-ink sm:text-[44px]">
+            <h2 id="estrutura-title" className="headline mt-5 text-[30px] font-bold leading-[1.12] tracking-[-0.015em] text-ink sm:text-[42px]">
               Soluções simples funcionam.<br />
               <span className="text-faint">Até o crescimento começar.</span>
             </h2>
@@ -159,13 +159,13 @@ export function ReflectionSection() {
               <Chip variant="dark">Reflexão</Chip>
             </Reveal>
             <Reveal delay={80}>
-              <h2 id="reflexao-title" className="headline mt-6 text-[30px] font-bold leading-[1.12] tracking-[-0.015em] text-white sm:text-[40px]">
+              <h2 id="reflexao-title" className="headline mt-5 text-[30px] font-bold leading-[1.12] tracking-[-0.015em] text-white sm:text-[42px]">
                 O problema nem sempre é o crescimento do portal.{' '}
                 <span className="text-primary-200">Às vezes é a estrutura que ficou para trás.</span>
               </h2>
             </Reveal>
             <Reveal delay={140}>
-              <p className="pretty mt-6 text-[17px] leading-[1.7] text-white/70">
+              <p className="pretty mt-6 text-[17px] leading-[1.66] text-white/85">
                 Seu portal cresce.<br />
                 A audiência cresce.<br />
                 A operação cresce.<br />
@@ -183,13 +183,13 @@ export function ReflectionSection() {
                   <svg width="26" height="6" viewBox="0 0 26 6" fill="none" aria-hidden="true">
                     <rect x="0" y="1" width="26" height="4" rx="2" fill="rgba(255,255,255,0.88)" />
                   </svg>
-                  <span className="text-[12px] text-white/50">Crescimento do portal</span>
+                  <span className="text-[12px] text-white/70">Crescimento do portal</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <svg width="26" height="6" viewBox="0 0 26 6" fill="none" aria-hidden="true">
                     <rect x="0" y="1" width="26" height="4" rx="2" fill="#FB923C" />
                   </svg>
-                  <span className="text-[12px] text-white/50">Estrutura</span>
+                  <span className="text-[12px] text-white/70">Estrutura</span>
                 </div>
               </div>
             </div>
@@ -199,7 +199,7 @@ export function ReflectionSection() {
 
         <Reveal delay={100} className="mt-14 lg:mt-16">
           <div className="rounded-2xl border border-white/15 bg-white/[0.07] px-8 py-10 lg:px-10 lg:py-12 backdrop-blur-sm">
-            <p className="text-center text-[12px] font-semibold uppercase tracking-[0.14em] text-white/45">
+            <p className="text-center text-[12px] font-semibold uppercase tracking-[0.14em] text-white/65">
               Sinais de que sua estrutura começou a limitar sua operação
             </p>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -208,7 +208,7 @@ export function ReflectionSection() {
                   <div className="flex-none rounded-lg bg-white/10 p-1.5">
                     <Icon name={s.icon} className="text-[18px] text-white/70" />
                   </div>
-                  <span className="text-[14.5px] leading-[1.55] text-white/75">{s.text}</span>
+                  <span className="text-[14.5px] leading-[1.55] text-white/90">{s.text}</span>
                 </div>
               ))}
             </div>

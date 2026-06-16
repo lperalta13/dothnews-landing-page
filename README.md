@@ -18,7 +18,7 @@ Esta landing foi criada para apoiar a captacao de operacoes editoriais que cresc
 ## Estrutura da pagina
 
 - `Header`: navegacao fixa com efeito liquid glass ao rolar a pagina.
-- `Hero`: headline principal, chamada para diagnostico e evidencia visual do painel SGI.
+- `Hero`: headline principal, chamada para diagnostico e evidencia visual do painel editorial.
 - `GrowthSection`: dores comuns de portais em crescimento.
 - `ReflectionSection`: bloco de reflexao sobre infraestrutura que ficou para tras.
 - `WhatSection`: explicacao da plataforma e pilares de valor.
@@ -27,7 +27,7 @@ Esta landing foi criada para apoiar a captacao de operacoes editoriais que cresc
 - `FaqSection`: perguntas frequentes sobre migracao, suporte e perfil de operacao.
 - `DiagnosisSection`: formulario local de solicitacao de diagnostico.
 - `FinalCta`: chamada final para conversao.
-- `Footer`: informacoes institucionais da DothNews/Dotcom.
+- `Footer`: informacoes institucionais da DothNews/dothCom.
 
 ## Tecnologias
 
@@ -60,7 +60,7 @@ Os assets ficam em `public/assets/` e incluem:
 
 - Logos DothNews em SVG.
 - Logos de clientes.
-- Capturas do SGI e telas de monitoramento.
+- Capturas do painel editorial e telas de monitoramento.
 - Blobs vetoriais usados no fundo do hero.
 
 ## Estilos e UI

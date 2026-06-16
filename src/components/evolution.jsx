@@ -75,7 +75,7 @@ export function EvolutionSection() {
             </h2>
           </Reveal>
           <Reveal delay={120}>
-            <p className="pretty text-[16px] leading-[1.66] text-mute">
+            <p className="pretty text-[17px] leading-[1.66] text-mute">
               A operação evolui.<br />
               O comportamento da audiência muda.<br />
               Novas formas de monetização surgem.<br />
@@ -179,7 +179,7 @@ export function FaqSection() {
       <Shell className="max-w-4xl">
         <Reveal className="text-center">
           <Chip className="justify-center">Dúvidas</Chip>
-          <h2 id="duvidas-title" className="headline mx-auto mt-6 max-w-2xl text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
+          <h2 id="duvidas-title" className="headline mx-auto mt-5 max-w-2xl text-[30px] font-bold leading-[1.12] tracking-[-0.015em] text-ink sm:text-[42px]">
             As perguntas que você provavelmente está fazendo.
           </h2>
         </Reveal>

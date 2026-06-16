@@ -40,38 +40,38 @@ const PILLARS = [
   {
     icon: 'headset_mic',
     title: 'Suporte Especializado',
-    text: 'Equipe que vive diariamente o mercado de notícias.',
+    text: 'Equipe que vive diariamente as operações editoriais.',
   },
 ]
 
 const SGI_SLIDES = [
   {
     src: '/assets/sgi-dashboard.png',
-    alt: 'Painel principal do SGI com visão geral da operação editorial',
-    label: '// painel principal do sgi',
+    alt: 'Painel principal com visão geral da operação editorial',
+    label: '// painel editorial',
     text: 'Visão geral consolidada da operação: publicações recentes, métricas de conteúdo e atividade da redação em um único painel.',
   },
   {
     src: '/assets/sgi-criar-post.png',
-    alt: 'Editor de criação de post do SGI',
+    alt: 'Editor de criação de post',
     label: '// editor de post',
     text: 'O mesmo editor que centenas de jornalistas usam todos os dias. Pensado para o fluxo de uma redação, não adaptado de um CMS genérico.',
   },
   {
     src: '/assets/sgi-posts.png',
-    alt: 'Listagem e gestão de publicações no SGI',
+    alt: 'Listagem e gestão de publicações no painel editorial',
     label: '// gestão de publicações',
     text: 'Listagem, filtros e controle de todo o conteúdo publicado. Fluxo editorial pensado para agilidade sem perder rastreabilidade.',
   },
   {
     src: '/assets/sgi-usuarios.png',
-    alt: 'Gestão de usuários e permissões no SGI',
+    alt: 'Gestão de usuários e permissões',
     label: '// gestão de usuários',
     text: 'Perfis e permissões por nível de acesso. Controle granular de quem publica, edita ou aprova conteúdo na redação.',
   },
   {
     src: '/assets/sgi-config.png',
-    alt: 'Tela de configurações do SGI',
+    alt: 'Tela de configurações da plataforma editorial',
     label: '// configurações do sistema',
     text: 'Controle total das configurações da plataforma. Nenhuma dependência de plugin externo para ajustar o comportamento do sistema.',
   },
@@ -230,7 +230,7 @@ export function WhatSection() {
             <Chip className="justify-center">Plataforma</Chip>
           </Reveal>
           <Reveal delay={80}>
-            <h2 id="plataforma-title" className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
+            <h2 id="plataforma-title" className="headline mt-5 text-[30px] font-bold leading-[1.12] tracking-[-0.015em] text-ink sm:text-[42px]">
               Infraestrutura especializada para operações editoriais que cresceram além das soluções genéricas.
             </h2>
           </Reveal>
@@ -428,7 +428,7 @@ function ClientLogosGrid() {
           alt={card.name}
           title={card.name}
           loading="lazy"
-          className="h-10 w-auto object-contain brightness-0 invert opacity-50 transition-opacity hover:opacity-80"
+          className="h-10 w-auto object-contain brightness-0 invert opacity-70 transition-opacity hover:opacity-90"
         />
       ))}
     </div>
@@ -456,12 +456,12 @@ export function WhySection() {
               <Chip variant="dark">Validação</Chip>
             </Reveal>
             <Reveal delay={80}>
-              <h2 id="clientes-title" className="headline mt-5 text-[28px] font-bold leading-[1.12] tracking-[-0.02em] text-white sm:text-[38px]">
+              <h2 id="clientes-title" className="headline mt-5 text-[30px] font-bold leading-[1.12] tracking-[-0.015em] text-white sm:text-[42px]">
                 Estrutura validada diariamente por operações editoriais reais.
               </h2>
             </Reveal>
             <Reveal delay={140}>
-              <p className="mt-4 text-[16px] leading-[1.6] text-white/60">
+              <p className="mt-6 text-[17px] leading-[1.66] text-white/80">
                 A confiança não vem apenas do discurso.<br />
                 Ela é construída diariamente por portais que dependem da DothNews para publicar, monetizar e crescer.
               </p>
@@ -490,7 +490,7 @@ export function WhySection() {
                     <Icon name={f.icon} className="text-[40px]" />
                   </div>
                   <h3 className="text-[17px] font-semibold text-white">{f.title}</h3>
-                  <p className="text-[14.5px] leading-[1.6] text-white/55">{f.text}</p>
+                  <p className="text-[14.5px] leading-[1.6] text-white/75">{f.text}</p>
                 </div>
               </Reveal>
             ))}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Shell, Button } from './ui'
 
 /**
@@ -77,6 +77,8 @@ export function SiteHeader({
 }) {
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
+  const menuRef = useRef(null)
+  const hamburgerRef = useRef(null)
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -84,6 +86,20 @@ export function SiteHeader({
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  useEffect(() => {
+    if (!open) return
+    const handler = (e) => {
+      if (
+        menuRef.current && !menuRef.current.contains(e.target) &&
+        hamburgerRef.current && !hamburgerRef.current.contains(e.target)
+      ) {
+        setOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handler)
+    return () => document.removeEventListener('mousedown', handler)
+  }, [open])
 
   return (
     <header
@@ -105,6 +121,7 @@ export function SiteHeader({
 
         {/* Botão hambúrguer mobile */}
         <button
+          ref={hamburgerRef}
           onClick={() => setOpen((v) => !v)}
           className="md:hidden"
           aria-label={open ? 'Fechar menu' : 'Abrir menu'}
@@ -119,7 +136,7 @@ export function SiteHeader({
 
       {/* Menu mobile */}
       {open && (
-        <div id="mobile-menu" className="border-t border-line bg-white md:hidden">
+        <div ref={menuRef} id="mobile-menu" className="border-t border-line bg-white md:hidden">
           <Shell className="flex flex-col gap-1 py-4">
             {links.map((link) => (
               <a

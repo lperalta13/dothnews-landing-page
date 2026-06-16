@@ -250,7 +250,7 @@ export function DiagnosisSection() {
             <Chip className="justify-center">Diagnóstico</Chip>
           </Reveal>
           <Reveal delay={80}>
-            <h2 id="diagnostico-title" className="headline mt-6 text-[30px] font-bold leading-[1.14] tracking-[-0.015em] text-ink sm:text-[42px]">
+            <h2 id="diagnostico-title" className="headline mt-5 text-[30px] font-bold leading-[1.12] tracking-[-0.015em] text-ink sm:text-[42px]">
               Antes de indicar uma solução, entendemos a estrutura da sua operação.
             </h2>
           </Reveal>
@@ -295,13 +295,13 @@ export function FinalCta({ onOpenForm }) {
             <Chip className="justify-center" variant="dark">Próximo passo</Chip>
           </Reveal>
           <Reveal delay={80}>
-            <h2 className="headline mt-7 text-[26px] font-bold leading-[1.1] tracking-[-0.015em] sm:text-[34px] lg:text-[48px]">
+            <h2 className="headline mt-5 text-[30px] font-bold leading-[1.12] tracking-[-0.015em] sm:text-[42px]">
               <span className="block">O crescimento já aconteceu.</span>
               <span className="block">Agora a estrutura precisa acompanhar.</span>
             </h2>
           </Reveal>
           <Reveal delay={140}>
-            <p className="pretty mx-auto mt-7 max-w-2xl text-[18px] leading-[1.62] text-white/65">
+            <p className="pretty mx-auto mt-6 max-w-2xl text-[17px] leading-[1.66] text-white/70">
               Descubra se a infraestrutura atual do seu portal está preparada para sustentar os próximos ciclos de crescimento, monetização e operação.
             </p>
           </Reveal>
