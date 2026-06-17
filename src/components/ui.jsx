@@ -9,21 +9,24 @@ const checkReveal = () => {
   if (!canUseDOM) return
   checkQueued = false
   const vh = window.innerHeight || document.documentElement.clientHeight
+  // Batch all DOM reads first, then apply writes — prevents forced reflow
+  const toReveal = []
   revealEls.forEach((el) => {
-    if (el.getBoundingClientRect().top < vh * 0.9) {
-      el.style.opacity = '1'
-      el.style.transform = 'none'
-      el.classList.add('in')
-      revealEls.delete(el)
-      // Self-heal: snap if transition froze (background tab / throttled context)
-      setTimeout(() => {
-        if (parseFloat(window.getComputedStyle(el).opacity) < 0.9) {
-          el.style.transition = 'none'
-          el.style.opacity = '1'
-          el.style.transform = 'none'
-        }
-      }, 1200)
-    }
+    if (el.getBoundingClientRect().top < vh * 0.9) toReveal.push(el)
+  })
+  toReveal.forEach((el) => {
+    el.style.opacity = '1'
+    el.style.transform = 'none'
+    el.classList.add('in')
+    revealEls.delete(el)
+    // Self-heal: snap if transition froze (background tab / throttled context)
+    setTimeout(() => {
+      if (parseFloat(window.getComputedStyle(el).opacity) < 0.9) {
+        el.style.transition = 'none'
+        el.style.opacity = '1'
+        el.style.transform = 'none'
+      }
+    }, 1200)
   })
 }
 
@@ -31,7 +34,7 @@ const scheduleCheck = () => {
   if (!canUseDOM) return
   if (!checkQueued) {
     checkQueued = true
-    setTimeout(checkReveal, 16)
+    requestAnimationFrame(checkReveal)
   }
 }
 

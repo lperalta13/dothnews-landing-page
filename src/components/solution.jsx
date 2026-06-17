@@ -51,6 +51,7 @@ const SGI_SLIDES = [
     alt: 'Painel principal com visão geral da operação editorial',
     label: '// painel editorial',
     text: 'Visão geral consolidada da operação: publicações recentes, métricas de conteúdo e atividade da redação em um único painel.',
+    imgW: 1846, imgH: 928,
   },
   {
     src: '/assets/sgi-criar-post.webp',
@@ -58,6 +59,7 @@ const SGI_SLIDES = [
     alt: 'Editor de criação de post',
     label: '// editor de post',
     text: 'O mesmo editor que centenas de jornalistas usam todos os dias. Pensado para o fluxo de uma redação, não adaptado de um CMS genérico.',
+    imgW: 1846, imgH: 928,
   },
   {
     src: '/assets/sgi-posts.webp',
@@ -65,6 +67,7 @@ const SGI_SLIDES = [
     alt: 'Listagem e gestão de publicações no painel editorial',
     label: '// gestão de publicações',
     text: 'Listagem, filtros e controle de todo o conteúdo publicado. Fluxo editorial pensado para agilidade sem perder rastreabilidade.',
+    imgW: 1846, imgH: 928,
   },
   {
     src: '/assets/sgi-usuarios.webp',
@@ -72,6 +75,7 @@ const SGI_SLIDES = [
     alt: 'Gestão de usuários e permissões',
     label: '// gestão de usuários',
     text: 'Perfis e permissões por nível de acesso. Controle granular de quem publica, edita ou aprova conteúdo na redação.',
+    imgW: 1846, imgH: 928,
   },
   {
     src: '/assets/sgi-config.webp',
@@ -79,27 +83,34 @@ const SGI_SLIDES = [
     alt: 'Tela de configurações da plataforma editorial',
     label: '// configurações do sistema',
     text: 'Controle total das configurações da plataforma. Nenhuma dependência de plugin externo para ajustar o comportamento do sistema.',
+    imgW: 1846, imgH: 928,
   },
 ]
 
 const MONITORING_SLIDES = [
   {
     src: '/assets/grafana-overview.webp',
+    srcSet: '/assets/grafana-overview-sm.webp 900w, /assets/grafana-overview.webp 1917w',
     alt: 'Visão geral do ambiente de monitoramento no Grafana',
     label: '// visão geral do ambiente',
     text: 'Painel consolidado com o estado de toda a infraestrutura. CPU, memória, disco e rede de cada servidor em um único lugar.',
+    imgW: 1917, imgH: 908,
   },
   {
     src: '/assets/monitoramento-grafana-dashboard-nave-mae-mysql.webp',
+    srcSet: '/assets/monitoramento-grafana-dashboard-nave-mae-mysql-sm.webp 900w, /assets/monitoramento-grafana-dashboard-nave-mae-mysql.webp 1897w',
     alt: 'Dashboard MySQL com QPS, conexões e buffer pool em tempo real',
     label: '// banco de dados em operação real',
     text: 'QPS, conexões e buffer pool visíveis a todo momento. Infraestrutura que não esconde o que está acontecendo.',
+    imgW: 1897, imgH: 910,
   },
   {
     src: '/assets/grafana-nginx.webp',
+    srcSet: '/assets/grafana-nginx-sm.webp 900w, /assets/grafana-nginx.webp 1900w',
     alt: 'Dashboard de monitoramento do Nginx com requisições e latência',
     label: '// camada web em tempo real',
     text: 'Requisições por segundo, tempo de resposta e status HTTP monitorados no Nginx. Anomalias detectadas antes de virarem incidente.',
+    imgW: 1900, imgH: 904,
   },
 ]
 
@@ -160,6 +171,8 @@ function ScreenCarousel({ slides, imageRight = true }) {
           srcSet={prevSlide.srcSet}
           sizes="(max-width: 640px) 100vw, 680px"
           alt={prevSlide.alt}
+          width={prevSlide.imgW}
+          height={prevSlide.imgH}
           className={`absolute inset-0 h-full w-full object-cover object-left-top ${exitClass}`}
         />
       )}
@@ -169,6 +182,8 @@ function ScreenCarousel({ slides, imageRight = true }) {
         srcSet={slide.srcSet}
         sizes="(max-width: 640px) 100vw, 680px"
         alt={slide.alt}
+        width={slide.imgW}
+        height={slide.imgH}
         loading="lazy"
         className={`absolute inset-0 h-full w-full object-cover object-left-top ${enterClass}`}
       />
@@ -284,15 +299,15 @@ export function WhatSection() {
 }
 
 const CLIENT_CARDS = [
-  { name: 'Correio do Estado',    logo: '/assets/clients/correiodoestado.webp',    meta: 'Campo Grande · MS',    print: '/assets/clients/prints/correiodoestado.webp' },
-  { name: 'Folha de Pernambuco',  logo: '/assets/clients/folhadepernambuco.webp',  meta: 'Recife · PE',           print: '/assets/clients/prints/folhadepernambuco.webp' },
-  { name: 'Capital do Pantanal',  logo: '/assets/clients/capitaldopantanal.webp',  meta: 'Corumbá · MS',          print: '/assets/clients/prints/capitaldopantanal.webp' },
-  { name: 'Diário do Estado',     logo: '/assets/clients/diariadoestado.webp',     meta: 'Portal de notícias',   print: null },
-  { name: 'Expressão MS',         logo: '/assets/clients/expressaoms.webp',        meta: 'Mato Grosso do Sul',   print: null },
-  { name: 'Folha de Alphaville',  logo: '/assets/clients/folhadealphaville.webp',  meta: 'Alphaville · SP',       print: null },
-  { name: 'Portal Mais 360',      logo: '/assets/clients/portalmais360.webp',      meta: 'Portal de notícias',   print: null },
-  { name: 'Diário da Baixada',    logo: '/assets/clients/diariadabaixada.webp',    meta: 'Baixada Fluminense',   print: null },
-  { name: 'Portal de Prefeitura', logo: '/assets/clients/portaldeprefeitura.webp', meta: 'Gestão pública',       print: null },
+  { name: 'Correio do Estado',    logo: '/assets/clients/correiodoestado.webp',    logoW: 545, logoH: 110, meta: 'Campo Grande · MS',    print: '/assets/clients/prints/correiodoestado.webp',    printSm: '/assets/clients/prints/correiodoestado-sm.webp' },
+  { name: 'Folha de Pernambuco',  logo: '/assets/clients/folhadepernambuco.webp',  logoW: 570, logoH: 114, meta: 'Recife · PE',           print: '/assets/clients/prints/folhadepernambuco.webp',  printSm: '/assets/clients/prints/folhadepernambuco-sm.webp' },
+  { name: 'Capital do Pantanal',  logo: '/assets/clients/capitaldopantanal.webp',  logoW: 790, logoH: 236, meta: 'Corumbá · MS',          print: '/assets/clients/prints/capitaldopantanal.webp',  printSm: '/assets/clients/prints/capitaldopantanal-sm.webp' },
+  { name: 'Diário do Estado',     logo: '/assets/clients/diariadoestado.webp',     logoW: 440, logoH: 87,  meta: 'Portal de notícias',   print: null },
+  { name: 'Expressão MS',         logo: '/assets/clients/expressaoms.webp',        logoW: 696, logoH: 224, meta: 'Mato Grosso do Sul',   print: null },
+  { name: 'Folha de Alphaville',  logo: '/assets/clients/folhadealphaville.webp',  logoW: 740, logoH: 165, meta: 'Alphaville · SP',       print: null },
+  { name: 'Portal Mais 360',      logo: '/assets/clients/portalmais360.webp',      logoW: 440, logoH: 162, meta: 'Portal de notícias',   print: null },
+  { name: 'Diário da Baixada',    logo: '/assets/clients/diariadabaixada.webp',    logoW: 840, logoH: 167, meta: 'Baixada Fluminense',   print: null },
+  { name: 'Portal de Prefeitura', logo: '/assets/clients/portaldeprefeitura.webp', logoW: 438, logoH: 111, meta: 'Gestão pública',       print: null },
 ]
 
 const METRICS = [
@@ -379,14 +394,22 @@ function PrintCarousel() {
         <img
           key={`prev-${prevIndex}`}
           src={prevSlide.print}
+          srcSet={prevSlide.printSm ? `${prevSlide.printSm} 700w, ${prevSlide.print} 1200w` : undefined}
+          sizes="(max-width: 640px) 100vw, 800px"
           alt={`Portal ${prevSlide.name} na DothNews`}
+          width="1200"
+          height="603"
           className={`absolute inset-0 h-full w-full object-cover object-top ${exitClass}`}
         />
       )}
       <img
         key={`curr-${index}`}
         src={slide.print}
+        srcSet={slide.printSm ? `${slide.printSm} 700w, ${slide.print} 1200w` : undefined}
+        sizes="(max-width: 640px) 100vw, 800px"
         alt={`Portal ${slide.name} na DothNews`}
+        width="1200"
+        height="603"
         loading="lazy"
         className={`absolute inset-0 h-full w-full object-cover object-top ${enterClass}`}
       />
@@ -436,6 +459,8 @@ function ClientLogosGrid() {
           src={card.logo}
           alt={card.name}
           title={card.name}
+          width={card.logoW}
+          height={card.logoH}
           loading="lazy"
           className="h-10 w-auto object-contain brightness-0 invert opacity-70 transition-opacity hover:opacity-90"
         />

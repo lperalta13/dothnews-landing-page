@@ -46,8 +46,14 @@
       imagesizes="(max-width: 640px) 100vw, 1142px"
       fetchpriority="high" />
 
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional" rel="stylesheet" />
+    <!-- Material Symbols (ícones): não bloqueante, display=optional para não atrasar render -->
+    <!-- IBM Plex Sans/Mono são auto-hospedados via @fontsource no bundle CSS -->
+    <link rel="preload" as="style"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional"
+      onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional" /></noscript>
     <script>
       document.documentElement.classList.add('js')
     </script>

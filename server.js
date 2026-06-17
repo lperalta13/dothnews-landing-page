@@ -11,6 +11,45 @@ app.use(express.json())
 app.use(express.static(join(__dirname, 'dist')))
 
 const DESTINATARIOS = ['semproblema@gmail.com', 'ajuda@dothcom.net', 'dothcom@gmail.com']
+const ACCENT_COLOR = '#2B00C9'
+const BRAND_LIGHT_COLOR = '#394AF7'
+const INK_COLOR = '#040407'
+const SUBINK_COLOR = '#292D3D'
+const MUTE_COLOR = '#626983'
+const FAINT_COLOR = '#949EB7'
+const LINE_COLOR = '#DFE7F1'
+const TINT_COLOR = '#F0F4FA'
+const SURFACE_COLOR = '#F4F6FD'
+const PRIMARY_100_COLOR = '#D7DFFB'
+const FONT_SANS = "'IBM Plex Sans', Arial, Helvetica, sans-serif"
+const FONT_MONO = "'IBM Plex Mono', 'Courier New', Courier, monospace"
+const WHATSAPP_FALLBACK_COUNTRY_CODE = '55'
+
+const AUDIENCIA_LABELS = {
+  'ate-1m': 'Até 1M pageviews/mês',
+  '1m-5m': '1M – 5M pageviews/mês',
+  '5m-20m': '5M – 20M pageviews/mês',
+  '20m+': '20M+ pageviews/mês',
+}
+
+const PLATAFORMA_LABELS = {
+  wordpress: 'WordPress',
+  'cms-proprio': 'CMS próprio',
+  'outra-plataforma': 'Outra plataforma',
+  outra: 'Outra',
+}
+
+const EMAIL_PREVIEW_SAMPLE = {
+  nome: 'Neilton de Jesus Santos',
+  email: 'sullbahia1@gmail.com',
+  portal: 'Sul Bahia News',
+  url: 'https://www.sulbahia1.com.br',
+  contato: '(75) 99825-1093',
+  audiencia: '1m-5m',
+  plataforma: 'wordpress',
+  dificuldade: 'O site fica lento e cai nos picos de acesso, principalmente quando uma matéria viraliza. Já perdemos audiência por instabilidade e o suporte atual demora pra responder.',
+  observacoes: 'Opera com equipe enxuta de redação. Quer migrar sem perder SEO e mantendo o domínio. Já avaliou outras empresas, mas achou caro.',
+}
 
 const transporter = nodemailer.createTransport({
   host: process.env.MAIL_HOST,
@@ -22,48 +61,308 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-function buildEmailHtml(data) {
-  const field = (label, value) =>
-    value
-      ? `<tr><td style="padding:6px 0;font-size:14px;color:#555;"><strong>${label}:</strong> ${value}</td></tr>`
-      : ''
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, (char) => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;',
+  })[char])
+}
+
+function nl2br(value) {
+  return escapeHtml(value).replace(/\r?\n/g, '<br>')
+}
+
+function fieldValue(value, fallback = 'Não informado') {
+  const normalized = String(value ?? '').trim()
+  return normalized ? normalized : fallback
+}
+
+function hasValue(value) {
+  return String(value ?? '').trim().length > 0
+}
+
+function normalizeEmail(value) {
+  return String(value ?? '').trim()
+}
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(value))
+}
+
+function getMailtoHref(value) {
+  const email = normalizeEmail(value)
+  return email ? `mailto:${encodeURIComponent(email)}` : ''
+}
+
+function isEmailPreviewEnabled() {
+  return process.env.NODE_ENV !== 'production' || process.env.EMAIL_PREVIEW_ENABLED === 'true'
+}
+
+function labelFrom(map, value) {
+  const normalized = String(value ?? '').trim()
+  return normalized ? map[normalized] ?? normalized : 'Não informado'
+}
+
+function formatDateTime(date = new Date()) {
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'America/Campo_Grande',
+  }).format(date)
+}
+
+function getHttpHref(value) {
+  const normalized = String(value ?? '').trim()
+  if (!normalized) return ''
+  const withProtocol = /^https?:\/\//i.test(normalized) ? normalized : `https://${normalized}`
+
+  try {
+    const url = new URL(withProtocol)
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : ''
+  } catch {
+    return ''
+  }
+}
+
+function getWhatsappHref(contato, nome) {
+  const digits = String(contato ?? '').replace(/\D/g, '')
+  if (digits.length < 8) return ''
+
+  const phone = digits.startsWith(WHATSAPP_FALLBACK_COUNTRY_CODE)
+    ? digits
+    : `${WHATSAPP_FALLBACK_COUNTRY_CODE}${digits}`
+  const firstName = fieldValue(nome, '').split(' ')[0] || 'tudo bem'
+  const message = `Olá ${firstName}, recebemos seu pedido de diagnóstico na DothNews. Podemos conversar?`
+
+  return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`
+}
+
+function getContactHref(data) {
+  return getWhatsappHref(data.contato, data.nome) || getMailtoHref(data.email)
+}
+
+function getAudienceLevel(audiencia) {
+  if (['1m-5m', '5m-20m', '20m+'].includes(audiencia)) return 'Alto'
+  if (audiencia === 'ate-1m') return 'Médio'
+  return 'A avaliar'
+}
+
+function getComplexityLevel(data) {
+  if (data.plataforma === 'cms-proprio' || data.plataforma === 'outra-plataforma') return 'Alto'
+  if (String(data.dificuldade ?? '').trim().length > 140) return 'Alto'
+  if (data.plataforma === 'wordpress' || data.plataforma === 'outra') return 'Médio'
+  return 'A avaliar'
+}
+
+function getFitLevel(audiencia) {
+  if (['1m-5m', '5m-20m', '20m+'].includes(audiencia)) return 'Alto'
+  if (audiencia === 'ate-1m') return 'Médio'
+  return 'A avaliar'
+}
+
+function renderSegments(level) {
+  const filledCount = { Baixo: 1, Médio: 2, Alto: 3 }[level] ?? 0
+  return [0, 1, 2].map((index) => {
+    const color = index < filledCount ? ACCENT_COLOR : LINE_COLOR
+    return `<td width="28" style="width:28px;height:8px;background:${color};border-radius:2px;font-size:0;line-height:0;">&nbsp;</td>`
+  }).join('<td width="4" style="width:4px;font-size:0;line-height:0;">&nbsp;</td>')
+}
+
+function renderTriageRow(label, level) {
+  const textColor = level === 'Alto' ? ACCENT_COLOR : level === 'A avaliar' ? FAINT_COLOR : SUBINK_COLOR
 
   return `
-    <div style="font-family:Arial,Helvetica,sans-serif;max-width:600px;margin:auto;">
-      <div style="background:#3493E0;padding:24px 32px;">
-        <a href="https://www.dothnews.com.br" style="color:#fff;font-size:20px;font-weight:bold;text-decoration:none;">dothNews</a>
-      </div>
-      <div style="background:#fff;padding:32px;">
-        <p style="font-size:14px;color:#666;margin:0 0 8px;">Novo diagn&oacute;stico solicitado via landing page</p>
-        <p style="font-size:28px;font-weight:bold;color:#333;margin:0 0 24px;">${data.nome}</p>
-        <table cellpadding="0" cellspacing="0" style="width:100%;">
-          ${field('Portal', data.portal)}
-          ${field('URL', data.url)}
-          ${field('Contato (WhatsApp)', data.contato)}
-          ${field('Audi&ecirc;ncia mensal', data.audiencia)}
-          ${field('Plataforma atual', data.plataforma)}
-          ${field('Principal dificuldade', data.dificuldade ? data.dificuldade.replace(/\n/g, '<br>') : '')}
+    <tr>
+      <td style="padding:9px 0;border-bottom:1px solid ${TINT_COLOR};">
+        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+          <tr>
+            <td class="triage-label" style="font-family:${FONT_SANS};font-size:14px;line-height:20px;color:${SUBINK_COLOR};">${escapeHtml(label)}</td>
+            <td width="96" align="right" style="width:96px;">
+              <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="right">
+                <tr>${renderSegments(level)}</tr>
+              </table>
+            </td>
+            <td width="72" align="right" style="width:72px;font-family:${FONT_SANS};font-size:13px;line-height:20px;font-weight:700;color:${textColor};">${escapeHtml(level)}</td>
+          </tr>
         </table>
-      </div>
-      <div style="background:#DC3930;height:4px;"></div>
-      <div style="background:#F56962;padding:14px;text-align:center;color:#fff;font-size:13px;">www.dothcom.net</div>
-    </div>
+      </td>
+    </tr>
   `
 }
 
-app.post('/api/contact', async (req, res) => {
-  const { nome, portal, contato } = req.body ?? {}
+function renderSummaryRow(label, value, href = '') {
+  const content = href
+    ? `<a href="${escapeHtml(href)}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">${escapeHtml(value)}</a>`
+    : escapeHtml(value)
 
-  if (!nome || !portal || !contato) {
+  return `
+    <tr>
+      <td class="summary-label" width="174" valign="top" style="width:174px;padding:13px 16px 13px 0;border-bottom:1px solid ${TINT_COLOR};font-family:${FONT_SANS};font-size:13px;line-height:20px;color:${MUTE_COLOR};">${escapeHtml(label)}</td>
+      <td class="summary-value" valign="top" style="padding:13px 0;border-bottom:1px solid ${TINT_COLOR};font-family:${FONT_SANS};font-size:15px;line-height:22px;font-weight:700;color:${INK_COLOR};">${content}</td>
+    </tr>
+  `
+}
+
+function buildEmailHtml(data, options = {}) {
+  const nome = fieldValue(data.nome)
+  const portal = fieldValue(data.portal)
+  const email = fieldValue(data.email)
+  const contato = fieldValue(data.contato)
+  const audiencia = labelFrom(AUDIENCIA_LABELS, data.audiencia)
+  const plataforma = labelFrom(PLATAFORMA_LABELS, data.plataforma)
+  const urlDisplay = fieldValue(data.url)
+  const urlHref = getHttpHref(data.url)
+  const contactHref = getContactHref(data)
+  const sentAt = formatDateTime()
+  const emailHref = getMailtoHref(data.email)
+  const crmHref = fieldValue(options.crmHref || process.env.CRM_LEAD_URL || process.env.CRM_URL, '')
+
+  const triageRows = [
+    ['Potencial de audiência', getAudienceLevel(data.audiencia)],
+    ['Complexidade da operação', getComplexityLevel(data)],
+    ['Aderência ao perfil DothNews', getFitLevel(data.audiencia)],
+  ].map(([label, level]) => renderTriageRow(label, level)).join('')
+
+  return `<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="x-apple-disable-message-reformatting">
+    <title>Novo diagnóstico recebido</title>
+    <style>
+      @media screen and (max-width: 620px) {
+        .email-shell { width: 100% !important; }
+        .email-pad { padding: 24px 20px !important; }
+        .summary-label, .summary-value { display: block !important; width: 100% !important; padding-right: 0 !important; }
+        .summary-label { padding-bottom: 2px !important; border-bottom: 0 !important; }
+        .summary-value { padding-top: 0 !important; }
+        .header-meta { display: block !important; padding-top: 8px !important; text-align: left !important; }
+        .triage-label { display: block !important; padding-bottom: 6px !important; }
+      }
+    </style>
+  </head>
+  <body style="margin:0;padding:0;background:#FFFFFF;color:${INK_COLOR};">
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
+      Novo diagnóstico recebido via landing page DothNews.
+    </div>
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;background:#FFFFFF;border-collapse:collapse;">
+      <tr>
+        <td align="center" style="padding:34px 16px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="email-shell" style="width:600px;max-width:600px;border-collapse:collapse;">
+            <tr>
+              <td class="email-pad" style="padding:0 36px 24px;border-bottom:2px solid ${ACCENT_COLOR};">
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
+                  <tr>
+                    <td valign="top" style="font-family:${FONT_SANS};font-size:18px;line-height:24px;font-weight:800;letter-spacing:0;color:${ACCENT_COLOR};">
+                      DOTH<span style="font-weight:800;color:${BRAND_LIGHT_COLOR};">NEWS</span>
+                    </td>
+                    <td valign="top" align="right" class="header-meta" style="font-family:${FONT_MONO};font-size:12px;line-height:18px;color:${FAINT_COLOR};">
+                      ${escapeHtml(sentAt)}
+                    </td>
+                  </tr>
+                </table>
+                <div style="display:inline-block;font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${SUBINK_COLOR};background:${SURFACE_COLOR};border:1px solid ${PRIMARY_100_COLOR};border-radius:999px;padding:6px 10px;margin-top:22px;">
+                  Novo lead · Diagnóstico consultivo
+                </div>
+                <h1 style="font-family:${FONT_SANS};font-size:28px;line-height:34px;font-weight:700;letter-spacing:0;color:${INK_COLOR};margin:12px 0 0;">
+                  Novo diagnóstico recebido
+                </h1>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="email-pad" style="padding:28px 36px 0;">
+                <div style="font-family:${FONT_SANS};font-size:13px;line-height:18px;color:${MUTE_COLOR};margin-bottom:4px;">Enviado por</div>
+                <div style="font-family:${FONT_SANS};font-size:23px;line-height:30px;font-weight:700;letter-spacing:0;color:${INK_COLOR};">${escapeHtml(nome)}</div>
+                <div style="font-family:${FONT_SANS};font-size:14px;line-height:22px;color:${MUTE_COLOR};margin-top:8px;">
+                  <a href="${escapeHtml(getWhatsappHref(data.contato, data.nome))}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">${escapeHtml(contato)}</a>
+                  <span style="color:#C6D0E1;">&nbsp;·&nbsp;</span>
+                  <a href="${escapeHtml(emailHref)}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">${escapeHtml(email)}</a>
+                </div>
+
+                <div style="font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 4px;">Resumo rápido</div>
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid ${TINT_COLOR};border-collapse:collapse;">
+                  ${renderSummaryRow('Nome do lead', nome)}
+                  ${renderSummaryRow('WhatsApp', contato, getWhatsappHref(data.contato, data.nome))}
+                  ${renderSummaryRow('E-mail', email, emailHref)}
+                  ${renderSummaryRow('Portal', portal)}
+                  ${renderSummaryRow('URL', urlDisplay, urlHref)}
+                  ${renderSummaryRow('Faixa de Page Views', audiencia)}
+                  ${renderSummaryRow('Plataforma atual', plataforma)}
+                </table>
+
+                <div style="font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 12px;">Diagnóstico informado pelo lead</div>
+
+                <div style="font-family:${FONT_SANS};font-size:13px;line-height:18px;color:${MUTE_COLOR};margin-bottom:6px;">Principal dificuldade</div>
+                <div style="font-family:${FONT_SANS};font-size:15px;line-height:24px;color:${SUBINK_COLOR};background:${SURFACE_COLOR};border-left:3px solid ${ACCENT_COLOR};border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:18px;">
+                  ${nl2br(fieldValue(data.dificuldade))}
+                </div>
+
+                <div style="font-family:${FONT_SANS};font-size:13px;line-height:18px;color:${MUTE_COLOR};margin-bottom:4px;">Observações</div>
+                <div style="font-family:${FONT_SANS};font-size:15px;line-height:24px;color:${SUBINK_COLOR};">
+                  ${nl2br(fieldValue(data.observacoes))}
+                </div>
+
+                <div style="font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 8px;">Avaliação rápida · triagem comercial</div>
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;">
+                  ${triageRows}
+                </table>
+
+                ${contactHref ? `
+                <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="margin-top:30px;">
+                  <tr>
+                    <td align="center" bgcolor="${ACCENT_COLOR}" style="border-radius:14px;">
+                      <a href="${escapeHtml(contactHref)}" style="display:block;padding:16px 24px;font-family:${FONT_SANS};font-size:16px;line-height:22px;font-weight:700;color:#FFFFFF;text-decoration:none;border-radius:14px;">
+                        Entrar em contato com este lead&nbsp;&rarr;
+                      </a>
+                    </td>
+                  </tr>
+                </table>` : ''}
+
+                <div style="font-family:${FONT_SANS};font-size:13px;line-height:20px;color:${FAINT_COLOR};text-align:center;margin-top:12px;">
+                  SLA de retorno ao lead: <strong style="color:${SUBINK_COLOR};">até 48h úteis</strong>
+                  ${crmHref ? `<span style="color:#C6D0E1;">&nbsp;·&nbsp;</span><a href="${escapeHtml(crmHref)}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">Abrir no CRM</a>` : ''}
+                </div>
+              </td>
+            </tr>
+
+            <tr>
+              <td class="email-pad" style="padding:24px 36px 0;">
+                <div style="border-top:1px solid ${TINT_COLOR};padding-top:16px;font-family:${FONT_SANS};font-size:12px;line-height:18px;color:${FAINT_COLOR};">
+                  DothNews · Infraestrutura editorial especializada para portais de notícias
+                </div>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`
+}
+
+app.post('/api/contact', async (req, res) => {
+  const { nome, portal, contato, email } = req.body ?? {}
+
+  if (!hasValue(nome) || !hasValue(portal) || !hasValue(contato) || !isValidEmail(email)) {
     return res.status(422).json({ rs: 'erro', msg: 'Campos obrigatórios não preenchidos.' })
   }
 
   try {
-    const assunto = `Diagnóstico Landing — ${portal} — ${contato}`
+    const leadEmail = normalizeEmail(email)
+    const assunto = `Diagnóstico Landing — ${fieldValue(portal)} — ${fieldValue(contato)}`
     await transporter.sendMail({
       from: `"${process.env.MAIL_FROM_NAME || 'dothNews'}" <${process.env.MAIL_FROM}>`,
       bcc: DESTINATARIOS,
       subject: assunto,
+      replyTo: leadEmail,
       html: buildEmailHtml(req.body),
     })
     res.json({ rs: 'ok' })
@@ -73,8 +372,20 @@ app.post('/api/contact', async (req, res) => {
   }
 })
 
+app.get('/api/contact/preview', (req, res) => {
+  if (!isEmailPreviewEnabled()) {
+    return res.status(404).send('Not found')
+  }
+
+  res
+    .type('html')
+    .send(buildEmailHtml(EMAIL_PREVIEW_SAMPLE, {
+      crmHref: 'https://crm.dothnews.com.br/leads/preview',
+    }))
+})
+
 // SPA fallback
-app.get('*', (_, res) => {
+app.use((_, res) => {
   res.sendFile(join(__dirname, 'dist', 'index.html'))
 })
 

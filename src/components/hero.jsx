@@ -200,12 +200,8 @@ export function Hero({ onOpenForm }) {
           purple: top=232px h=138px  |  blue: top=199px h=171px
       */}
       <div className="hero-background pointer-events-none z-0 inset-0 select-none" aria-hidden="true">
-        <div className="absolute hero-blob-purple opacity-[0.48]">
-          <img src="/assets/bg/blob-purple.svg" alt="" className="block h-full w-full" />
-        </div>
-        <div className="absolute hero-blob-blue opacity-80">
-          <img src="/assets/bg/blob-blue.svg" alt="" className="block h-full w-full" />
-        </div>
+        <div className="absolute hero-blob-purple" />
+        <div className="absolute hero-blob-blue" />
         <div className="absolute hero-blur-overlay rounded-[20px] backdrop-blur-[125px]" />
       </div>
     </section>

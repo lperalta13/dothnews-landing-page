@@ -114,14 +114,16 @@ O formulário de diagnóstico em `DiagnosisSection` (e no modal `DiagnosisModal`
 
 Campos coletados pelo formulário:
 - **Nome completo** (obrigatório)
+- **E-mail** (obrigatório)
 - **Nome do portal** (obrigatório)
 - **WhatsApp / Contato** (obrigatório)
 - URL do portal (opcional)
 - Faixa de audiência mensal (opcional)
 - Plataforma atual (opcional)
 - Principal dificuldade hoje (opcional, textarea)
+- Observações (opcional, textarea)
 
-Ao submeter, o servidor valida os três campos obrigatórios e envia um email HTML via SMTP em **BCC** para os três destinatários configurados em `server.js` (linhas 13–15):
+Ao submeter, o servidor valida os quatro campos obrigatórios e envia um email HTML via SMTP em **BCC** para os três destinatários configurados em `server.js`:
 
 ```js
 const DESTINATARIOS = [
@@ -134,6 +136,16 @@ const DESTINATARIOS = [
 Para alterar os destinatários, basta editar essa constante em `server.js`.
 
 O formulário exibe feedback visual durante o envio (botão com texto "Enviando…" e desabilitado) e mensagem de erro inline caso o servidor não responda ou retorne falha.
+
+O template do email "Novo diagnóstico recebido" é montado em `server.js` com HTML puro e estilos inline para compatibilidade com clientes como Gmail e Outlook. Ele inclui resumo do lead, diagnóstico informado, observações, triagem comercial automática e botão de contato via WhatsApp. Se `CRM_LEAD_URL` ou `CRM_URL` estiver configurada, o email também exibe o link "Abrir no CRM".
+
+Para visualizar o template sem disparar email, rode `npm start` e acesse:
+
+```text
+http://localhost:3000/api/contact/preview
+```
+
+A rota de preview fica disponível fora de produção. Em produção, só é exposta se `EMAIL_PREVIEW_ENABLED=true` estiver configurado.
 
 ### Arquitetura
 
@@ -234,6 +246,9 @@ O `server.js` serve os arquivos de `dist/`. Se `dist/` não existir, as páginas
 | `MAIL_PASS` | Sim | — | Senha ou app password SMTP |
 | `MAIL_FROM` | Sim | — | Endereço remetente (deve ser válido na conta SMTP) |
 | `MAIL_FROM_NAME` | Não | `dothNews` | Nome exibido no campo "De:" |
+| `CRM_LEAD_URL` | Não | — | Link direto para abrir o lead no CRM, exibido no rodapé do email |
+| `CRM_URL` | Não | — | Link geral do CRM, usado como alternativa ao `CRM_LEAD_URL` |
+| `EMAIL_PREVIEW_ENABLED` | Não | — | Libera `/api/contact/preview` em produção quando definido como `true` |
 
 ### Arquivos relevantes
 

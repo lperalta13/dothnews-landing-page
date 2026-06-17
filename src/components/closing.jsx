@@ -63,7 +63,17 @@ const FINAL_METRICS = [
   { value: '99,9%', label: 'disponibilidade média' },
 ]
 
-const EMPTY_FORM = { nome: '', portal: '', url: '', contato: '', audiencia: '', plataforma: '', dificuldade: '' }
+const EMPTY_FORM = {
+  nome: '',
+  email: '',
+  portal: '',
+  url: '',
+  contato: '',
+  audiencia: '',
+  plataforma: '',
+  dificuldade: '',
+  observacoes: '',
+}
 
 function DiagnosisForm({ onSuccess }) {
   const [data, setData] = useState(EMPTY_FORM)
@@ -71,7 +81,7 @@ function DiagnosisForm({ onSuccess }) {
   const [error, setError] = useState(null)
 
   const set = (k) => (e) => setData((d) => ({ ...d, [k]: e.target.value }))
-  const valid = data.nome && data.portal && data.contato
+  const valid = data.nome && data.email && data.portal && data.contato
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -100,14 +110,15 @@ function DiagnosisForm({ onSuccess }) {
   return (
     <form onSubmit={handleSubmit} className="p-6 sm:p-8">
       <div className="grid gap-5 sm:grid-cols-2">
-        <FormInput name="nome" label="Nome completo" required value={data.nome} onChange={set('nome')} />
+        <FormInput name="nome" label="Nome completo" required autoComplete="name" value={data.nome} onChange={set('nome')} />
+        <FormInput name="email" label="E-mail" type="email" required autoComplete="email" value={data.email} onChange={set('email')} />
         <FormInput name="portal" label="Nome do portal" required value={data.portal} onChange={set('portal')} />
-        <FormInput name="url" label="URL do portal" type="url" value={data.url} onChange={set('url')} />
-        <FormInput name="contato" label="WhatsApp / Contato" required value={data.contato} onChange={set('contato')} />
+        <FormInput name="url" label="URL do portal" type="url" autoComplete="url" value={data.url} onChange={set('url')} />
+        <FormInput name="contato" label="WhatsApp / Contato" required autoComplete="tel" value={data.contato} onChange={set('contato')} />
         <FormSelect name="audiencia" label="Faixa de audiência mensal" value={data.audiencia} options={AUDIENCIA_OPTIONS} onChange={set('audiencia')} />
         <FormSelect name="plataforma" label="Plataforma atual" value={data.plataforma} options={PLATAFORMA_OPTIONS} onChange={set('plataforma')} />
       </div>
-      <div className="mt-5">
+      <div className="mt-5 grid gap-5">
         <FormTextarea
           name="dificuldade"
           label="Principal dificuldade hoje"
@@ -116,6 +127,15 @@ function DiagnosisForm({ onSuccess }) {
           rows={3}
           resize="none"
           helper="Conte, em poucas linhas, o que mais te incomoda na estrutura atual."
+        />
+        <FormTextarea
+          name="observacoes"
+          label="Observações"
+          value={data.observacoes}
+          onChange={set('observacoes')}
+          rows={3}
+          resize="none"
+          helper="Inclua contexto adicional, como urgência, cenário de migração ou detalhes da operação."
         />
       </div>
       <Button

@@ -32,6 +32,8 @@
       left: 12.65%;
       right: 1.1%;
       height: 330px;
+      opacity: 0.48;
+      background: url('/assets/bg/blob-purple.svg') no-repeat center / 100% 100%;
     }
 
     .hero-blob-blue {
@@ -39,6 +41,8 @@
       left: 6.6%;
       right: 6.6%;
       height: 404px;
+      opacity: 0.80;
+      background: url('/assets/bg/blob-blue.svg') no-repeat center / 100% 100%;
     }
 
     .hero-blur-overlay {
