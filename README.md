@@ -145,6 +145,8 @@ Para visualizar o template sem disparar email, rode `npm start` e acesse:
 http://localhost:3000/api/contact/preview
 ```
 
+![Preview do template de email Novo diagnóstico recebido](public/assets/template-email.png)
+
 A rota de preview fica disponível fora de produção. Em produção, só é exposta se `EMAIL_PREVIEW_ENABLED=true` estiver configurado.
 
 ### Arquitetura
