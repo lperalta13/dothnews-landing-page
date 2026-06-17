@@ -113,7 +113,7 @@ export function SiteHeader({
       <Shell className="flex items-center justify-between py-4">
         {/* Logo */}
         <a href={logo.href} aria-label={logo.alt} className="flex items-center">
-          <img src={logo.src} alt={logo.alt} className="h-[25px] w-auto logo-glow" />
+          <img src={logo.src} alt={logo.alt} width="569" height="76" className="h-[25px] w-auto logo-glow" />
         </a>
 
         {/* Nav desktop */}

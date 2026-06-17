@@ -380,7 +380,7 @@ export function Footer() {
       <Shell>
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] lg:items-start">
           <div>
-            <img src="/assets/logo-dothnews.svg" alt="DothNews" className="h-[25px] w-auto" />
+            <img src="/assets/logo-dothnews.svg" alt="DothNews" width="569" height="76" className="h-[25px] w-auto" />
             <p className="mt-5 max-w-md text-[13.5px] leading-[1.65] text-mute">
               A DothNews é desenvolvida pela{' '}
               <span className="font-medium text-subink">DothCom</span>, empresa com mais
@@ -397,7 +397,7 @@ export function Footer() {
           <span>© 2026 DothNews · DothCom Tecnologia. Todos os direitos reservados.</span>
           <span className="flex items-center gap-2">
             infraestrutura editorial · desde 2004 · 
-            <img src="/assets/logo-dothcom.svg" alt="DothCom" className="h-[48px] w-auto opacity-70" />
+            <img src="/assets/logo-dothcom.svg" alt="DothCom" width="198" height="87" className="h-[48px] w-auto opacity-70" />
           </span>
         </div>
       </Shell>

@@ -40,16 +40,23 @@
     <meta name="twitter:image" content="https://dothnews.com.br/assets/og-image.png" />
     <meta name="twitter:image:alt" content="DothNews, plataforma e infraestrutura especializada para portais de notícias" />
 
+    <!-- Fontes IBM Plex — auto-hospedadas, preload das variantes críticas para o primeiro render -->
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/fonts/ibm-plex-sans-latin-400-normal.woff2" />
+    <link rel="preload" as="font" type="font/woff2" crossorigin href="/assets/fonts/ibm-plex-sans-latin-700-normal.woff2" />
+
     <!-- Performance: preload da imagem LCP (primeiro slide do carousel hero) -->
     <link rel="preload" as="image" href="/assets/sgi-dashboard.webp"
-      imagesrcset="/assets/sgi-dashboard-sm.webp 800w, /assets/sgi-dashboard.webp 1846w"
-      imagesizes="(max-width: 640px) 100vw, 1142px"
+      imagesrcset="/assets/sgi-dashboard-xs.webp 400w, /assets/sgi-dashboard-sm.webp 800w, /assets/sgi-dashboard.webp 1846w"
+      imagesizes="(max-width: 400px) 100vw, (max-width: 640px) 800px, 1142px"
       fetchpriority="high" />
+
+    <!-- blob-blue: elemento identificado como LCP pelo PageSpeed — preload garante descoberta no HTML inicial -->
+    <link rel="preload" as="image" href="/assets/bg/blob-blue.svg" fetchpriority="high" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <!-- Material Symbols (ícones): não bloqueante, display=optional para não atrasar render -->
-    <!-- IBM Plex Sans/Mono são auto-hospedados via @fontsource no bundle CSS -->
+    <!-- IBM Plex Sans/Mono são auto-hospedados em /assets/fonts/ com @font-face em index.css -->
     <link rel="preload" as="style"
       href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=optional"
       onload="this.onload=null;this.rel='stylesheet'" />
