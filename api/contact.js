@@ -87,6 +87,33 @@ function getMailtoHref(value) {
   return email ? `mailto:${encodeURIComponent(email)}` : ''
 }
 
+function getMailFrom() {
+  const rawFrom = String(process.env.MAIL_FROM ?? '').trim()
+  const fromEmail = String(process.env.MAIL_FROM_EMAIL ?? '').trim()
+  const fromName = String(process.env.MAIL_FROM_NAME ?? 'DothNews').trim() || 'DothNews'
+
+  if (rawFrom) {
+    const emailMatch = rawFrom.match(/<([^>]+)>/) || rawFrom.match(/([\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,})/)
+    if (emailMatch) {
+      return rawFrom
+    }
+
+    if (fromEmail) {
+      const safeName = rawFrom.replace(/"/g, '\\"')
+      return `"${safeName}" <${fromEmail}>`
+    }
+
+    return `"${rawFrom.replace(/"/g, '\\"')}" <no-reply@dothnews.com>`
+  }
+
+  if (fromEmail) {
+    const safeName = fromName.replace(/"/g, '\\"')
+    return `"${safeName}" <${fromEmail}>`
+  }
+
+  return `"${fromName}" <no-reply@dothnews.com>`
+}
+
 function isEmailPreviewEnabled() {
   return process.env.NODE_ENV !== 'production' || process.env.EMAIL_PREVIEW_ENABLED === 'true'
 }
@@ -363,11 +390,11 @@ export default async function handler(req, res) {
           'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: process.env.MAIL_FROM || `"${process.env.MAIL_FROM_NAME || 'dothNews'}" <no-reply@dothnews.com>`,
+          from: getMailFrom(),
           to: DESTINATARIOS[0],
           subject: assunto,
           html: buildEmailHtml(req.body),
-          reply_to: leadEmail,
+          reply_to: [leadEmail],
           bcc: DESTINATARIOS.slice(1),
         }),
       })
