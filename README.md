@@ -106,6 +106,17 @@ Para validar apenas o build estático (sem testar o email):
 npm run build
 ```
 
+## Deploy no Vercel
+
+O projeto agora suporta deploy no Vercel com uma função serverless para o endpoint `/api/contact`.
+
+- A página continua sendo gerada estaticamente em `dist` via `npm run build`.
+- A função `api/contact.js` implementa o mesmo fluxo de validação e template HTML do `server.js`, mas como API function do Vercel.
+- Em Vercel, defina as variáveis de ambiente `RESEND_API_KEY`, `MAIL_FROM` e `MAIL_FROM_NAME`.
+- O envio por SMTP ainda está disponível como fallback quando `RESEND_API_KEY` não estiver configurada.
+
+A configuração de deploy está em `vercel.json`.
+
 ## Formulário de Diagnóstico — Envio de Email
 
 ### O que foi implementado
@@ -174,13 +185,16 @@ Em produção, o Express serve também os arquivos estáticos do `dist/`, sendo 
 Copie `.env.example` para `.env` e preencha:
 
 ```
+RESEND_API_KEY=<sua_chave_resend>
+MAIL_FROM="DothNews" <no-reply@dothnews.com>
+MAIL_FROM_NAME=DothNews
+
+# Fallback SMTP (somente se não usar Resend)
 MAIL_HOST=smtp.zoho.com
 MAIL_PORT=587
 MAIL_SECURE=false
 MAIL_USER=<endereço-de-email-remetente>
 MAIL_PASS=<senha-do-email-ou-app-password>
-MAIL_FROM=nao-responda@dothcom.net
-MAIL_FROM_NAME=dothNews
 ```
 
 O domínio usa Zoho como provedor de email (registros MX apontam para Zoho). As credenciais SMTP podem ser geradas no painel Zoho em **Settings → Security → App Passwords** (recomendado) ou usando a senha da conta. O endereço em `MAIL_USER` e `MAIL_FROM` deve ser uma conta ativa no Zoho do domínio `dothcom.net`.
@@ -248,6 +262,7 @@ O `server.js` serve os arquivos de `dist/`. Se `dist/` não existir, as páginas
 | `MAIL_PASS` | Sim | — | Senha ou app password SMTP |
 | `MAIL_FROM` | Sim | — | Endereço remetente (deve ser válido na conta SMTP) |
 | `MAIL_FROM_NAME` | Não | `dothNews` | Nome exibido no campo "De:" |
+| `RESEND_API_KEY` | Não | — | Chave da API Resend; se definida, o envio usa Resend em vez de SMTP |
 | `CRM_LEAD_URL` | Não | — | Link direto para abrir o lead no CRM, exibido no rodapé do email |
 | `CRM_URL` | Não | — | Link geral do CRM, usado como alternativa ao `CRM_LEAD_URL` |
 | `EMAIL_PREVIEW_ENABLED` | Não | — | Libera `/api/contact/preview` em produção quando definido como `true` |

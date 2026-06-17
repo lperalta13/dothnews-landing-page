@@ -1,14 +1,4 @@
-import 'dotenv/config'
-import express from 'express'
 import nodemailer from 'nodemailer'
-import { fileURLToPath } from 'node:url'
-import { dirname, join } from 'node:path'
-
-const __dirname = dirname(fileURLToPath(import.meta.url))
-const app = express()
-
-app.use(express.json())
-app.use(express.static(join(__dirname, 'dist')))
 
 const DESTINATARIOS = ['semproblema@gmail.com', 'ajuda@dothcom.net', 'dothcom@gmail.com']
 const ACCENT_COLOR = '#2B00C9'
@@ -348,7 +338,12 @@ function buildEmailHtml(data, options = {}) {
 </html>`
 }
 
-app.post('/api/contact', async (req, res) => {
+export default async function handler(req, res) {
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', 'POST')
+    return res.status(405).json({ rs: 'erro', msg: 'Method not allowed.' })
+  }
+
   const { nome, portal, contato, email } = req.body ?? {}
 
   if (!hasValue(nome) || !hasValue(portal) || !hasValue(contato) || !isValidEmail(email)) {
@@ -358,36 +353,44 @@ app.post('/api/contact', async (req, res) => {
   try {
     const leadEmail = normalizeEmail(email)
     const assunto = `Diagnóstico Landing — ${fieldValue(portal)} — ${fieldValue(contato)}`
-    await transporter.sendMail({
-      from: `"${process.env.MAIL_FROM_NAME || 'dothNews'}" <${process.env.MAIL_FROM}>`,
-      bcc: DESTINATARIOS,
-      subject: assunto,
-      replyTo: leadEmail,
-      html: buildEmailHtml(req.body),
-    })
+
+    if (process.env.RESEND_API_KEY) {
+      // Envia via Resend API quando chave estiver configurada
+      const resp = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: process.env.MAIL_FROM || `"${process.env.MAIL_FROM_NAME || 'dothNews'}" <no-reply@dothnews.com>`,
+          to: DESTINATARIOS[0],
+          subject: assunto,
+          html: buildEmailHtml(req.body),
+          reply_to: leadEmail,
+          headers: { Bcc: DESTINATARIOS.slice(1).join(',') },
+        }),
+      })
+
+      if (!resp.ok) {
+        const body = await resp.text().catch(() => '')
+        throw new Error(`Resend API error ${resp.status} ${body}`)
+      }
+    } else {
+      // Fallback para Nodemailer (comportamento atual)
+      await transporter.sendMail({
+        from: `"${process.env.MAIL_FROM_NAME || 'dothNews'}" <${process.env.MAIL_FROM}>`,
+        bcc: DESTINATARIOS,
+        subject: assunto,
+        replyTo: leadEmail,
+        html: buildEmailHtml(req.body),
+      })
+    }
+
     res.json({ rs: 'ok' })
   } catch (err) {
-    console.error('[contact]', err.message)
+    console.error('[contact]', err.message || err)
     res.status(500).json({ rs: 'erro', msg: 'Erro ao enviar email.' })
   }
-})
+}
 
-app.get('/api/contact/preview', (req, res) => {
-  if (!isEmailPreviewEnabled()) {
-    return res.status(404).send('Not found')
-  }
-
-  res
-    .type('html')
-    .send(buildEmailHtml(EMAIL_PREVIEW_SAMPLE, {
-      crmHref: 'https://crm.dothnews.com.br/leads/preview',
-    }))
-})
-
-// SPA fallback
-app.use((_, res) => {
-  res.sendFile(join(__dirname, 'dist', 'index.html'))
-})
-
-const PORT = process.env.PORT || 3000
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
