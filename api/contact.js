@@ -368,7 +368,7 @@ export default async function handler(req, res) {
           subject: assunto,
           html: buildEmailHtml(req.body),
           reply_to: leadEmail,
-          headers: { Bcc: DESTINATARIOS.slice(1).join(',') },
+          bcc: DESTINATARIOS.slice(1),
         }),
       })
 
