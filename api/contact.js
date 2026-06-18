@@ -17,17 +17,19 @@ const FONT_MONO = "'IBM Plex Mono', 'Courier New', Courier, monospace"
 const WHATSAPP_FALLBACK_COUNTRY_CODE = '55'
 
 const AUDIENCIA_LABELS = {
-  'ate-1m': 'Até 1M pageviews/mês',
-  '1m-5m': '1M – 5M pageviews/mês',
-  '5m-20m': '5M – 20M pageviews/mês',
-  '20m+': '20M+ pageviews/mês',
+  'ate-100k': 'Até 100 mil pageviews/mês',
+  '100k-300k': '100 mil a 300 mil pageviews/mês',
+  '300k-1m': '300 mil a 1 milhão de pageviews/mês',
+  '1m-5m': '1 milhão a 5 milhões de pageviews/mês',
+  '5m+': 'Acima de 5 milhões de pageviews/mês',
 }
 
 const PLATAFORMA_LABELS = {
   wordpress: 'WordPress',
   'cms-proprio': 'CMS próprio',
-  'outra-plataforma': 'Outra plataforma',
-  outra: 'Outra',
+  'plataforma-noticias': 'Plataforma especializada para notícias',
+  outra: 'Outra plataforma',
+  desconhecido: 'Não sei informar',
 }
 
 const EMAIL_PREVIEW_SAMPLE = {
@@ -166,21 +168,34 @@ function getContactHref(data) {
 }
 
 function getAudienceLevel(audiencia) {
-  if (['1m-5m', '5m-20m', '20m+'].includes(audiencia)) return 'Alto'
-  if (audiencia === 'ate-1m') return 'Médio'
+  if (['300k-1m'].includes(audiencia)) return 'Médio'
+
+  if (['1m-5m', '5m+'].includes(audiencia)) return 'Alto'
+
+  if (['ate-100k', '100k-300k'].includes(audiencia)) return 'Baixo'
+
   return 'A avaliar'
 }
 
 function getComplexityLevel(data) {
-  if (data.plataforma === 'cms-proprio' || data.plataforma === 'outra-plataforma') return 'Alto'
-  if (String(data.dificuldade ?? '').trim().length > 140) return 'Alto'
-  if (data.plataforma === 'wordpress' || data.plataforma === 'outra') return 'Médio'
+  if (data.plataforma === 'desconhecido') return 'Baixa'
+
+  if (data.plataforma === 'wordpress' || data.plataforma === 'outra') return 'Média'
+
+  if (data.plataforma === 'cms-proprio' || data.plataforma === 'plataforma-noticias') return 'Alta'
+
   return 'A avaliar'
 }
 
 function getFitLevel(audiencia) {
-  if (['1m-5m', '5m-20m', '20m+'].includes(audiencia)) return 'Alto'
-  if (audiencia === 'ate-1m') return 'Médio'
+  if (['ate-100k'].includes(audiencia)) return 'Baixa'
+
+  if (['100k-300k'].includes(audiencia)) return 'Média'
+
+  if (
+    ['300k-1m', '1m-5m', '5m+'].includes(audiencia)
+  ) return 'Alta'
+
   return 'A avaliar'
 }
 
