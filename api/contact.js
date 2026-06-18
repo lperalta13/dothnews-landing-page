@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
 // const DESTINATARIOS = ['semproblema@gmail.com', 'ajuda@dothcom.net', 'dothcom@gmail.com', 'lperalta13@gmail.com']
-const DESTINATARIOS = ['dothcom@gmail.com']
+const DESTINATARIOS = ['lperalta13@gmail.com']
 const ACCENT_COLOR = '#2B00C9'
 const BRAND_LIGHT_COLOR = '#394AF7'
 const INK_COLOR = '#040407'
@@ -254,7 +254,7 @@ function buildEmailHtml(data, options = {}) {
   const contactHref = getContactHref(data)
   const sentAt = formatDateTime()
   const emailHref = getMailtoHref(data.email)
-  const crmHref = fieldValue(options.crmHref || process.env.CRM_LEAD_URL || process.env.CRM_URL, '')
+  const crmHref = fieldValue(options.crmHref || process.env.CRM_LEAD_URL || process.env.CRM_URL || 'https://dothcom.youtrack.cloud/tickets', '')
 
   const triageRows = [
     ['Potencial de audiência', getAudienceLevel(data.audiencia)],
@@ -268,7 +268,7 @@ function buildEmailHtml(data, options = {}) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="x-apple-disable-message-reformatting">
-    <title>Novo diagnóstico recebido</title>
+    <title>Solicitação de diagnóstico recebido</title>
     <style>
       @media screen and (max-width: 620px) {
         .email-shell { width: 100% !important; }
@@ -283,7 +283,7 @@ function buildEmailHtml(data, options = {}) {
   </head>
   <body style="margin:0;padding:0;background:#FFFFFF;color:${INK_COLOR};">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
-      Novo diagnóstico recebido via landing page DothNews.
+      Solicitação de diagnóstico recebido via landing page DothNews.
     </div>
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;background:#FFFFFF;border-collapse:collapse;">
       <tr>
@@ -305,7 +305,7 @@ function buildEmailHtml(data, options = {}) {
                   Novo lead · Diagnóstico consultivo
                 </div>
                 <h1 style="font-family:${FONT_SANS};font-size:28px;line-height:34px;font-weight:700;letter-spacing:0;color:${INK_COLOR};margin:12px 0 0;">
-                  Novo diagnóstico recebido
+                  Solicitação de diagnóstico recebido
                 </h1>
               </td>
             </tr>
@@ -315,25 +315,26 @@ function buildEmailHtml(data, options = {}) {
                 <div style="font-family:${FONT_SANS};font-size:13px;line-height:18px;color:${MUTE_COLOR};margin-bottom:4px;">Enviado por</div>
                 <div style="font-family:${FONT_SANS};font-size:23px;line-height:30px;font-weight:700;letter-spacing:0;color:${INK_COLOR};">${escapeHtml(nome)}</div>
                 <div style="font-family:${FONT_SANS};font-size:14px;line-height:22px;color:${MUTE_COLOR};margin-top:8px;">
-                  <a href="${escapeHtml(getWhatsappHref(data.contato, data.nome))}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">${escapeHtml(contato)}</a>
+                  <a href="${escapeHtml(getWhatsappHref(data.contato, data.nome))}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">WhatsApp: ${escapeHtml(contato)}</a>
                   <span style="color:#C6D0E1;">&nbsp;·&nbsp;</span>
-                  <a href="${escapeHtml(emailHref)}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">${escapeHtml(email)}</a>
+                  <a href="${escapeHtml(emailHref)}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">E-mail: ${escapeHtml(email)}</a>
                 </div>
 
                 <div style="font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 4px;">Resumo rápido</div>
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid ${TINT_COLOR};border-collapse:collapse;">
-                  ${renderSummaryRow('Nome do lead', nome)}
-                  ${renderSummaryRow('WhatsApp', contato, getWhatsappHref(data.contato, data.nome))}
-                  ${renderSummaryRow('E-mail', email, emailHref)}
+                  // ${renderSummaryRow('Nome do lead', nome)}
+                  // ${renderSummaryRow('WhatsApp', contato, getWhatsappHref(data.contato, data.nome))}
+                  // ${renderSummaryRow('E-mail', email, emailHref)}
                   ${renderSummaryRow('Portal', portal)}
                   ${renderSummaryRow('URL', urlDisplay, urlHref)}
+                  ${renderSummaryRow('WhatsApp', contato, getWhatsappHref(data.contato, data.nome))}
                   ${renderSummaryRow('Faixa de Page Views', audiencia)}
                   ${renderSummaryRow('Plataforma atual', plataforma)}
                 </table>
 
                 <div style="font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 12px;">Diagnóstico informado pelo lead</div>
 
-                <div style="font-family:${FONT_SANS};font-size:13px;line-height:18px;color:${MUTE_COLOR};margin-bottom:6px;">Principal dificuldade</div>
+                <div style="font-family:${FONT_SANS};font-size:13px;line-height:18px;color:${MUTE_COLOR};margin-bottom:6px;">Principal dificuldade hoje</div>
                 <div style="font-family:${FONT_SANS};font-size:15px;line-height:24px;color:${SUBINK_COLOR};background:${SURFACE_COLOR};border-left:3px solid ${ACCENT_COLOR};border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:18px;">
                   ${nl2br(fieldValue(data.dificuldade))}
                 </div>
