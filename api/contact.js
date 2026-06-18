@@ -178,23 +178,23 @@ function getAudienceLevel(audiencia) {
 }
 
 function getComplexityLevel(data) {
-  if (data.plataforma === 'desconhecido') return 'Baixa'
+  if (data.plataforma === 'desconhecido') return 'Baixo'
 
-  if (data.plataforma === 'wordpress' || data.plataforma === 'outra') return 'Média'
+  if (data.plataforma === 'wordpress' || data.plataforma === 'outra') return 'Médio'
 
-  if (data.plataforma === 'cms-proprio' || data.plataforma === 'plataforma-noticias') return 'Alta'
+  if (data.plataforma === 'cms-proprio' || data.plataforma === 'plataforma-noticias') return 'Alto'
 
   return 'A avaliar'
 }
 
 function getFitLevel(audiencia) {
-  if (['ate-100k'].includes(audiencia)) return 'Baixa'
+  if (['ate-100k'].includes(audiencia)) return 'Baixo'
 
-  if (['100k-300k'].includes(audiencia)) return 'Média'
+  if (['100k-300k'].includes(audiencia)) return 'Médio'
 
   if (
     ['300k-1m', '1m-5m', '5m+'].includes(audiencia)
-  ) return 'Alta'
+  ) return 'Alto'
 
   return 'A avaliar'
 }
