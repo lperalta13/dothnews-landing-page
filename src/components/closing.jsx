@@ -24,17 +24,19 @@ const STEPS = [
 ]
 
 const AUDIENCIA_OPTIONS = [
-  { value: 'ate-1m', label: 'Até 1M pageviews/mês' },
-  { value: '1m-5m', label: '1M – 5M pageviews/mês' },
-  { value: '5m-20m', label: '5M – 20M pageviews/mês' },
-  { value: '20m+', label: '20M+ pageviews/mês' },
+  { value: 'ate-100k', label: 'Até 100 mil pageviews/mês' },
+  { value: '100k-300k', label: '100 mil a 300 mil pageviews/mês' },
+  { value: '300k-1m', label: '300 mil a 1 milhão de pageviews/mês' },
+  { value: '1m-5m', label: '1 milhão a 5 milhões de pageviews/mês' },
+  { value: '5m+', label: 'Acima de 5 milhões de pageviews/mês' },
 ]
 
 const PLATAFORMA_OPTIONS = [
   { value: 'wordpress', label: 'WordPress' },
   { value: 'cms-proprio', label: 'CMS próprio' },
-  { value: 'outra-plataforma', label: 'Outra plataforma' },
-  { value: 'outra', label: 'Outra' },
+  { value: 'plataforma-noticias', label: 'Plataforma especializada para notícias' },
+  { value: 'outra', label: 'Outra plataforma' },
+  { value: 'desconhecido', label: 'Não sei informar' },
 ]
 
 const NEXT_STEP_FEATURES = [
