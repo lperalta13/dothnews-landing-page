@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer'
 
 // const DESTINATARIOS = ['semproblema@gmail.com', 'ajuda@dothcom.net', 'dothcom@gmail.com', 'lperalta13@gmail.com']
-const DESTINATARIOS = ['lperalta13@gmail.com']
+const DESTINATARIOS = ['dothcom@gmail.com']
 const ACCENT_COLOR = '#2B00C9'
 const BRAND_LIGHT_COLOR = '#394AF7'
 const INK_COLOR = '#040407'
