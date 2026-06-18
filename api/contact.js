@@ -322,9 +322,6 @@ function buildEmailHtml(data, options = {}) {
 
                 <div style="font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 4px;">Resumo rápido</div>
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid ${TINT_COLOR};border-collapse:collapse;">
-                  // ${renderSummaryRow('Nome do lead', nome)}
-                  // ${renderSummaryRow('WhatsApp', contato, getWhatsappHref(data.contato, data.nome))}
-                  // ${renderSummaryRow('E-mail', email, emailHref)}
                   ${renderSummaryRow('Portal', portal)}
                   ${renderSummaryRow('URL', urlDisplay, urlHref)}
                   ${renderSummaryRow('WhatsApp', contato, getWhatsappHref(data.contato, data.nome))}
@@ -362,7 +359,6 @@ function buildEmailHtml(data, options = {}) {
 
                 <div style="font-family:${FONT_SANS};font-size:13px;line-height:20px;color:${FAINT_COLOR};text-align:center;margin-top:12px;">
                   SLA de retorno ao lead: <strong style="color:${SUBINK_COLOR};">até 48h úteis</strong>
-                  ${crmHref ? `<span style="color:#C6D0E1;">&nbsp;·&nbsp;</span><a href="${escapeHtml(crmHref)}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">Abrir no CRM</a>` : ''}
                 </div>
               </td>
             </tr>
@@ -370,7 +366,8 @@ function buildEmailHtml(data, options = {}) {
             <tr>
               <td class="email-pad" style="padding:24px 36px 0;">
                 <div style="border-top:1px solid ${TINT_COLOR};padding-top:16px;font-family:${FONT_SANS};font-size:12px;line-height:18px;color:${FAINT_COLOR};">
-                  DothNews · Infraestrutura editorial especializada para portais de notícias
+                  <span>DothNews · Infraestrutura editorial especializada para portais de notícias</span>
+                  ${crmHref ? `<span style="color:#C6D0E1; float:right;"><a href="${escapeHtml(crmHref)}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">Abrir no CRM</a></span>` : ''}
                 </div>
               </td>
             </tr>
