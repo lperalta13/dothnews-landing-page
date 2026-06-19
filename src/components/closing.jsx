@@ -115,8 +115,7 @@ function DiagnosisForm({ onSuccess }) {
         <FormInput name="nome" label="Nome completo" required autoComplete="name" value={data.nome} onChange={set('nome')} />
         <FormInput name="email" label="E-mail" type="email" required autoComplete="email" value={data.email} onChange={set('email')} />
         <FormInput name="portal" label="Nome do portal" required value={data.portal} onChange={set('portal')} />
-        <FormInput name="url" label="URL do portal" type="text" autoComplete="url" value={data.url} onChange={set('url')} />
-        if (!url.startsWith('http://') && !url.startsWith('https://')) {url = `https://${url}`;}
+        <FormInput name="url" label="URL do portal" type="text" autoComplete="url" value={data.url}  onChange={(e) => {let url = e.target.value; if (url && !url.startsWith('http://') && !url.startsWith('https://')) {url = `https://${url}`;}set('url')({ target: { value: url } });}} />
         <FormInput name="contato" label="WhatsApp / Contato" required autoComplete="tel" value={data.contato} onChange={set('contato')} />
         <FormSelect name="audiencia" label="Faixa de audiência mensal" value={data.audiencia} options={AUDIENCIA_OPTIONS} onChange={set('audiencia')} />
         <FormSelect name="plataforma" label="Plataforma atual" value={data.plataforma} options={PLATAFORMA_OPTIONS} onChange={set('plataforma')} />
