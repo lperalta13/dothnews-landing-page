@@ -7,7 +7,7 @@ const BRAND_LIGHT_COLOR = '#394AF7'
 const INK_COLOR = '#040407'
 const SUBINK_COLOR = '#292D3D'
 const MUTE_COLOR = '#626983'
-const FAINT_COLOR = '#949EB7'
+const FAINT_COLOR = '#717889'
 const LINE_COLOR = '#DFE7F1'
 const TINT_COLOR = '#F0F4FA'
 const SURFACE_COLOR = '#F4F6FD'
@@ -283,17 +283,17 @@ function buildEmailHtml(data, options = {}) {
   </head>
   <body style="margin:0;padding:0;background:#FFFFFF;color:${INK_COLOR};">
     <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
-      Solicitação de diagnóstico recebido via landing page DothNews.
+      Solicitação de diagnóstico via landing page DothNews.
     </div>
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="width:100%;background:#FFFFFF;border-collapse:collapse;">
       <tr>
         <td align="center" style="padding:34px 16px;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="600" class="email-shell" style="width:600px;max-width:600px;border-collapse:collapse;">
             <tr>
-              <td class="email-pad" style="padding:0 36px 24px;border-bottom:2px solid ${ACCENT_COLOR};">
+              <td class="email-pad" style="padding:0 36px 24px;border-bottom:2px solid ${INK_COLOR};">
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
                   <tr>
-                    <td valign="top" style="font-family:${FONT_SANS};font-size:18px;line-height:24px;font-weight:800;letter-spacing:0;color:${ACCENT_COLOR};">
+                    <td valign="top" style="font-family:${FONT_SANS};font-size:18px;line-height:24px;font-weight:800;letter-spacing:0;color:${INK_COLOR};">
                       DOTH<span style="font-weight:800;color:${BRAND_LIGHT_COLOR};">NEWS</span>
                     </td>
                     <td valign="top" align="right" class="header-meta" style="font-family:${FONT_MONO};font-size:12px;line-height:18px;color:${FAINT_COLOR};">
@@ -301,11 +301,11 @@ function buildEmailHtml(data, options = {}) {
                     </td>
                   </tr>
                 </table>
-                <div style="display:inline-block;font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${SUBINK_COLOR};background:${SURFACE_COLOR};border:1px solid ${PRIMARY_100_COLOR};border-radius:999px;padding:6px 10px;margin-top:22px;">
+                <div style="display:inline-block;font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${SUBINK_COLOR};padding:6px 10px;margin-top:22px;">
                   Novo lead · Diagnóstico consultivo
                 </div>
                 <h1 style="font-family:${FONT_SANS};font-size:28px;line-height:34px;font-weight:700;letter-spacing:0;color:${INK_COLOR};margin:12px 0 0;">
-                  Solicitação de diagnóstico recebido
+                  Solicitação de diagnóstico
                 </h1>
               </td>
             </tr>
