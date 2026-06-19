@@ -301,7 +301,7 @@ function buildEmailHtml(data, options = {}) {
                     </td>
                   </tr>
                 </table>
-                <div style="display:inline-block;font-family:${FONT_MONO};font-size:13px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${SUBINK_COLOR};padding:6px 10px;margin-top:22px;">
+                <div style="display:inline-block;font-family:${FONT_MONO};font-size:13px; font-weight: bold; line-height:16px;letter-spacing:0;text-transform:uppercase;color:${SUBINK_COLOR}; background:${SURFACE_COLOR}; padding:6px 10px;margin-top:22px;">
                   Novo lead · Diagnóstico consultivo
                 </div>
                 <h1 style="font-family:${FONT_SANS};font-size:28px;line-height:34px;font-weight:700;letter-spacing:0;color:${INK_COLOR};margin:12px 0 0;">
