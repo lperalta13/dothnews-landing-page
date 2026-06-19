@@ -301,7 +301,7 @@ function buildEmailHtml(data, options = {}) {
                     </td>
                   </tr>
                 </table>
-                <div style="display:inline-block;font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${SUBINK_COLOR};padding:6px 10px;margin-top:22px;">
+                <div style="display:inline-block;font-family:${FONT_MONO};font-size:13px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${SUBINK_COLOR};padding:6px 10px;margin-top:22px;">
                   Novo lead · Diagnóstico consultivo
                 </div>
                 <h1 style="font-family:${FONT_SANS};font-size:28px;line-height:34px;font-weight:700;letter-spacing:0;color:${INK_COLOR};margin:12px 0 0;">
@@ -320,7 +320,7 @@ function buildEmailHtml(data, options = {}) {
                   <a href="${escapeHtml(emailHref)}" style="color:${ACCENT_COLOR};text-decoration:none;font-weight:700;">E-mail: ${escapeHtml(email)}</a>
                 </div>
 
-                <div style="font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 4px;">Resumo rápido</div>
+                <div style="font-family:${FONT_MONO};font-size:13px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 4px;">Resumo rápido</div>
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-top:1px solid ${TINT_COLOR};border-collapse:collapse;">
                   ${renderSummaryRow('Portal', portal)}
                   ${renderSummaryRow('URL', urlDisplay, urlHref)}
@@ -329,7 +329,7 @@ function buildEmailHtml(data, options = {}) {
                   ${renderSummaryRow('Plataforma atual', plataforma)}
                 </table>
 
-                <div style="font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 12px;">Diagnóstico informado pelo lead</div>
+                <div style="font-family:${FONT_MONO};font-size:13px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 12px;">Diagnóstico informado pelo lead</div>
 
                 <div style="font-family:${FONT_SANS};font-size:13px;line-height:18px;color:${MUTE_COLOR};margin-bottom:6px;">Principal dificuldade hoje</div>
                 <div style="font-family:${FONT_SANS};font-size:15px;line-height:24px;color:${SUBINK_COLOR};background:${SURFACE_COLOR};border-left:3px solid ${ACCENT_COLOR};border-radius:0 8px 8px 0;padding:12px 14px;margin-bottom:18px;">
@@ -341,7 +341,7 @@ function buildEmailHtml(data, options = {}) {
                   ${nl2br(fieldValue(data.observacoes))}
                 </div>
 
-                <div style="font-family:${FONT_MONO};font-size:11px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 8px;">Avaliação rápida · triagem comercial</div>
+                <div style="font-family:${FONT_MONO};font-size:13px;line-height:16px;letter-spacing:0;text-transform:uppercase;color:${FAINT_COLOR};margin:30px 0 8px;">Avaliação rápida · triagem comercial</div>
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:collapse;">
                   ${triageRows}
                 </table>
