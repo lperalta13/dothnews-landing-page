@@ -111,9 +111,9 @@ npm run build
 O projeto agora suporta deploy no Vercel com uma função serverless para o endpoint `/api/contact`.
 
 - A página continua sendo gerada estaticamente em `dist` via `npm run build`.
-- A função `api/contact.js` implementa o mesmo fluxo de validação e template HTML do `server.js`, mas como API function do Vercel.
-- Em Vercel, defina as variáveis de ambiente `RESEND_API_KEY`, `MAIL_FROM` e `MAIL_FROM_NAME`.
-- O envio por SMTP ainda está disponível como fallback quando `RESEND_API_KEY` não estiver configurada.
+- A função `api/contact.js` implementa o fluxo de validação e template HTML para o endpoint `/api/contact`.
+- Em Vercel, defina as variáveis de ambiente `MAIL_FROM`, `MAIL_FROM_NAME` e as credenciais SMTP necessárias.
+- O arquivo `server.js` existe apenas para rodar o site em modo Node local/fallback; em deploy Vercel, o endpoint principal é `api/contact.js`.
 
 A configuração de deploy está em `vercel.json`.
 
@@ -121,7 +121,7 @@ A configuração de deploy está em `vercel.json`.
 
 ### O que foi implementado
 
-O formulário de diagnóstico em `DiagnosisSection` (e no modal `DiagnosisModal`) agora faz um `POST /api/contact` ao clicar em "Solicitar diagnóstico". O endpoint é servido pelo `server.js` — um servidor Express incluído neste repositório.
+O formulário de diagnóstico em `DiagnosisSection` (e no modal `DiagnosisModal`) agora faz um `POST /api/contact` ao clicar em "Solicitar diagnóstico". Em produção Vercel, o endpoint é atendido por `api/contact.js`.
 
 Campos coletados pelo formulário:
 - **Nome completo** (obrigatório)
@@ -134,7 +134,7 @@ Campos coletados pelo formulário:
 - Principal dificuldade hoje (opcional, textarea)
 - Observações (opcional, textarea)
 
-Ao submeter, o servidor valida os quatro campos obrigatórios e envia um email HTML via SMTP em **BCC** para os três destinatários configurados em `server.js`:
+Ao submeter, a API valida os quatro campos obrigatórios e envia um email HTML via SMTP em **BCC** para os destinatários configurados em `api/contact.js`:
 
 ```js
 const DESTINATARIOS = [
@@ -144,21 +144,11 @@ const DESTINATARIOS = [
 ]
 ```
 
-Para alterar os destinatários, basta editar essa constante em `server.js`.
+Para alterar os destinatários, basta editar essa constante em `api/contact.js`.
 
 O formulário exibe feedback visual durante o envio (botão com texto "Enviando…" e desabilitado) e mensagem de erro inline caso o servidor não responda ou retorne falha.
 
-O template do email "Novo diagnóstico recebido" é montado em `server.js` com HTML puro e estilos inline para compatibilidade com clientes como Gmail e Outlook. Ele inclui resumo do lead, diagnóstico informado, observações, triagem comercial automática e botão de contato via WhatsApp. Se `CRM_LEAD_URL` ou `CRM_URL` estiver configurada, o email também exibe o link "Abrir no CRM".
-
-Para visualizar o template sem disparar email, rode `npm start` e acesse:
-
-```text
-http://localhost:3000/api/contact/preview
-```
-
-![Preview do template de email Novo diagnóstico recebido](public/assets/template-email.png)
-
-A rota de preview fica disponível fora de produção. Em produção, só é exposta se `EMAIL_PREVIEW_ENABLED=true` estiver configurado.
+O template do email "Novo diagnóstico recebido" é montado em `api/contact.js` com HTML puro e estilos inline para compatibilidade com clientes como Gmail e Outlook. Ele inclui resumo do lead, diagnóstico informado, observações, triagem comercial automática e botão de contato via WhatsApp. Se `CRM_LEAD_URL` ou `CRM_URL` estiver configurada, o email também exibe o link "Abrir no CRM".
 
 ### Arquitetura
 
@@ -167,13 +157,13 @@ Usuário preenche o formulário
     ↓
 React faz POST /api/contact com JSON
     ↓
-Express (server.js) valida campos obrigatórios
+`api/contact.js` valida campos obrigatórios
     ↓
 Nodemailer monta email HTML e envia via SMTP
     ↓
-Email chega em BCC para os 3 destinatários
+Email chega em BCC para os destinatários
     ↓
-Servidor retorna { rs: 'ok' } → formulário mostra tela de sucesso
+API retorna { rs: 'ok' } → formulário mostra tela de sucesso
 ```
 
 Em produção, o Express serve também os arquivos estáticos do `dist/`, sendo o único processo necessário para rodar a aplicação completa.
@@ -182,14 +172,11 @@ Em produção, o Express serve também os arquivos estáticos do `dist/`, sendo 
 
 **Passo 1 — Preencher as credenciais SMTP no servidor de produção**
 
-Copie `.env.example` para `.env` e preencha:
+Crie um arquivo `.env` na raiz do projeto com as variáveis abaixo:
 
 ```
-RESEND_API_KEY=<sua_chave_resend>
 MAIL_FROM="DothNews" <no-reply@dothnews.com>
 MAIL_FROM_NAME=DothNews
-
-# Fallback SMTP (somente se não usar Resend)
 MAIL_HOST=smtp.zoho.com
 MAIL_PORT=587
 MAIL_SECURE=false
@@ -262,7 +249,6 @@ O `server.js` serve os arquivos de `dist/`. Se `dist/` não existir, as páginas
 | `MAIL_PASS` | Sim | — | Senha ou app password SMTP |
 | `MAIL_FROM` | Sim | — | Endereço remetente (deve ser válido na conta SMTP) |
 | `MAIL_FROM_NAME` | Não | `dothNews` | Nome exibido no campo "De:" |
-| `RESEND_API_KEY` | Não | — | Chave da API Resend; se definida, o envio usa Resend em vez de SMTP |
 | `CRM_LEAD_URL` | Não | — | Link direto para abrir o lead no CRM, exibido no rodapé do email |
 | `CRM_URL` | Não | — | Link geral do CRM, usado como alternativa ao `CRM_LEAD_URL` |
 | `EMAIL_PREVIEW_ENABLED` | Não | — | Libera `/api/contact/preview` em produção quando definido como `true` |
@@ -271,9 +257,8 @@ O `server.js` serve os arquivos de `dist/`. Se `dist/` não existir, as páginas
 
 | Arquivo | Função |
 |---|---|
-| `server.js` | Servidor Express: static files + endpoint `/api/contact` |
+| `server.js` | Servidor Express local/fallback para servir `dist` e `/api/contact` |
 | `.env` | Credenciais e configurações locais (não commitado) |
-| `.env.example` | Modelo de configuração a ser copiado para `.env` |
 | `src/components/closing.jsx` | Formulário React com lógica de submit, loading e erro |
 
 ---
