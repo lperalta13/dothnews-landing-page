@@ -3,13 +3,13 @@ import nodemailer from 'nodemailer'
 // const DESTINATARIOS = ['semproblema@gmail.com', 'ajuda@dothcom.net', 'dothcom@gmail.com', 'lperalta13@gmail.com']
 const DESTINATARIOS = ['lperalta13@gmail.com']
 const ACCENT_COLOR = '#2B00C9'
-const BRAND_LIGHT_COLOR = '#394AF7'
+const BRAND_LIGHT_COLOR = '#747798'
 const INK_COLOR = '#040407'
 const SUBINK_COLOR = '#292D3D'
 const MUTE_COLOR = '#626983'
 const FAINT_COLOR = '#717889'
 const LINE_COLOR = '#DFE7F1'
-const TINT_COLOR = '#F0F4FA'
+const TINT_COLOR = '#dee5ee'
 const SURFACE_COLOR = '#F4F6FD'
 const PRIMARY_100_COLOR = '#D7DFFB'
 const FONT_SANS = "'IBM Plex Sans', Arial, Helvetica, sans-serif"
@@ -393,7 +393,7 @@ export default async function handler(req, res) {
 
   try {
     const leadEmail = normalizeEmail(email)
-    const assunto = `Diagnóstico Landing — ${fieldValue(portal)} — ${fieldValue(contato)}`
+    const assunto = `Diagnóstico — ${fieldValue(portal)} — ${fieldValue(contato)}`
 
     if (process.env.RESEND_API_KEY) {
       // Envia via Resend API quando chave estiver configurada
