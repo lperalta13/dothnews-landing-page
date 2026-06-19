@@ -148,7 +148,15 @@ Para alterar os destinatários, basta editar essa constante em `api/contact.js`.
 
 O formulário exibe feedback visual durante o envio (botão com texto "Enviando…" e desabilitado) e mensagem de erro inline caso o servidor não responda ou retorne falha.
 
-O template do email "Novo diagnóstico recebido" é montado em `api/contact.js` com HTML puro e estilos inline para compatibilidade com clientes como Gmail e Outlook. Ele inclui resumo do lead, diagnóstico informado, observações, triagem comercial automática e botão de contato via WhatsApp. Se `CRM_LEAD_URL` ou `CRM_URL` estiver configurada, o email também exibe o link "Abrir no CRM".
+O template do email "Solicitação de diagnótstico" é montado em `api/contact.js` com HTML puro e estilos inline para compatibilidade com clientes como Gmail e Outlook. Ele inclui resumo do lead, diagnóstico informado, observações, triagem comercial automática e botão de contato via WhatsApp. Se `CRM_LEAD_URL` ou `CRM_URL` estiver configurada, o email também exibe o link "Abrir no CRM".
+
+Para visualizar o template sem disparar email, rode `npm start` e acesse:
+
+```text
+http://localhost:3000/api/contact/preview
+```
+
+![Preview do template de email Novo diagnóstico recebido](public/assets/template-email.png)
 
 ### Arquitetura
 
